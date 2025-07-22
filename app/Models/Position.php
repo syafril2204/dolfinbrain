@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Position extends Model
 {
@@ -11,13 +13,16 @@ class Position extends Model
 
     protected $fillable = ['formation_id', 'name', 'slug'];
 
-    public function formation()
+    protected static function boot()
     {
-        return $this->belongsTo(Formation::class);
+        parent::boot();
+        static::creating(function ($position) {
+            $position->slug = Str::slug($position->name);
+        });
     }
 
-    public function users()
+    public function formation(): BelongsTo
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(Formation::class);
     }
 }

@@ -20,53 +20,80 @@
                         <span class="hide-menu">Home</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('beli-paket') ? 'active' : '' }}" href="#"
-                        aria-expanded="false">
-                        <span><i class="ti ti-shopping-cart"></i></span>
-                        <span class="hide-menu">Beli Paket</span>
-                    </a>
-                </li>
-                {{-- ... menu lainnya ... --}}
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('paket-saya') ? 'active' : '' }}" href="#"
-                        aria-expanded="false">
-                        <span><i class="ti ti-wallet"></i></span>
-                        <span class="hide-menu">Paket Saya</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('materi') ? 'active' : '' }}" href="#"
-                        aria-expanded="false">
-                        <span><i class="ti ti-book"></i></span>
-                        <span class="hide-menu">Materi</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('soal') ? 'active' : '' }}" href="#"
-                        aria-expanded="false">
-                        <span><i class="ti ti-file-text"></i></span>
-                        <span class="hide-menu">Soal</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('lms-space') ? 'active' : '' }}" href="#"
-                        aria-expanded="false">
-                        <span><i class="ti ti-layout-grid"></i></span>
-                        <span class="hide-menu">LMS Space</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('lms-space') ? 'active' : '' }}" href="#"
-                        aria-expanded="false">
-                        <span><i class="ti ti-user-circle"></i></span>
-                        <span class="hide-menu">Profile</span>
-                    </a>
-                </li>
+
+                {{-- =================================== --}}
+                {{--         MENU UNTUK ADMIN            --}}
+                {{-- =================================== --}}
+                @role('admin')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('admin.formations.*', 'admin.positions.*') ? 'active' : '' }}"
+                            href="{{ route('admin.formations.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-sitemap"></i></span>
+                            <span class="hide-menu">Manajemen Formasi</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('beli-paket') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-shopping-cart"></i></span>
+                            <span class="hide-menu">Beli Paket</span>
+                        </a>
+                    </li>
+                @endrole
+
+                {{-- =================================== --}}
+                {{--         MENU UNTUK STUDENT          --}}
+                {{-- =================================== --}}
+                @role('student')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('beli-paket') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-shopping-cart"></i></span>
+                            <span class="hide-menu">Beli Paket</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('paket-saya') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-wallet"></i></span>
+                            <span class="hide-menu">Paket Saya</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('materi') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-book"></i></span>
+                            <span class="hide-menu">Materi</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('soal') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-file-text"></i></span>
+                            <span class="hide-menu">Soal</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('lms-space') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-layout-grid"></i></span>
+                            <span class="hide-menu">LMS Space</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('profile') ? 'active' : '' }}" href="#"
+                            aria-expanded="false">
+                            <span><i class="ti ti-user-circle"></i></span>
+                            <span class="hide-menu">Profile</span>
+                        </a>
+                    </li>
+                @endrole
             </ul>
 
+            {{-- 👇 Tombol Logout Dikembalikan ke Versi Awal --}}
             <div class="logout-wrapper px-4 mt-auto">
-                <form method="POST" action="">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="btn btn-outline-danger w-100">
                         <i class="ti ti-logout me-2"></i>
@@ -80,7 +107,6 @@
 
 @push('styles')
     <style>
-        /* Final Attempt: CSS Override */
         aside.left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active,
         .sidebar-nav ul .sidebar-item.selected>.sidebar-link.active {
             background-color: #eef5ff !important;

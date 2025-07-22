@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Traits\HasRoles; // Import trait
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles; // Gunakan trait
+    use HasFactory, Notifiable, HasRoles, HasApiTokens; // Gunakan trait
 
     protected $fillable = [
         'name',

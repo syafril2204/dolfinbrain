@@ -1,4 +1,4 @@
-@if (auth()->check())
+{{-- @if (auth()->check())
     <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light">
             <ul class="navbar-nav">
@@ -72,4 +72,4 @@
             </div>
         </nav>
     </header>
-@endif
+@endif --}}

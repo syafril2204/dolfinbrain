@@ -1,23 +1,27 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Formation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'short_description', 'slug'];
 
-    public function positions()
+    protected static function boot()
     {
-        return $this->hasMany(Position::class);
+        parent::boot();
+        static::creating(function ($formation) {
+            $formation->slug = Str::slug($formation->name);
+        });
     }
 
-    public function users()
+    public function positions(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Position::class);
     }
 }

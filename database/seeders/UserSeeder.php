@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,11 +17,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::query()->create([
+        $user = User::query()->create([
             'name' => 'admin',
             'email' => strtolower(str_replace(' ', '', 'admin')) . "@example.com",
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
+        $user->assignRole(RoleEnum::ADMIN->value);
     }
 }

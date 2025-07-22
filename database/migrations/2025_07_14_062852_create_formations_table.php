@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('formations', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('short_description');
             $table->string('slug')->unique();
             $table->timestamps();
         });

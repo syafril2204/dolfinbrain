@@ -18,12 +18,15 @@ class Login extends Component
     #[Rule('required')]
     public $password = '';
 
+    #[Rule('boolean')]
+    public $remember = false;
+
 
     public function attemptLogin()
     {
         $this->validate();
 
-        if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+        if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             session()->regenerate();
 
             return $this->redirectRoute('dashboard', navigate: true);
