@@ -13,12 +13,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <link rel="shortcut icon" type="image/png" href="{{ asset('dist/images/logos/favicon.ico') }}" />
-
     <link rel="stylesheet" href="{{ asset('dist/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
 
+    {{-- Pastikan hanya ada satu file style.min.css --}}
     <link id="themeColors" rel="stylesheet" href="{{ asset('dist/css/style.min.css') }}" />
-    @stack('styles')
 
+    {{-- CSS untuk Select2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    @stack('styles')
     @livewireStyles
 </head>
 
@@ -33,27 +36,32 @@
         <x-partials.sidebar />
 
         <div class="body-wrapper">
-
             <x-partials.header />
-
             <div class="container-fluid">
                 {{ $slot }}
             </div>
-
         </div>
     </div>
 
-    <script src="{{ asset('dist/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+    {{-- =============================================== --}}
+    {{--           BLOK SCRIPT YANG BENAR                --}}
+    {{-- =============================================== --}}
+
+    {{-- 1. jQuery dimuat pertama kali --}}
     <script src="{{ asset('dist/libs/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('dist/libs/simplebar/dist/simplebar.min.js') }}"></script>
+
+    {{-- 2. Bootstrap --}}
     <script src="{{ asset('dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 
+    {{-- 3. Select2 (setelah jQuery) --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="{{ asset('dist/libs/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('dist/js/app.min.js') }}"></script>
     <script src="{{ asset('dist/js/app.init.js') }}"></script>
     <script src="{{ asset('dist/js/app-style-switcher.js') }}"></script>
     <script src="{{ asset('dist/js/sidebarmenu.js') }}"></script>
     <script src="{{ asset('dist/js/custom.js') }}"></script>
-
     <script src="{{ asset('dist/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('dist/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('dist/js/dashboard.js') }}"></script>

@@ -32,12 +32,11 @@
                             <span class="hide-menu">Manajemen Formasi</span>
                         </a>
                     </li>
-
                     <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('beli-paket') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
-                            <span><i class="ti ti-shopping-cart"></i></span>
-                            <span class="hide-menu">Beli Paket</span>
+                        <a class="sidebar-link {{ request()->routeIs('admin.materials.*') ? 'active' : '' }}"
+                            href="{{ route('admin.materials.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-book"></i></span>
+                            <span class="hide-menu">Manajemen Materi</span>
                         </a>
                     </li>
                 @endrole

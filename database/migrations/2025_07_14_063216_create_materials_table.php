@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
-            $table->string('title'); // e.g., "TWK: Pancasila dan UUD 1945"
+            $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('file_path'); // Path ke file di storage
