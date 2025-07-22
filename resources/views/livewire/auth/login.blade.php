@@ -1,8 +1,7 @@
  <div class="col-xl-5 col-xxl-4">
      <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
          <div class="col-sm-8 col-md-6 col-xl-9">
-             <h2 class="mb-3 fs-7 fw-bolder">Welcome to Modernize</h2>
-             <p class=" mb-9">Your Admin Dashboard</p>
+             <h2 class="mb-3 fs-7 fw-bolder">Welcome to Dolfin Brain</h2>
              <div class="row">
                  <div class="col-6 mb-2 mb-sm-0">
                      <a class="btn btn-white text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
@@ -47,7 +46,7 @@
                  </div>
                  <a href="index-2.html" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign In</a>
                  <div class="d-flex align-items-center justify-content-center">
-                     <p class="fs-4 mb-0 fw-medium">New to Modernize?</p>
+                     <p class="fs-4 mb-0 fw-medium">Belum punya akun?</p>
                      <a class="text-primary fw-medium ms-2" href="authentication-register.html">Create an account</a>
                  </div>
              </form>
