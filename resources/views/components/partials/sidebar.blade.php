@@ -39,6 +39,14 @@
                             <span class="hide-menu">Manajemen Materi</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        {{-- Kondisi ini sekarang akan mencakup semua halaman kuis dan soal --}}
+                        <a class="sidebar-link {{ request()->routeIs('admin.quiz-packages.*') ? 'active' : '' }}"
+                            href="{{ route('admin.quiz-packages.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-file-text"></i></span>
+                            <span class="hide-menu">Manajemen Kuis</span>
+                        </a>
+                    </li>
                 @endrole
 
                 {{-- =================================== --}}

@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quiz_package_id')->constrained()->onDelete('cascade');
             $table->longText('question_text');
-            $table->longText('explanation')->nullable(); // Penjelasan/pembahasan jawaban
-            $table->unsignedTinyInteger('points')->default(1);
+            $table->longText('explanation')->nullable();
+            $table->enum('type', ['multiple_choice', 'true_false', 'essay'])->default('multiple_choice');
             $table->timestamps();
         });
     }

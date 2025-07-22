@@ -31,4 +31,9 @@ class Position extends Model
     {
         return $this->belongsToMany(Material::class);
     }
+
+    public function quizPackages(): BelongsToMany
+    {
+        return $this->belongsToMany(QuizPackage::class);
+    }
 }

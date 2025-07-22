@@ -11,12 +11,6 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="col-3">
-                    <div class="text-center mb-n5">
-                        <img src="{{ asset('dist/images/breadcrumb/ChatBc.png') }}" alt=""
-                            class="img-fluid mb-n4">
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -27,7 +21,8 @@
             <div class="d-flex gap-2">
                 <input type="text" class="form-control" placeholder="Cari materi..."
                     wire:model.live.debounce.300ms="searchTerm">
-                <a href="{{ route('admin.materials.create') }}" class="btn btn-primary" wire:navigate>Tambah Materi</a>
+                {{-- HAPUS wire:navigate DARI SINI --}}
+                <a href="{{ route('admin.materials.create') }}" class="btn btn-primary">Tambah Materi</a>
             </div>
         </div>
         <div class="card-body">
@@ -53,19 +48,16 @@
                                     </div>
                                     <div class="ms-auto">
                                         <div class="dropdown dropstart">
-                                            <a href="#" class="text-muted"
-                                                id="dropdownMenuButton-{{ $material->id }}" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="ti ti-dots-vertical fs-6"></i>
-                                            </a>
-                                            <ul class="dropdown-menu"
-                                                aria-labelledby="dropdownMenuButton-{{ $material->id }}">
+                                            <a href="#" class="text-muted" data-bs-toggle="dropdown"><i
+                                                    class="ti ti-dots-vertical fs-6"></i></a>
+                                            <ul class="dropdown-menu">
+                                                {{-- HAPUS wire:navigate DARI SINI --}}
                                                 <li><a class="dropdown-item d-flex align-items-center gap-3"
-                                                        href="{{ route('admin.materials.edit', $material) }}"
-                                                        wire:navigate><i class="fs-4 ti ti-edit"></i>Edit</a></li>
+                                                        href="{{ route('admin.materials.edit', $material) }}"><i
+                                                            class="fs-4 ti ti-edit"></i>Edit</a></li>
                                                 <li><a class="dropdown-item d-flex align-items-center gap-3"
                                                         href="#" wire:click.prevent="delete({{ $material->id }})"
-                                                        wire:confirm="Anda yakin ingin menghapus materi ini?"><i
+                                                        wire:confirm="Anda yakin?"><i
                                                             class="fs-4 ti ti-trash"></i>Delete</a></li>
                                                 <li><a class="dropdown-item d-flex align-items-center gap-3"
                                                         href="{{ route('materials.download', $material) }}"><i
@@ -85,8 +77,7 @@
                     </div>
                 @empty
                     <div class="col-12">
-                        <p class="text-center text-muted">Belum ada materi yang ditambahkan atau tidak ada hasil yang
-                            cocok dengan pencarian Anda.</p>
+                        <p class="text-center text-muted">Belum ada materi.</p>
                     </div>
                 @endforelse
             </div>

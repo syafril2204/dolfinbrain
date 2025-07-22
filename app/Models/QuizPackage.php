@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class QuizPackage extends Model
 {
@@ -14,16 +17,29 @@ class QuizPackage extends Model
         'slug',
         'description',
         'duration_in_minutes',
-        'is_active',
+        'is_active'
     ];
 
-    public function questions()
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($package) {
+            $package->slug = Str::slug($package->title);
+        });
+    }
+
+    public function positions(): BelongsToMany
+    {
+        return $this->belongsToMany(Position::class);
+    }
+
+    public function questions(): HasMany
     {
         return $this->hasMany(Question::class);
     }
 
-    public function positions()
+    public function attempts(): HasMany
     {
-        return $this->belongsToMany(Position::class, 'position_quiz_package');
+        return $this->hasMany(QuizAttempt::class);
     }
 }

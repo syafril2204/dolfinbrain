@@ -15,7 +15,7 @@
     <link rel="shortcut icon" type="image/png" href="{{ asset('dist/images/logos/favicon.ico') }}" />
     <link rel="stylesheet" href="{{ asset('dist/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
 
-    {{-- Pastikan hanya ada satu file style.min.css --}}
+    {{-- CSS Tema Utama --}}
     <link id="themeColors" rel="stylesheet" href="{{ asset('dist/css/style.min.css') }}" />
 
     {{-- CSS untuk Select2 --}}
@@ -44,18 +44,12 @@
     </div>
 
     {{-- =============================================== --}}
-    {{--           BLOK SCRIPT YANG BENAR                --}}
+    {{--                  AREA SCRIPT                    --}}
     {{-- =============================================== --}}
 
-    {{-- 1. jQuery dimuat pertama kali --}}
     <script src="{{ asset('dist/libs/jquery/dist/jquery.min.js') }}"></script>
-
-    {{-- 2. Bootstrap --}}
     <script src="{{ asset('dist/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-
-    {{-- 3. Select2 (setelah jQuery) --}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
     <script src="{{ asset('dist/libs/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('dist/js/app.min.js') }}"></script>
     <script src="{{ asset('dist/js/app.init.js') }}"></script>
@@ -65,6 +59,8 @@
     <script src="{{ asset('dist/libs/owl.carousel/dist/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('dist/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('dist/js/dashboard.js') }}"></script>
+
+    {{-- Baris script AlpineJS telah dihapus dari sini --}}
 
     @livewireScripts
     @stack('scripts')
