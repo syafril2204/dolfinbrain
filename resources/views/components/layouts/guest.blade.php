@@ -10,6 +10,8 @@
 
     {{-- Path ke CSS disesuaikan dengan struktur Laravel --}}
     <link id="themeColors" rel="stylesheet" href="{{ asset('dist/css/style.min.css') }}" />
+    @stack('styles')
+
 </head>
 
 <body>

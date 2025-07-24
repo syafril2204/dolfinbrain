@@ -5,12 +5,14 @@ use App\Livewire\Admin\Formations\Index as FormationIndex;
 use App\Livewire\Admin\Materials\Index as MaterialIndex;
 use App\Livewire\Admin\Positions\Index as PositionIndex;
 use App\Livewire\Auth\Login;
+use App\Livewire\Auth\Register;
 use App\Livewire\Dashboard;
 use App\Livewire\Admin\Materials\Form as MaterialForm;
 use App\Livewire\Admin\Quiz\Packages\Index as QuizPackageIndex;
 use App\Livewire\Admin\Quiz\Packages\Form as QuizPackageForm;
 use App\Livewire\Admin\Quiz\Questions\Index as QuestionIndex;
 use App\Livewire\Admin\Quiz\Questions\Form as QuestionForm;
+use App\Livewire\Student\Materials\Index as StudentMaterialIndex;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -32,6 +34,7 @@ Route::get('/', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -47,12 +50,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('materials.download');
 
 
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('/formations', FormationIndex::class)->name('formations.index');
         Route::get('/formations/{formation}/positions', PositionIndex::class)->name('positions.index');
-
-
-        Route::get('/materials', MaterialIndex::class)->name('materials.index');
+        Route::get('/materials', MaterialIndex::class)->name('materials');
         Route::get('/materials/create', MaterialForm::class)->name('materials.create');
         Route::get('/materials/{material}/edit', MaterialForm::class)->name('materials.edit');
 
@@ -67,5 +68,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{question}/edit', QuestionForm::class)->name('edit');
             });
         });
+    });
+    Route::prefix('students')->name('students.')->group(function () {
+        Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
     });
 });

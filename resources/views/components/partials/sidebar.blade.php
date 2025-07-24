@@ -54,45 +54,10 @@
                 {{-- =================================== --}}
                 @role('student')
                     <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('beli-paket') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
-                            <span><i class="ti ti-shopping-cart"></i></span>
-                            <span class="hide-menu">Beli Paket</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('paket-saya') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
-                            <span><i class="ti ti-wallet"></i></span>
-                            <span class="hide-menu">Paket Saya</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('materi') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
+                        <a class="sidebar-link {{ request()->routeIs('students.materi.index') ? 'active' : '' }}"
+                            href="{{ route('students.materi.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-book"></i></span>
                             <span class="hide-menu">Materi</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('soal') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
-                            <span><i class="ti ti-file-text"></i></span>
-                            <span class="hide-menu">Soal</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('lms-space') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
-                            <span><i class="ti ti-layout-grid"></i></span>
-                            <span class="hide-menu">LMS Space</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('profile') ? 'active' : '' }}" href="#"
-                            aria-expanded="false">
-                            <span><i class="ti ti-user-circle"></i></span>
-                            <span class="hide-menu">Profile</span>
                         </a>
                     </li>
                 @endrole

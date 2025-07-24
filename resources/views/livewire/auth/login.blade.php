@@ -55,17 +55,15 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">
-                    <span wire:loading.remove wire:target="attemptLogin">
+                    <span>
                         Login
-                    </span>
-                    <span wire:loading wire:target="attemptLogin">
-                        Logging in...
                     </span>
                 </button>
 
                 <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-medium">Belum Punya Akun?</p>
-                    <a class="text-primary fw-medium ms-2" href="">Daftar Sekarang</a>
+                    <a class="text-primary fw-medium ms-2" href="{{ route('register') }}" wire:navigate>Daftar
+                        Sekarang</a>
                 </div>
             </form>
         </div>
