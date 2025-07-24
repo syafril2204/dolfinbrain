@@ -14,14 +14,16 @@ class QuizAttempt extends Model
         'quiz_package_id',
         'score',
         'status',
+        'started_at',
         'finished_at',
     ];
 
     protected $casts = [
+        'started_at' => 'datetime',
         'finished_at' => 'datetime',
     ];
 
-    public function attemptDetails()
+    public function details()
     {
         return $this->hasMany(QuizAttemptDetail::class);
     }

@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quiz_attempt_id')->constrained()->onDelete('cascade');
             $table->foreignId('question_id')->constrained()->onDelete('cascade');
-            $table->foreignId('answer_id')->constrained()->onDelete('cascade'); // Jawaban yg dipilih user
-            $table->boolean('is_correct'); // Dicatat saat submit untuk mempermudah kalkulasi
+            $table->foreignId('answer_id')->nullable()->constrained()->onDelete('cascade');
+            $table->boolean('is_correct')->nullable(); // Dicatat saat submit untuk mempermudah kalkulasi
             $table->timestamps();
         });
     }

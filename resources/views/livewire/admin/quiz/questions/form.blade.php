@@ -7,7 +7,7 @@
                     <li class="breadcrumb-item"><a class="text-muted" href="{{ route('admin.quiz-packages.index') }}">Paket
                             Kuis</a></li>
                     <li class="breadcrumb-item"><a class="text-muted"
-                            href="{{ route('admin.questions.index', $quiz_package) }}">Soal</a></li>
+                            href="{{ route('admin.quiz-packages.questions.index', $quiz_package) }}">Soal</a></li>
                     <li class="breadcrumb-item" aria-current="page">{{ $isEditMode ? 'Edit' : 'Tambah' }}</li>
                 </ol>
             </nav>
@@ -57,7 +57,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Simpan Soal</button>
-                <a href="{{ route('admin.questions.index', $quiz_package) }}" class="btn btn-secondary">Batal</a>
+                <a href="{{ route('admin.quiz-packages.questions.index', $quiz_package) }}" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>

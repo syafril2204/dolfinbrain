@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Livewire\Admin\Formations\Index as FormationIndex;
 use App\Livewire\Admin\Materials\Index as MaterialIndex;
 use App\Livewire\Admin\Positions\Index as PositionIndex;
+use App\Livewire\Student\Quiz\PackageIndex as StudentQuizIndex;
+use App\Livewire\Student\Quiz\Attempt as StudentQuizAttempt;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Dashboard;
@@ -53,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('/formations', FormationIndex::class)->name('formations.index');
         Route::get('/formations/{formation}/positions', PositionIndex::class)->name('positions.index');
-        Route::get('/materials', MaterialIndex::class)->name('materials');
+        Route::get('/materials', MaterialIndex::class)->name('materials.index');
         Route::get('/materials/create', MaterialForm::class)->name('materials.create');
         Route::get('/materials/{material}/edit', MaterialForm::class)->name('materials.edit');
 
@@ -61,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', QuizPackageIndex::class)->name('index');
             Route::get('/create', QuizPackageForm::class)->name('create');
             Route::get('/{quiz_package}/edit', QuizPackageForm::class)->name('edit');
-
+            
             Route::prefix('/{quiz_package}/questions')->name('questions.')->group(function () {
                 Route::get('/', QuestionIndex::class)->name('index');
                 Route::get('/create', QuestionForm::class)->name('create');
@@ -71,5 +73,8 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('students')->name('students.')->group(function () {
         Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
+
+        Route::get('/soal', StudentQuizIndex::class)->name('soal.index');
+        Route::get('/quiz/{quiz_package}/attempt', StudentQuizAttempt::class)->name('quiz.attempt');
     });
 });

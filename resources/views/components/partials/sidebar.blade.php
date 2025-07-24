@@ -60,6 +60,13 @@
                             <span class="hide-menu">Materi</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.soal.*') ? 'active' : '' }}"
+                            href="{{ route('students.soal.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-file-text"></i></span>
+                            <span class="hide-menu">Soal</span>
+                        </a>
+                    </li>
                 @endrole
             </ul>
 

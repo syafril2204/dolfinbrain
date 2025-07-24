@@ -19,4 +19,19 @@ class QuizAttemptDetail extends Model
     protected $casts = [
         'is_correct' => 'boolean',
     ];
+
+    public function attempt()
+    {
+        return $this->belongsTo(QuizAttempt::class, 'quiz_attempt_id');
+    }
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
+
+    public function answer()
+    {
+        return $this->belongsTo(Answer::class);
+    }
 }
