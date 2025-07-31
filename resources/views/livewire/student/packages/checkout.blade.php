@@ -13,8 +13,8 @@
         </div>
     </div>
 
-    @if (session()->has('message'))
-        <div class="alert alert-success">{{ session('message') }}</div>
+    @if (session()->has('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
     <div class="row">
@@ -28,21 +28,22 @@
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <td class="text-muted">Paket</td>
-                                    <td class="fw-semibold">{{ $packageName }}</td>
+                                    <td class="text-muted border-0">Paket</td>
+                                    <td class="fw-semibold border-0">{{ $packageName }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted">Jabatan</td>
-                                    <td class="fw-semibold">{{ $position->formation->name }} - {{ $position->name }}
-                                    </td>
+                                    <td class="text-muted border-0">Jabatan</td>
+                                    <td class="fw-semibold border-0">{{ $position->formation->name }} -
+                                        {{ $position->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted">Durasi Akses</td>
-                                    <td class="fw-semibold">6 Bulan</td>
+                                    <td class="text-muted border-0">Durasi Akses</td>
+                                    <td class="fw-semibold border-0">6 Bulan</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted">ID Paket</td>
-                                    <td class="fw-semibold">PKT-{{ strtoupper($packageType) }}-{{ $position->id }}</td>
+                                    <td class="text-muted border-0">ID Paket</td>
+                                    <td class="fw-semibold border-0">
+                                        PKT-{{ strtoupper($packageType) }}-{{ $position->id }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -53,34 +54,54 @@
                 </div>
             </div>
 
-            {{-- Payment Methods --}}
+            {{-- Payment Methods (Accordion) --}}
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Payment methods</h5>
-                    <div class="list-group">
-                        <a href="#"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Add debit/credit card <i class="ti ti-chevron-right"></i>
-                        </a>
-                        <label class="list-group-item list-group-item-action d-flex align-items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png"
-                                alt="Mastercard" height="20">
-                            <span class="ms-3">Mastercard</span>
-                            <input type="radio" name="payment_method" class="form-check-input ms-auto">
-                        </label>
-                        <label class="list-group-item list-group-item-action d-flex align-items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Mandiri_logo.svg/1200px-Mandiri_logo.svg.png"
-                                alt="Mandiri" height="20">
-                            <span class="ms-3">Mandiri</span>
-                            <input type="radio" name="payment_method" class="form-check-input ms-auto">
-                        </label>
-                        <label class="list-group-item list-group-item-action d-flex align-items-center">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Logo_Alfamart.svg"
-                                alt="Alfamart" height="20">
-                            <span class="ms-3">Alfamart</span>
-                            <input type="radio" name="payment_method" class="form-check-input ms-auto">
-                        </label>
-                    </div>
+
+                    @if (!empty($paymentChannels))
+                        <div class="accordion" id="paymentMethodsAccordion">
+                            @foreach ($paymentChannels as $groupName => $channels)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-{{ Str::slug($groupName) }}">
+                                        <button class="accordion-button collapsed fw-semibold" type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-{{ Str::slug($groupName) }}" aria-expanded="false"
+                                            aria-controls="collapse-{{ Str::slug($groupName) }}">
+                                            {{ $groupName }}
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-{{ Str::slug($groupName) }}" class="accordion-collapse collapse"
+                                        aria-labelledby="heading-{{ Str::slug($groupName) }}"
+                                        data-bs-parent="#paymentMethodsAccordion">
+                                        <div class="accordion-body p-0">
+                                            <div class="list-group list-group-flush">
+                                                @foreach ($channels as $channel)
+                                                    <label
+                                                        class="list-group-item list-group-item-action d-flex align-items-center"
+                                                        style="cursor: pointer;">
+                                                        <img src="{{ $channel['icon_url'] }}"
+                                                            alt="{{ $channel['name'] }}" height="20" class="me-3">
+                                                        {{ $channel['name'] }}
+                                                        <input type="radio" name="payment_method"
+                                                            class="form-check-input ms-auto"
+                                                            value="{{ $channel['code'] }}"
+                                                            wire:model="selectedPaymentMethod">
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Gagal memuat metode pembayaran. Periksa koneksi atau coba lagi nanti.</p>
+                    @endif
+
+                    @error('selectedPaymentMethod')
+                        <div class="text-danger mt-2">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
         </div>
@@ -110,11 +131,12 @@
                     <h5 class="card-title fw-semibold mb-4">Invoice Breakdown</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal</span>
-                        <span class="fw-semibold">Rp {{ number_format($price, 0, ',', '.') }}</span>
+                        <span class="fw-semibold">Rp {{ number_format($originalPrice, 0, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <a href="#" class="text-primary">Diskon</a>
-                        <span class="fw-semibold">- Rp 0</span>
+                        <span class="text-primary">Diskon </span>
+                        <span class="fw-semibold text-danger">- Rp
+                            {{ number_format($discountAmount, 0, ',', '.') }}</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between fw-bolder">
@@ -136,7 +158,11 @@
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button class="btn btn-primary w-100 py-2" wire:click="processPayment">Bayar Sekarang</button>
+                    <button class="btn btn-primary w-100 py-2" wire:click="createTransaction"
+                        wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="createTransaction">Bayar Sekarang</span>
+                        <span wire:loading wire:target="createTransaction">Memproses...</span>
+                    </button>
                 </div>
             </div>
         </div>

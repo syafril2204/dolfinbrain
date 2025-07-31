@@ -25,6 +25,7 @@ use App\Livewire\Admin\Lms\Content\Coaching\Form as CoachingForm;
 use App\Livewire\Admin\Lms\Content\Attachments as LmsContentAttachments;
 use App\Livewire\Admin\Quiz\Packages\Show as QuizPackageShow;
 use App\Livewire\Admin\Lms\Content\Videos\Index as VideoIndex;
+use App\Livewire\Student\Packages\Instruction as StudentPackageInstruction;
 use App\Livewire\Admin\Lms\Content\Videos\Form as VideoForm;
 use App\Livewire\Admin\Lms\Content\Files as LmsContentFiles;
 use App\Livewire\Admin\Users\Index as UserIndex;
@@ -125,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
 
         Route::get('/beli-paket', StudentPackageIndex::class)->name('packages.index');
+        Route::get('/instruction/{transaction:reference}', StudentPackageInstruction::class)->name('packages.instruction');
         Route::get('/checkout/{package_type}', StudentPackageCheckout::class)->name('packages.checkout');
 
         Route::get('/soal', StudentQuizIndex::class)->name('soal.index');

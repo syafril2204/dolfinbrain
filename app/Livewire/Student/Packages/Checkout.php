@@ -3,18 +3,25 @@
 namespace App\Livewire\Student\Packages;
 
 use App\Models\Position;
-use Illuminate\Support\Str;
+use App\Models\Transaction;
+use App\Services\TripayService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Checkout extends Component
 {
-    public $packageType; // 'mandiri' atau 'bimbingan'
+    public $packageType;
     public ?Position $position;
     public $packageName;
-    public $price;
+    public $price; // Harga final setelah diskon
+    public $originalPrice; // Harga asli sebelum diskon
+    public $discountAmount; // Jumlah diskon
     public $transactionId;
     public $agree = false;
+
+    public $paymentChannels = [];
+    public $selectedPaymentMethod;
 
     public function mount($package_type)
     {
@@ -27,20 +34,70 @@ class Checkout extends Component
 
         if (!$user->position_id) {
             session()->flash('error', 'Silakan pilih jabatan terlebih dahulu.');
-            return $this->redirect(route('student.packages.index'));
+            return $this->redirect(route('students.packages.index'));
         }
 
         $this->position = Position::with('formation')->find($user->position_id);
-        $this->packageName = ($this->packageType === 'mandiri') ? 'Paket Mandiri' : 'Paket Bimbingan';
+        $this->packageName = ($this->packageType === 'mandiri') ? 'Paket Aplikasi' : 'Paket Bimbel';
+
+        // Ambil harga final dari database
         $this->price = ($this->packageType === 'mandiri') ? $this->position->price_mandiri : $this->position->price_bimbingan;
 
+        // Hitung harga asli (yang dicoret) adalah harga final ditambah 20%
+        $this->originalPrice = $this->price * 1.2;
+        $this->discountAmount = $this->originalPrice - $this->price;
+
         $this->transactionId = 'TRX' . strtoupper(Str::random(10));
+
+        try {
+            $tripay = new TripayService();
+            $channels = $tripay->getPaymentChannels();
+            $this->paymentChannels = collect($channels)->groupBy('group')->all();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Gagal memuat metode pembayaran. Coba lagi nanti.');
+            $this->paymentChannels = [];
+        }
     }
 
-    public function processPayment()
+    public function createTransaction()
     {
-        $this->validate(['agree' => 'accepted']);
-        session()->flash('message', 'Fitur pembayaran akan segera hadir!');
+        $this->validate([
+            'agree' => 'accepted',
+            'selectedPaymentMethod' => 'required',
+        ], [
+            'agree.accepted' => 'Anda harus menyetujui Syarat & Ketentuan.',
+            'selectedPaymentMethod.required' => 'Silakan pilih metode pembayaran.',
+        ]);
+
+        $user = Auth::user();
+
+        $transaction = Transaction::create([
+            'user_id' => $user->id,
+            'position_id' => $this->position->id,
+            'package_type' => $this->packageType,
+            'reference' => 'INV-' . $user->id . '-' . time(),
+            'payment_method' => $this->selectedPaymentMethod,
+            'amount' => $this->price,
+            'status' => 'pending',
+        ]);
+
+        $tripay = new TripayService();
+        $tripayResponse = $tripay->createTransaction($transaction, $user, $this->position, $this->packageType, $this->selectedPaymentMethod);
+
+        if (isset($tripayResponse['success']) && $tripayResponse['success'] == true) {
+            $tripayData = $tripayResponse['data'];
+
+            $transaction->update([
+                'checkout_url' => $tripayData['checkout_url'],
+                'payment_code' => $tripayData['pay_code'] ?? null,
+                'qr_url' => $tripayData['qr_url'] ?? null,
+                'expired_at' => date('Y-m-d H:i:s', $tripayData["expired_time"]),
+            ]);
+
+            return redirect()->route('students.packages.instruction', ['transaction' => $transaction->reference]);
+        } else {
+            session()->flash('error', 'Gagal membuat transaksi. Silakan coba lagi. ' . ($tripayResponse['message'] ?? ''));
+        }
     }
 
     public function render()
