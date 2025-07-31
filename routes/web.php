@@ -16,6 +16,8 @@ use App\Livewire\Admin\Quiz\Packages\Form as QuizPackageForm;
 use App\Livewire\Admin\Quiz\Questions\Index as QuestionIndex;
 use App\Livewire\Admin\Quiz\Questions\Form as QuestionForm;
 use App\Livewire\Student\Materials\Index as StudentMaterialIndex;
+use App\Livewire\Admin\Lms\Spaces\Index as LmsSpaceIndex;
+use App\Livewire\Admin\Lms\Spaces\Form as LmsSpaceForm;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -59,6 +61,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/materials', MaterialIndex::class)->name('materials.index');
         Route::get('/materials/create', MaterialForm::class)->name('materials.create');
         Route::get('/materials/{material}/edit', MaterialForm::class)->name('materials.edit');
+
+        Route::get('/lms-spaces', LmsSpaceIndex::class)->name('lms-spaces.index');
+        Route::get('/lms-spaces/create', LmsSpaceForm::class)->name('lms-spaces.create');
+        Route::get('/lms-spaces/{lms_space}/edit', LmsSpaceForm::class)->name('lms-spaces.edit');
 
         Route::prefix('quiz-packages')->name('quiz-packages.')->group(function () {
             Route::get('/', QuizPackageIndex::class)->name('index');

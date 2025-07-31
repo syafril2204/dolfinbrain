@@ -32,6 +32,7 @@
                             <span class="hide-menu">Manajemen Formasi</span>
                         </a>
                     </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('admin.materials.*') ? 'active' : '' }}"
                             href="{{ route('admin.materials.index') }}" wire:navigate aria-expanded="false">
@@ -45,6 +46,13 @@
                             href="{{ route('admin.quiz-packages.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-file-text"></i></span>
                             <span class="hide-menu">Manajemen Kuis</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('admin.lms-spaces.*') ? 'active' : '' }}"
+                            href="{{ route('admin.lms-spaces.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-device-laptop"></i></span>
+                            <span class="hide-menu">Manajemen LMS</span>
                         </a>
                     </li>
                 @endrole
