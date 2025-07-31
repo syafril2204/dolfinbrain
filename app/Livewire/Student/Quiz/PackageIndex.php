@@ -9,9 +9,7 @@ use Livewire\Component;
 class PackageIndex extends Component
 {
     public $activeTab = 'soal';
-
     public $expandedPackageId = null;
-
     protected $queryString = ['activeTab'];
 
     public function switchTab($tabName)
@@ -39,10 +37,16 @@ class PackageIndex extends Component
         if ($user && $user->position_id) {
             $position = Position::find($user->position_id);
             if ($position) {
-                $packages = $position->quizPackages()->where('is_active', true)->latest()->get();
+                $packages = $position->quizPackages()
+                    ->where('is_active', true)
+                    ->whereHas('questions')
+                    ->latest()
+                    ->get();
+
                 $latestPackageId = $packages->first()->id ?? null;
 
                 $historyPackages = $position->quizPackages()
+                    ->whereHas('questions')
                     ->whereHas('attempts', function ($query) use ($user) {
                         $query->where('user_id', $user->id)->where('status', 'completed');
                     })

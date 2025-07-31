@@ -12,7 +12,13 @@ class Position extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['formation_id', 'name', 'slug', 'price'];
+    protected $fillable = [
+        'formation_id',
+        'name',
+        'slug',
+        'price_mandiri',
+        'price_bimbingan',
+    ];
 
     protected static function boot()
     {
