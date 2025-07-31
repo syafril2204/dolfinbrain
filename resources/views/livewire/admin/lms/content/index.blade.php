@@ -22,5 +22,25 @@
                 </div>
             </a>
         </div>
+        <div class="col-md-6 col-lg-4">
+            <a
+                href="{{ route('admin.lms-spaces.content.attachments', ['lms_space' => $lms_space, 'tab' => 'materials']) }}">
+                <div class="card card-body text-center">
+                    <i class="ti ti-book fs-8 text-secondary"></i>
+                    <h6 class="fw-semibold mt-3 mb-0">Materi</h6>
+                    <p class="text-muted mb-0">Lampirkan Materi Belajar</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a
+                href="{{ route('admin.lms-spaces.content.attachments', ['lms_space' => $lms_space, 'tab' => 'quizzes']) }}">
+                <div class="card card-body text-center">
+                    <i class="ti ti-file-text fs-8 text-success"></i>
+                    <h6 class="fw-semibold mt-3 mb-0">Kuis</h6>
+                    <p class="text-muted mb-0">Lampirkan Paket Soal</p>
+                </div>
+            </a>
+        </div>
     </div>
 </div>

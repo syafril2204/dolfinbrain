@@ -21,6 +21,8 @@ use App\Livewire\Admin\Lms\Spaces\Form as LmsSpaceForm;
 use App\Livewire\Admin\Lms\Content\Index as LmsContentIndex;
 use App\Livewire\Admin\Lms\Content\Coaching\Index as CoachingIndex;
 use App\Livewire\Admin\Lms\Content\Coaching\Form as CoachingForm;
+use App\Livewire\Admin\Lms\Content\Attachments as LmsContentAttachments;
+use App\Livewire\Admin\Quiz\Packages\Show as QuizPackageShow;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -78,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('/create', CoachingForm::class)->name('create');
                     Route::get('/{coaching}/edit', CoachingForm::class)->name('edit');
                 });
+                Route::get('/attachments', LmsContentAttachments::class)->name('attachments');
             });
         });
 
@@ -85,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', QuizPackageIndex::class)->name('index');
             Route::get('/create', QuizPackageForm::class)->name('create');
             Route::get('/{quiz_package}/edit', QuizPackageForm::class)->name('edit');
+            Route::get('/{quiz_package}', QuizPackageShow::class)->name('show');
 
             Route::prefix('/{quiz_package}/questions')->name('questions.')->group(function () {
                 Route::get('/', QuestionIndex::class)->name('index');

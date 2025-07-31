@@ -51,6 +51,9 @@
                                     <a href="{{ route('admin.quiz-packages.questions.index', $package) }}"
                                         class="btn btn-sm btn-info">Soal</a>
 
+                                    <a href="{{ route('admin.quiz-packages.show', $package) }}"
+                                        class="btn btn-sm btn-outline-secondary">Lihat</a>
+
                                     <a href="{{ route('admin.quiz-packages.edit', $package) }}"
                                         class="btn btn-sm btn-warning">Edit</a>
                                     <button wire:click="delete({{ $package->id }})" wire:confirm="Yakin?"
