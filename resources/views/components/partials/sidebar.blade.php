@@ -83,6 +83,13 @@
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">Pembelajaran Siswa</span>
                     </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.packages.index') ? 'active' : '' }}"
+                            href="{{ route('students.packages.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-shopping-cart"></i></span>
+                            <span class="hide-menu">Beli Paket</span>
+                        </a>
+                    </li>
 
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('students.materi.index') ? 'active' : '' }}"

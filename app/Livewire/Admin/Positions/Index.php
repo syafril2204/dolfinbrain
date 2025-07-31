@@ -12,7 +12,8 @@ class Index extends Component
     public Formation $formation;
 
     public $name;
-    public $price = 0;
+    public $price_mandiri = 0;
+    public $price_bimbingan = 0;
     public $position_id;
 
     public $isModalOpen = false;
@@ -22,7 +23,8 @@ class Index extends Component
     {
         return [
             'name' => 'required|string|max:255',
-            'price' => 'required|integer|min:0',
+            'price_mandiri' => 'required|integer|min:0',
+            'price_bimbingan' => 'required|integer|min:0',
         ];
     }
 
@@ -30,9 +32,12 @@ class Index extends Component
     {
         return [
             'name.required' => 'Nama posisi tidak boleh kosong.',
-            'price.required' => 'Harga harus diisi.',
-            'price.integer' => 'Harga harus berupa angka.',
-            'price.min' => 'Harga tidak boleh negatif.',
+            'price_mandiri.required' => 'Harga Paket Mandiri harus diisi.',
+            'price_mandiri.integer' => 'Harga Paket Mandiri harus berupa angka.',
+            'price_mandiri.min' => 'Harga Paket Mandiri tidak boleh negatif.',
+            'price_bimbingan.required' => 'Harga Paket Bimbingan harus diisi.',
+            'price_bimbingan.integer' => 'Harga Paket Bimbingan harus berupa angka.',
+            'price_bimbingan.min' => 'Harga Paket Bimbingan tidak boleh negatif.',
         ];
     }
 
@@ -62,7 +67,8 @@ class Index extends Component
     private function resetForm()
     {
         $this->name = '';
-        $this->price = 0;
+        $this->price_mandiri = 0;
+        $this->price_bimbingan = 0;
         $this->position_id = null;
         $this->isEditMode = false;
         $this->resetErrorBag();
@@ -81,7 +87,8 @@ class Index extends Component
         $this->formation->positions()->updateOrCreate(['id' => $this->position_id], [
             'name' => $this->name,
             'slug' => Str::slug($this->name),
-            'price' => $this->price,
+            'price_mandiri' => $this->price_mandiri,
+            'price_bimbingan' => $this->price_bimbingan,
         ]);
 
         session()->flash('message', $this->position_id ? 'Posisi berhasil diperbarui.' : 'Posisi berhasil dibuat.');
@@ -92,7 +99,8 @@ class Index extends Component
     {
         $this->position_id = $position->id;
         $this->name = $position->name;
-        $this->price = $position->price;
+        $this->price_mandiri = $position->price_mandiri;
+        $this->price_bimbingan = $position->price_bimbingan;
         $this->isEditMode = true;
         $this->openModal();
     }

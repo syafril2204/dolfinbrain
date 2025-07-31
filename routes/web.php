@@ -19,6 +19,7 @@ use App\Livewire\Student\Materials\Index as StudentMaterialIndex;
 use App\Livewire\Admin\Lms\Spaces\Index as LmsSpaceIndex;
 use App\Livewire\Admin\Lms\Spaces\Form as LmsSpaceForm;
 use App\Livewire\Admin\Lms\Content\Index as LmsContentIndex;
+use App\Livewire\Student\Packages\Index as StudentPackageIndex;
 use App\Livewire\Admin\Lms\Content\Coaching\Index as CoachingIndex;
 use App\Livewire\Admin\Lms\Content\Coaching\Form as CoachingForm;
 use App\Livewire\Admin\Lms\Content\Attachments as LmsContentAttachments;
@@ -27,6 +28,7 @@ use App\Livewire\Admin\Lms\Content\Videos\Index as VideoIndex;
 use App\Livewire\Admin\Lms\Content\Videos\Form as VideoForm;
 use App\Livewire\Admin\Lms\Content\Files as LmsContentFiles;
 use App\Livewire\Admin\Users\Index as UserIndex;
+use App\Livewire\Student\Packages\Checkout as StudentPackageCheckout;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use App\Models\LmsResource;
@@ -121,6 +123,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
 
         Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
+
+        Route::get('/beli-paket', StudentPackageIndex::class)->name('packages.index');
+        Route::get('/checkout/{package_type}', StudentPackageCheckout::class)->name('packages.checkout');
 
         Route::get('/soal', StudentQuizIndex::class)->name('soal.index');
         Route::get('/quiz/{quiz_package}/attempt', StudentQuizAttempt::class)->name('quiz.attempt');

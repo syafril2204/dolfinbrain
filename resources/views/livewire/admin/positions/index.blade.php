@@ -36,7 +36,10 @@
                                 <h6 class="fs-4 fw-semibold mb-0">Nama Posisi</h6>
                             </th>
                             <th>
-                                <h6 class="fs-4 fw-semibold mb-0">Harga</h6>
+                                <h6 class="fs-4 fw-semibold mb-0">Harga Mandiri</h6>
+                            </th>
+                            <th>
+                                <h6 class="fs-4 fw-semibold mb-0">Harga Bimbingan</h6>
                             </th>
                             <th>
                                 <h6 class="fs-4 fw-semibold mb-0">Aksi</h6>
@@ -48,7 +51,8 @@
                             <tr wire:key="{{ $position->id }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $position->name }}</td>
-                                <td>Rp {{ number_format($position->price, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($position->price_mandiri, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($position->price_bimbingan, 0, ',', '.') }}</td>
                                 <td>
                                     <button wire:click="edit({{ $position->id }})"
                                         class="btn btn-sm btn-warning">Edit</button>
@@ -59,7 +63,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">Belum ada data posisi.</td>
+                                <td colspan="5" class="text-center">Belum ada data posisi.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -87,12 +91,24 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="position_price" class="form-label">Harga</label>
+                                <label for="price_mandiri" class="form-label">Harga Paket Mandiri</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="number" class="form-control" id="position_price" wire:model="price">
+                                    <input type="number" class="form-control" id="price_mandiri"
+                                        wire:model="price_mandiri">
                                 </div>
-                                @error('price')
+                                @error('price_mandiri')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="price_bimbingan" class="form-label">Harga Paket Bimbingan</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" class="form-control" id="price_bimbingan"
+                                        wire:model="price_bimbingan">
+                                </div>
+                                @error('price_bimbingan')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
