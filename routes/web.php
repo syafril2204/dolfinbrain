@@ -26,6 +26,7 @@ use App\Livewire\Admin\Quiz\Packages\Show as QuizPackageShow;
 use App\Livewire\Admin\Lms\Content\Videos\Index as VideoIndex;
 use App\Livewire\Admin\Lms\Content\Videos\Form as VideoForm;
 use App\Livewire\Admin\Lms\Content\Files as LmsContentFiles;
+use App\Livewire\Admin\Users\Index as UserIndex;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use App\Models\LmsResource;
@@ -71,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('admin.lms-resources.download');
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+
+        Route::get('/users', UserIndex::class)->name('users.index');
         Route::get('/formations', FormationIndex::class)->name('formations.index');
         Route::get('/formations/{formation}/positions', PositionIndex::class)->name('positions.index');
         Route::get('/materials', MaterialIndex::class)->name('materials.index');

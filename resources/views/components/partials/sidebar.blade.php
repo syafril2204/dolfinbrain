@@ -1,5 +1,4 @@
 <aside class="left-sidebar">
-    {{-- Sidebar scroll --}}
     <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
             <a href="{{ route('dashboard') }}" class="text-nowrap logo-img" wire:navigate>
@@ -10,9 +9,15 @@
             </div>
         </div>
 
-        {{-- Navigasi Sidebar --}}
         <nav class="sidebar-nav scroll-sidebar" data-simplebar>
             <ul id="sidebarnav">
+
+                {{-- ========== MENU UTAMA ========= --}}
+                <li class="nav-small-cap">
+                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                    <span class="hide-menu">Menu Utama</span>
+                </li>
+
                 <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
                         href="{{ route('dashboard') }}" wire:navigate aria-expanded="false">
@@ -21,46 +26,64 @@
                     </a>
                 </li>
 
-                {{-- =================================== --}}
-                {{--         MENU UNTUK ADMIN            --}}
-                {{-- =================================== --}}
+                {{-- ========== PENGATURAN STRUKTUR & PENGGUNA (ADMIN) ========= --}}
                 @role('admin')
+                    <li class="nav-small-cap mt-4">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Struktur & Pengguna</span>
+                    </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('admin.formations.*', 'admin.positions.*') ? 'active' : '' }}"
                             href="{{ route('admin.formations.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-sitemap"></i></span>
-                            <span class="hide-menu">Manajemen Formasi</span>
+                            <span class="hide-menu">Formasi & Posisi</span>
                         </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
+                            href="{{ route('admin.users.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-users"></i></span>
+                            <span class="hide-menu">Pengguna</span>
+                        </a>
+                    </li>
+
+                    {{-- ========== KONTEN PEMBELAJARAN (ADMIN) ========= --}}
+                    <li class="nav-small-cap mt-4">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Konten Pembelajaran</span>
                     </li>
 
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('admin.materials.*') ? 'active' : '' }}"
                             href="{{ route('admin.materials.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-book"></i></span>
-                            <span class="hide-menu">Manajemen Materi</span>
+                            <span class="hide-menu">Materi</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        {{-- Kondisi ini sekarang akan mencakup semua halaman kuis dan soal --}}
                         <a class="sidebar-link {{ request()->routeIs('admin.quiz-packages.*') ? 'active' : '' }}"
                             href="{{ route('admin.quiz-packages.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-file-text"></i></span>
-                            <span class="hide-menu">Manajemen Kuis</span>
+                            <span class="hide-menu">Kuis</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('admin.lms-spaces.*') ? 'active' : '' }}"
                             href="{{ route('admin.lms-spaces.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-device-laptop"></i></span>
-                            <span class="hide-menu">Manajemen LMS</span>
+                            <span class="hide-menu">LMS Space</span>
                         </a>
                     </li>
                 @endrole
 
-                {{-- =================================== --}}
-                {{--         MENU UNTUK STUDENT          --}}
-                {{-- =================================== --}}
+                {{-- ========== MENU SISWA ========= --}}
                 @role('student')
+                    <li class="nav-small-cap mt-4">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Pembelajaran Siswa</span>
+                    </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('students.materi.index') ? 'active' : '' }}"
                             href="{{ route('students.materi.index') }}" wire:navigate aria-expanded="false">
@@ -75,17 +98,23 @@
                             <span class="hide-menu">Soal</span>
                         </a>
                     </li>
+
+                    <li class="nav-small-cap mt-4">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Akun Saya</span>
+                    </li>
+
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('students.profile.index') ? 'active' : '' }}"
                             href="{{ route('students.profile.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-user-circle"></i></span>
-                            <span class="hide-menu">Profile</span>
+                            <span class="hide-menu">Profil</span>
                         </a>
                     </li>
                 @endrole
             </ul>
 
-            {{-- 👇 Tombol Logout Dikembalikan ke Versi Awal --}}
+            {{-- LOGOUT --}}
             <div class="logout-wrapper px-4 mt-auto">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -98,36 +127,3 @@
         </nav>
     </div>
 </aside>
-
-@push('styles')
-    <style>
-        aside.left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active,
-        .sidebar-nav ul .sidebar-item.selected>.sidebar-link.active {
-            background-color: #eef5ff !important;
-            color: #5D87FF !important;
-            border-left: 4px solid #5D87FF !important;
-            box-shadow: 0 4px 12px -2px rgba(93, 135, 255, 0.3) !important;
-            font-weight: 600 !important;
-        }
-
-        aside.left-sidebar .sidebar-nav ul .sidebar-item .sidebar-link.active i,
-        .sidebar-nav ul .sidebar-item.selected>.sidebar-link.active i {
-            color: #5D87FF !important;
-        }
-
-        .scroll-sidebar {
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 100px);
-        }
-
-        .logout-wrapper {
-            margin-top: auto;
-            padding-bottom: 20px;
-        }
-
-        .sidebar-nav .sidebar-item {
-            margin-bottom: 5px;
-        }
-    </style>
-@endpush
