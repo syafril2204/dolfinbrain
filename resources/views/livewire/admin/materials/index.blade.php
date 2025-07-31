@@ -125,3 +125,20 @@
         </div>
     @endif
 </div>
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:navigated', () => {
+            const pageKey = 'reloaded_materials_page';
+            if (!sessionStorage.getItem(pageKey)) {
+                sessionStorage.setItem(pageKey, 'true');
+                window.location.reload();
+            }
+        });
+
+        document.addEventListener('livewire:navigating', () => {
+            sessionStorage.removeItem('reloaded_materials_page');
+        }, {
+            once: true
+        });
+    </script>
+@endpush

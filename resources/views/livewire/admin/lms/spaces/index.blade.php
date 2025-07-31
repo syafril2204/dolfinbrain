@@ -61,3 +61,21 @@
         {{ $spaces->links() }}
     </div>
 </div>
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:navigated', () => {
+            const pageKey = 'reloaded_lms_spaces_page';
+
+            if (!sessionStorage.getItem(pageKey)) {
+                sessionStorage.setItem(pageKey, 'true');
+                window.location.reload();
+            }
+        });
+
+        document.addEventListener('livewire:navigating', () => {
+            sessionStorage.removeItem('reloaded_lms_spaces_page');
+        }, {
+            once: true
+        });
+    </script>
+@endpush
