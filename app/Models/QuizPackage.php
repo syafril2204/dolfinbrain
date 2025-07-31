@@ -42,4 +42,9 @@ class QuizPackage extends Model
     {
         return $this->hasMany(QuizAttempt::class);
     }
+
+    public function lmsSpaces(): BelongsToMany
+    {
+        return $this->belongsToMany(LmsSpace::class, 'lms_space_quiz_package');
+    }
 }

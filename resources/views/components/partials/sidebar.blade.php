@@ -67,6 +67,13 @@
                             <span class="hide-menu">Soal</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.profile.index') ? 'active' : '' }}"
+                            href="{{ route('students.profile.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-user-circle"></i></span>
+                            <span class="hide-menu">Profile</span>
+                        </a>
+                    </li>
                 @endrole
             </ul>
 

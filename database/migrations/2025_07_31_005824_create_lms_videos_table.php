@@ -6,19 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('lms_videos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lms_meeting_id')->constrained()->onDelete('cascade');
-            $table->string('title'); // e.g., "Video Bimbel 2"
-            $table->string('youtube_url'); // Link video YouTube
-            $table->string('duration')->nullable(); // e.g., "5 mins"
-            $table->unsignedSmallInteger('order')->default(0); // Untuk urutan video
+            $table->foreignId('lms_space_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->string('youtube_url');
+            $table->string('duration')->nullable();
+            $table->unsignedSmallInteger('order')->default(0);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('lms_videos');

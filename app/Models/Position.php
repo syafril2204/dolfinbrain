@@ -36,4 +36,10 @@ class Position extends Model
     {
         return $this->belongsToMany(QuizPackage::class);
     }
+
+
+    public function lmsSpaces(): BelongsToMany
+    {
+        return $this->belongsToMany(LmsSpace::class, 'lms_space_position');
+    }
 }

@@ -7,26 +7,22 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * up
-     *
-     * @return void
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('lms_meeting_quiz_package', function (Blueprint $table) {
-            $table->foreignId('lms_meeting_id')->constrained()->onDelete('cascade');
+        Schema::create('lms_space_quiz_package', function (Blueprint $table) {
+            $table->foreignId('lms_space_id')->constrained()->onDelete('cascade');
             $table->foreignId('quiz_package_id')->constrained()->onDelete('cascade');
-            $table->primary(['lms_meeting_id', 'quiz_package_id']);
+            $table->primary(['lms_space_id', 'quiz_package_id']);
         });
     }
 
     /**
-     * down
-     *
-     * @return void
+     * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('lms_meeting_quiz_package');
+        Schema::dropIfExists('lms_space_quiz_package');
     }
 };

@@ -35,4 +35,9 @@ class User extends Authenticatable
         'date_of_birth' => 'date',
         'password' => 'hashed',
     ];
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
+    }
 }

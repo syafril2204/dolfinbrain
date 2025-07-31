@@ -6,6 +6,7 @@ use App\Livewire\Admin\Materials\Index as MaterialIndex;
 use App\Livewire\Admin\Positions\Index as PositionIndex;
 use App\Livewire\Student\Quiz\PackageIndex as StudentQuizIndex;
 use App\Livewire\Student\Quiz\Attempt as StudentQuizAttempt;
+use App\Livewire\Student\Profile\Index as StudentProfileIndex;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Dashboard;
@@ -63,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', QuizPackageIndex::class)->name('index');
             Route::get('/create', QuizPackageForm::class)->name('create');
             Route::get('/{quiz_package}/edit', QuizPackageForm::class)->name('edit');
-            
+
             Route::prefix('/{quiz_package}/questions')->name('questions.')->group(function () {
                 Route::get('/', QuestionIndex::class)->name('index');
                 Route::get('/create', QuestionForm::class)->name('create');
@@ -73,6 +74,8 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::prefix('students')->name('students.')->group(function () {
         Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
+
+        Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
 
         Route::get('/soal', StudentQuizIndex::class)->name('soal.index');
         Route::get('/quiz/{quiz_package}/attempt', StudentQuizAttempt::class)->name('quiz.attempt');

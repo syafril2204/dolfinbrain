@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LmsMeetingMaterial extends Model
+class LmsQuizPackage extends Model
 {
     //
 }
