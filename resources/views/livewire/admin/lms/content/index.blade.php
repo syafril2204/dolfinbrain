@@ -42,5 +42,14 @@
                 </div>
             </a>
         </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ route('admin.lms-spaces.content.videos.index', $lms_space) }}">
+                <div class="card card-body text-center">
+                    <i class="ti ti-video fs-8 text-danger"></i>
+                    <h6 class="fw-semibold mt-3 mb-0">Rekaman</h6>
+                    <p class="text-muted mb-0">Kelola Video Rekaman</p>
+                </div>
+            </a>
+        </div>
     </div>
 </div>

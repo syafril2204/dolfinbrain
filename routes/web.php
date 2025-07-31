@@ -23,6 +23,8 @@ use App\Livewire\Admin\Lms\Content\Coaching\Index as CoachingIndex;
 use App\Livewire\Admin\Lms\Content\Coaching\Form as CoachingForm;
 use App\Livewire\Admin\Lms\Content\Attachments as LmsContentAttachments;
 use App\Livewire\Admin\Quiz\Packages\Show as QuizPackageShow;
+use App\Livewire\Admin\Lms\Content\Videos\Index as VideoIndex;
+use App\Livewire\Admin\Lms\Content\Videos\Form as VideoForm;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -74,6 +76,12 @@ Route::middleware(['auth'])->group(function () {
 
             Route::prefix('/{lms_space}/content')->name('content.')->group(function () {
                 Route::get('/', LmsContentIndex::class)->name('index');
+
+                Route::prefix('/videos')->name('videos.')->group(function () {
+                    Route::get('/', VideoIndex::class)->name('index');
+                    Route::get('/create', VideoForm::class)->name('create');
+                    Route::get('/{video}/edit', VideoForm::class)->name('edit');
+                });
 
                 Route::prefix('/coaching')->name('coaching.')->group(function () {
                     Route::get('/', CoachingIndex::class)->name('index');
