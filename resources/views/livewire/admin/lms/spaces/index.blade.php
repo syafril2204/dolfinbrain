@@ -26,12 +26,12 @@
                                 </a>
 
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink-{{ $space->id }}">
-                                    <li><a class="dropdown-item" href="#"><i
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('admin.lms-spaces.content.index', $space) }}"><i
                                                 class="ti ti-settings me-2"></i>Kelola Konten</a></li>
                                     <li><a class="dropdown-item" href="{{ route('admin.lms-spaces.edit', $space) }}"><i
                                                 class="ti ti-edit me-2"></i>Edit</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
+                                    <hr class="dropdown-divider">
                                     </li>
                                     <li>
                                         <a class="dropdown-item text-danger" href="#"

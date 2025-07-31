@@ -18,6 +18,9 @@ use App\Livewire\Admin\Quiz\Questions\Form as QuestionForm;
 use App\Livewire\Student\Materials\Index as StudentMaterialIndex;
 use App\Livewire\Admin\Lms\Spaces\Index as LmsSpaceIndex;
 use App\Livewire\Admin\Lms\Spaces\Form as LmsSpaceForm;
+use App\Livewire\Admin\Lms\Content\Index as LmsContentIndex;
+use App\Livewire\Admin\Lms\Content\Coaching\Index as CoachingIndex;
+use App\Livewire\Admin\Lms\Content\Coaching\Form as CoachingForm;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -62,9 +65,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/materials/create', MaterialForm::class)->name('materials.create');
         Route::get('/materials/{material}/edit', MaterialForm::class)->name('materials.edit');
 
-        Route::get('/lms-spaces', LmsSpaceIndex::class)->name('lms-spaces.index');
-        Route::get('/lms-spaces/create', LmsSpaceForm::class)->name('lms-spaces.create');
-        Route::get('/lms-spaces/{lms_space}/edit', LmsSpaceForm::class)->name('lms-spaces.edit');
+        Route::prefix('lms-spaces')->name('lms-spaces.')->group(function () {
+            Route::get('/', LmsSpaceIndex::class)->name('index');
+            Route::get('/create', LmsSpaceForm::class)->name('create');
+            Route::get('/{lms_space}/edit', LmsSpaceForm::class)->name('edit');
+
+            Route::prefix('/{lms_space}/content')->name('content.')->group(function () {
+                Route::get('/', LmsContentIndex::class)->name('index');
+
+                Route::prefix('/coaching')->name('coaching.')->group(function () {
+                    Route::get('/', CoachingIndex::class)->name('index');
+                    Route::get('/create', CoachingForm::class)->name('create');
+                    Route::get('/{coaching}/edit', CoachingForm::class)->name('edit');
+                });
+            });
+        });
 
         Route::prefix('quiz-packages')->name('quiz-packages.')->group(function () {
             Route::get('/', QuizPackageIndex::class)->name('index');
