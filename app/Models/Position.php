@@ -12,7 +12,7 @@ class Position extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['formation_id', 'name', 'slug'];
+    protected $fillable = ['formation_id', 'name', 'slug', 'price'];
 
     protected static function boot()
     {
@@ -37,6 +37,10 @@ class Position extends Model
         return $this->belongsToMany(QuizPackage::class);
     }
 
+    public function purchasedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'position_user');
+    }
 
     public function lmsSpaces(): BelongsToMany
     {

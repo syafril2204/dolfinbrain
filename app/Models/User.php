@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Traits\HasRoles; // Import trait
 
 class User extends Authenticatable
@@ -19,6 +20,7 @@ class User extends Authenticatable
         'gender',
         'date_of_birth',
         'domicile',
+        'status',
         'phone_number',
         'avatar',
         'position_id',
@@ -39,5 +41,14 @@ class User extends Authenticatable
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+    /**
+     * purchasedPositions
+     *
+     * @return BelongsToMany
+     */
+    public function purchasedPositions(): BelongsToMany
+    {
+        return $this->belongsToMany(Position::class, 'position_user');
     }
 }

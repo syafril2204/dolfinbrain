@@ -11,21 +11,31 @@ class Index extends Component
 {
     public Formation $formation;
 
-    // Properti form
     public $name;
+    public $price = 0;
     public $position_id;
 
-    // Properti modal
     public $isModalOpen = false;
     public $isEditMode = false;
 
-    // Aturan validasi
     protected function rules()
     {
-        return ['name' => 'required|string|max:255'];
+        return [
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer|min:0',
+        ];
     }
 
-    // Lifecycle hook untuk menerima data dari route
+    protected function messages()
+    {
+        return [
+            'name.required' => 'Nama posisi tidak boleh kosong.',
+            'price.required' => 'Harga harus diisi.',
+            'price.integer' => 'Harga harus berupa angka.',
+            'price.min' => 'Harga tidak boleh negatif.',
+        ];
+    }
+
     public function mount(Formation $formation)
     {
         $this->formation = $formation;
@@ -42,6 +52,7 @@ class Index extends Component
     {
         $this->isModalOpen = true;
     }
+
     public function closeModal()
     {
         $this->isModalOpen = false;
@@ -51,8 +62,10 @@ class Index extends Component
     private function resetForm()
     {
         $this->name = '';
+        $this->price = 0;
         $this->position_id = null;
         $this->isEditMode = false;
+        $this->resetErrorBag();
     }
 
     public function create()
@@ -68,6 +81,7 @@ class Index extends Component
         $this->formation->positions()->updateOrCreate(['id' => $this->position_id], [
             'name' => $this->name,
             'slug' => Str::slug($this->name),
+            'price' => $this->price,
         ]);
 
         session()->flash('message', $this->position_id ? 'Posisi berhasil diperbarui.' : 'Posisi berhasil dibuat.');
@@ -78,6 +92,7 @@ class Index extends Component
     {
         $this->position_id = $position->id;
         $this->name = $position->name;
+        $this->price = $position->price;
         $this->isEditMode = true;
         $this->openModal();
     }

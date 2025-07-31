@@ -1,10 +1,9 @@
-{{-- resources/views/livewire/admin/positions/index.blade.php --}}
 <div>
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
                 <div class="col-9">
-                    <h4 class="fw-semibold mb-8">Manajemen Posisi untuk Formasi: {{ $formation->name }}</h4>
+                    <h4 class="fw-semibold mb-8">Manajemen Posisi: {{ $formation->name }}</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a class="text-muted"
@@ -17,7 +16,6 @@
         </div>
     </div>
 
-    {{-- ... sisanya mirip dengan view formations, hanya ganti variabelnya ... --}}
     <div class="card w-100 position-relative overflow-hidden">
         <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center">
             <h5 class="card-title fw-semibold mb-0 lh-sm">Daftar Posisi</h5>
@@ -38,6 +36,9 @@
                                 <h6 class="fs-4 fw-semibold mb-0">Nama Posisi</h6>
                             </th>
                             <th>
+                                <h6 class="fs-4 fw-semibold mb-0">Harga</h6>
+                            </th>
+                            <th>
                                 <h6 class="fs-4 fw-semibold mb-0">Aksi</h6>
                             </th>
                         </tr>
@@ -47,6 +48,7 @@
                             <tr wire:key="{{ $position->id }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $position->name }}</td>
+                                <td>Rp {{ number_format($position->price, 0, ',', '.') }}</td>
                                 <td>
                                     <button wire:click="edit({{ $position->id }})"
                                         class="btn btn-sm btn-warning">Edit</button>
@@ -57,7 +59,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">Belum ada data posisi.</td>
+                                <td colspan="4" class="text-center">Belum ada data posisi.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -66,9 +68,10 @@
         </div>
     </div>
 
+    <!-- Modal untuk Create/Edit Posisi -->
     @if ($isModalOpen)
-        <div class="modal fade show" style="display: block;" tabindex="-1">
-            <div class="modal-dialog">
+        <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ $isEditMode ? 'Edit Posisi' : 'Tambah Posisi Baru' }}</h5>
@@ -78,8 +81,18 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="position_name" class="form-label">Nama Posisi</label>
-                                <input type="text" class="form-control" id="position_name" wire:model.defer="name">
+                                <input type="text" class="form-control" id="position_name" wire:model="name">
                                 @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="position_price" class="form-label">Harga</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" class="form-control" id="position_price" wire:model="price">
+                                </div>
+                                @error('price')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -93,6 +106,5 @@
                 </div>
             </div>
         </div>
-        <div class="modal-backdrop fade show"></div>
     @endif
 </div>

@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('formation_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('slug');
+            $table->unsignedInteger('price')->default(0);
             $table->timestamps();
         });
     }
