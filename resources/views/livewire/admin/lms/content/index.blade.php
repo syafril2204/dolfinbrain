@@ -1,4 +1,5 @@
 <div>
+    {{-- Header & Breadcrumb --}}
     <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body px-4 py-3">
             <h4 class="fw-semibold mb-8">Kelola Konten: {{ $lms_space->title }}</h4>
@@ -13,6 +14,7 @@
     </div>
 
     <div class="row">
+        {{-- Menu Coaching --}}
         <div class="col-md-6 col-lg-4">
             <a href="{{ route('admin.lms-spaces.content.coaching.index', $lms_space) }}">
                 <div class="card card-body text-center">
@@ -22,6 +24,7 @@
                 </div>
             </a>
         </div>
+        {{-- Menu Materi --}}
         <div class="col-md-6 col-lg-4">
             <a
                 href="{{ route('admin.lms-spaces.content.attachments', ['lms_space' => $lms_space, 'tab' => 'materials']) }}">
@@ -32,6 +35,7 @@
                 </div>
             </a>
         </div>
+        {{-- Menu Kuis --}}
         <div class="col-md-6 col-lg-4">
             <a
                 href="{{ route('admin.lms-spaces.content.attachments', ['lms_space' => $lms_space, 'tab' => 'quizzes']) }}">
@@ -42,12 +46,34 @@
                 </div>
             </a>
         </div>
+        {{-- Menu Rekaman --}}
         <div class="col-md-6 col-lg-4">
             <a href="{{ route('admin.lms-spaces.content.videos.index', $lms_space) }}">
                 <div class="card card-body text-center">
                     <i class="ti ti-video fs-8 text-danger"></i>
                     <h6 class="fw-semibold mt-3 mb-0">Rekaman</h6>
                     <p class="text-muted mb-0">Kelola Video Rekaman</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <a
+                href="{{ route('admin.lms-spaces.content.files.index', ['lms_space' => $lms_space, 'tab' => 'files']) }}">
+                <div class="card card-body text-center">
+                    <i class="ti ti-file-invoice fs-8 text-warning"></i>
+                    <h6 class="fw-semibold mt-3 mb-0">File Rekap</h6>
+                    <p class="text-muted mb-0">Kelola File PDF, DOC, dll</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a
+                href="{{ route('admin.lms-spaces.content.files.index', ['lms_space' => $lms_space, 'tab' => 'audio']) }}">
+                <div class="card card-body text-center">
+                    <i class="ti ti-microphone fs-8 text-info"></i>
+                    <h6 class="fw-semibold mt-3 mb-0">Audio</h6>
+                    <p class="text-muted mb-0">Kelola Rekaman Audio</p>
                 </div>
             </a>
         </div>

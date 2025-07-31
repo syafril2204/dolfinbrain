@@ -25,8 +25,10 @@ use App\Livewire\Admin\Lms\Content\Attachments as LmsContentAttachments;
 use App\Livewire\Admin\Quiz\Packages\Show as QuizPackageShow;
 use App\Livewire\Admin\Lms\Content\Videos\Index as VideoIndex;
 use App\Livewire\Admin\Lms\Content\Videos\Form as VideoForm;
+use App\Livewire\Admin\Lms\Content\Files as LmsContentFiles;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
+use App\Models\LmsResource;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -61,6 +63,12 @@ Route::middleware(['auth'])->group(function () {
         abort(404, 'File not found.');
     })->name('materials.download');
 
+    Route::get('/lms-resources/download/{resource}', function (LmsResource $resource) {
+        if (Storage::disk('public')->exists($resource->file_path)) {
+            return Storage::disk('public')->download($resource->file_path, $resource->title . '.' . $resource->file_type);
+        }
+        abort(404, 'File tidak ditemukan.');
+    })->name('admin.lms-resources.download');
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('/formations', FormationIndex::class)->name('formations.index');
@@ -89,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('/{coaching}/edit', CoachingForm::class)->name('edit');
                 });
                 Route::get('/attachments', LmsContentAttachments::class)->name('attachments');
+                Route::get('/files', LmsContentFiles::class)->name('files.index');
             });
         });
 
