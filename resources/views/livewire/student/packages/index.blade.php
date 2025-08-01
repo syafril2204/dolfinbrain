@@ -92,11 +92,20 @@
                             Sesi Bimbel</li>
                     </ul>
 
-                    <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
-                        class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
-                        wire:navigate>
-                        Pilih Paket Aplikasi
-                    </a>
+                    @if (auth()->user()->lastPendingTransaction->package_type == 'mandiri' &&
+                            now() <= auth()->user()->lastPendingTransaction->expired_at)
+                        <a href="{{ route('students.packages.instruction', auth()->user()->lastPendingTransaction->reference) }}"
+                            class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
+                            wire:navigate>
+                            Selesaikan Pembayaran
+                        </a>
+                    @else
+                        <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
+                            class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
+                            wire:navigate>
+                            Pilih Paket Aplikasi
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

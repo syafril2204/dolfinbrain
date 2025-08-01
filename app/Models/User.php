@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles; // Import trait
 
 class User extends Authenticatable
@@ -50,5 +51,15 @@ class User extends Authenticatable
     public function purchasedPositions(): BelongsToMany
     {
         return $this->belongsToMany(Position::class, 'position_user');
+    }
+
+    public function lastPendingTransaction(): HasOne
+    {
+        return $this->hasOne(Transaction::class)->ofMany(
+            ['created_at' => 'max'],
+            function ($query) {
+                $query->where('status', 'pending');
+            }
+        );
     }
 }
