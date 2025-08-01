@@ -53,12 +53,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Position::class, 'position_user');
     }
 
-    public function lastPendingTransaction(): HasOne
+    public function lastTransaction(): HasOne
     {
         return $this->hasOne(Transaction::class)->ofMany(
             ['created_at' => 'max'],
             function ($query) {
-                $query->where('status', 'pending');
+                $query
+                    ->where('expired_at', '>=', now())
+                    ->where('position_id', auth()->user()->position_id);
             }
         );
     }

@@ -29,10 +29,8 @@ class TripayCallbackController extends Controller
 
             if ($transaction && $transaction->status === 'pending') {
                 $transaction->update(['status' => 'paid']);
-
                 $user = $transaction->user;
-                $packageType = explode('-', $transaction->position->sku)[0];
-                dd($packageType);
+                $packageType = $transaction->package_type;
                 $user->purchasedPositions()->attach($transaction->position_id, ['package_type' => $packageType]);
             }
         }

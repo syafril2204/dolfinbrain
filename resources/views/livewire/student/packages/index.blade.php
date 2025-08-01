@@ -92,14 +92,18 @@
                             Sesi Bimbel</li>
                     </ul>
 
-                    @if (auth()->user()->lastPendingTransaction)
-                        @if (auth()->user()->lastPendingTransaction->package_type == 'mandiri' &&
-                                now() <= auth()->user()->lastPendingTransaction->expired_at)
-                            <a href="{{ route('students.packages.instruction', auth()->user()->lastPendingTransaction->reference) }}"
+                    @if (auth()->user()->lastTransaction)
+                        @if (auth()->user()->lastTransaction->package_type == 'mandiri' && auth()->user()->lastTransaction->status == 'pending')
+                            <a href="{{ route('students.packages.instruction', auth()->user()->lastTransaction->reference) }}"
                                 class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
                                 wire:navigate>
                                 Selesaikan Pembayaran
                             </a>
+                        @elseif(auth()->user()->lastTransaction->package_type == 'mandiri' && auth()->user()->lastTransaction->status == 'paid')
+                            <button href="#" disabled class="btn btn-success w-100 mt-auto"
+                                @if (!$currentPosition) disabled @endif wire:navigate>
+                                Anda sudah membeli paket ini
+                            </button>
                         @else
                             <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
                                 class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
@@ -152,10 +156,9 @@
                             Paket Bimbel</li>
                     </ul>
 
-                    @if (auth()->user()->lastPendingTransaction)
-                        @if (auth()->user()->lastPendingTransaction->package_type == 'bimbingan' &&
-                                now() <= auth()->user()->lastPendingTransaction->expired_at)
-                            <a href="{{ route('students.packages.instruction', auth()->user()->lastPendingTransaction->reference) }}"
+                    @if (auth()->user()->lastTransaction)
+                        @if (auth()->user()->lastTransaction->package_type == 'bimbingan')
+                            <a href="{{ route('students.packages.instruction', auth()->user()->lastTransaction->reference) }}"
                                 class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
                                 wire:navigate>
                                 Selesaikan Pembayaran
@@ -212,8 +215,8 @@
                     @if ($step == 2)
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" wire:click="closeModal">Batal</button>
-                            <button type="button" class="btn btn-primary" wire:click="changePosition"
-                                @if (!$new_position_id) disabled @endif>Simpan Jabatan</button>
+                            <button type="button" class="btn btn-primary" wire:click="changePosition">Simpan
+                                Jabatan</button>
                         </div>
                     @endif
                 </div>
