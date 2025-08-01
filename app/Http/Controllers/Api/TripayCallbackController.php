@@ -32,6 +32,7 @@ class TripayCallbackController extends Controller
 
                 $user = $transaction->user;
                 $packageType = explode('-', $transaction->position->sku)[0];
+                dd($packageType);
                 $user->purchasedPositions()->attach($transaction->position_id, ['package_type' => $packageType]);
             }
         }

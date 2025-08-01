@@ -1,5 +1,4 @@
 <div>
-    {{-- Header --}}
     <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body px-4 py-3">
             <h4 class="fw-semibold mb-8">Checkout</h4>
@@ -134,7 +133,7 @@
                         <span class="fw-semibold">Rp {{ number_format($originalPrice, 0, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-primary">Diskon </span>
+                        <span class="text-primary">Diskon (20%)</span>
                         <span class="fw-semibold text-danger">- Rp
                             {{ number_format($discountAmount, 0, ',', '.') }}</span>
                     </div>

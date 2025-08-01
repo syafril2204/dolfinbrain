@@ -14,9 +14,9 @@ class Checkout extends Component
     public $packageType;
     public ?Position $position;
     public $packageName;
-    public $price; // Harga final setelah diskon
-    public $originalPrice; // Harga asli sebelum diskon
-    public $discountAmount; // Jumlah diskon
+    public $price;
+    public $originalPrice;
+    public $discountAmount;
     public $transactionId;
     public $agree = false;
 
@@ -26,7 +26,7 @@ class Checkout extends Component
     public function mount($package_type)
     {
         if (!in_array($package_type, ['mandiri', 'bimbingan'])) {
-            return abort(404);
+            abort(404);
         }
 
         $this->packageType = $package_type;
@@ -37,16 +37,30 @@ class Checkout extends Component
             return $this->redirect(route('students.packages.index'));
         }
 
+        $pendingTransaction = Transaction::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($pendingTransaction) {
+            if ($pendingTransaction->position_id == $user->position_id && $pendingTransaction->package_type == $this->packageType) {
+                session()->flash('message', 'Anda sudah memiliki transaksi tertunda untuk paket ini. Silakan selesaikan pembayaran.');
+                return $this->redirect(route('students.packages.instruction', ['transaction' => $pendingTransaction->reference]));
+            } else {
+                $pendingTransaction->delete();
+            }
+        }
+
+        $this->setupCheckout();
+    }
+
+    public function setupCheckout()
+    {
+        $user = Auth::user();
         $this->position = Position::with('formation')->find($user->position_id);
         $this->packageName = ($this->packageType === 'mandiri') ? 'Paket Aplikasi' : 'Paket Bimbel';
-
-        // Ambil harga final dari database
         $this->price = ($this->packageType === 'mandiri') ? $this->position->price_mandiri : $this->position->price_bimbingan;
-
-        // Hitung harga asli (yang dicoret) adalah harga final ditambah 20%
         $this->originalPrice = $this->price * 1.2;
         $this->discountAmount = $this->originalPrice - $this->price;
-
         $this->transactionId = 'TRX' . strtoupper(Str::random(10));
 
         try {
@@ -91,7 +105,7 @@ class Checkout extends Component
                 'checkout_url' => $tripayData['checkout_url'],
                 'payment_code' => $tripayData['pay_code'] ?? null,
                 'qr_url' => $tripayData['qr_url'] ?? null,
-                'expired_at' => date('Y-m-d H:i:s', $tripayData["expired_time"]),
+                'expired_at' => \Carbon\Carbon::createFromTimestamp($tripayData['expired_time']),
             ]);
 
             return redirect()->route('students.packages.instruction', ['transaction' => $transaction->reference]);
