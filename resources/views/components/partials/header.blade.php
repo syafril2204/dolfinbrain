@@ -1,4 +1,4 @@
-{{-- @if (auth()->check())
+@if (auth()->check())
     <header class="app-header">
         <nav class="navbar navbar-expand-lg navbar-light">
             <ul class="navbar-nav">
@@ -8,18 +8,42 @@
                     </a>
                 </li>
             </ul>
-
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <div class="d-flex align-items-center justify-content-between">
                     <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
+                        @role('student')
+                            @if (auth()->user())
+                                @if (auth()->user()->position)
+                                    <li class="nav-item d-none d-md-block">
+                                        <div class="d-flex align-items-center bg-light rounded-pill p-1 me-3">
+                                            <div class="d-flex flex-column text-end px-2">
+                                                <span
+                                                    class="fs-2 fw-semibold text-dark">{{ auth()->user()->position->name }}</span>
+                                                <span
+                                                    class="fs-1 text-muted">{{ auth()->user()->position->formation->name }}</span>
+                                            </div>
+                                            @if (auth()->user()->positionUser)
+                                                <span class="badge bg-primary rounded-pill py-1 px-2">
+                                                    {{ auth()->user()->positionUser[0]->package_type }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary rounded-pill py-1 px-2">
+                                                    Free
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </li>
+                                @endif
+                            @endif
+                        @endrole
 
                         <li class="nav-item dropdown">
                             <a class="nav-link pe-0" href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 <div class="d-flex align-items-center">
                                     <div class="user-profile-img">
-                                        <img src="{{ auth()->user()->avatar_url }}" class="rounded-circle"
-                                            width="35" height="35" alt="" />
+                                        <img src="{{ auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : asset('dist/images/profile/user-1.jpg') }}"
+                                            class="rounded-circle" width="35" height="35" alt="User Avatar" />
                                     </div>
                                 </div>
                             </a>
@@ -30,12 +54,12 @@
                                         <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
                                     </div>
                                     <div class="d-flex align-items-center py-9 mx-7 border-bottom">
-                                        <img src="{{ asset('dist/images/profile/user-1.jpg') }}" class="rounded-circle"
-                                            width="80" height="80" alt="" />
+                                        <img src="{{ auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : asset('dist/images/profile/user-1.jpg') }}"
+                                            class="rounded-circle" width="80" height="80" alt="User Avatar" />
                                         <div class="ms-3">
                                             <h5 class="mb-1 fs-3">{{ auth()->user()->name }}</h5>
                                             <span
-                                                class="mb-1 d-block text-dark">{{ auth()->user()->getRoleNames()->first() ?? 'User' }}</span>
+                                                class="mb-1 d-block text-dark">{{ Str::ucfirst(auth()->user()->getRoleNames()->first() ?? 'User') }}</span>
                                             <p class="mb-0 d-flex text-dark align-items-center gap-2">
                                                 <i class="ti ti-mail fs-4"></i> {{ auth()->user()->email }}
                                             </p>
@@ -43,8 +67,9 @@
                                     </div>
 
                                     <div class="message-body">
-                                        <a href="{{ route('profile.update') }}"
-                                            class="py-8 px-7 mt-8 d-flex align-items-center" wire:navigate>
+                                        {{-- Link ke halaman profil --}}
+                                        <a href="" class="py-8 px-7 mt-8 d-flex align-items-center"
+                                            wire:navigate>
                                             <span
                                                 class="d-flex align-items-center justify-content-center bg-light rounded-1 p-6">
                                                 <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/icon-account.svg"
@@ -72,4 +97,4 @@
             </div>
         </nav>
     </header>
-@endif --}}
+@endif

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles; // Import trait
 
@@ -63,5 +65,17 @@ class User extends Authenticatable
                     ->where('position_id', auth()->user()->position_id);
             }
         );
+    }
+
+    /**
+     * positionUser
+     *
+     * @return HasMany
+     */
+    public function latestPositionUser(): HasOne
+    {
+        return $this->hasOne(PositionUser::class)
+            ->where('position_id', auth()->user()->position_id)
+            ->latestOfMany();
     }
 }

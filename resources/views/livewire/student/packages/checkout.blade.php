@@ -111,10 +111,6 @@
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Transaction Info</h5>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-muted">ID Transaksi</span>
-                        <span class="fw-semibold">#{{ $transactionId }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Tanggal</span>
                         <span class="fw-semibold">{{ now()->translatedFormat('j F Y') }}</span>
                     </div>
@@ -133,7 +129,7 @@
                         <span class="fw-semibold">Rp {{ number_format($originalPrice, 0, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                        <span class="text-primary">Diskon (20%)</span>
+                        <span class="text-primary">Diskon</span>
                         <span class="fw-semibold text-danger">- Rp
                             {{ number_format($discountAmount, 0, ',', '.') }}</span>
                     </div>

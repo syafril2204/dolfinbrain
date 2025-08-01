@@ -12,6 +12,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('position_id')->constrained()->onDelete('cascade');
             $table->primary(['user_id', 'position_id']);
+            $table->timestamps();
         });
     }
 

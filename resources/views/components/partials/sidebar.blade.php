@@ -110,6 +110,13 @@
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">Akun Saya</span>
                     </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.transactions.index') ? 'active' : '' }}"
+                            href="{{ route('students.transactions.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-receipt"></i></span>
+                            <span class="hide-menu">History Pembelian</span>
+                        </a>
+                    </li>
 
                     <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('students.profile.index') ? 'active' : '' }}"

@@ -7,6 +7,7 @@ use App\Livewire\Admin\Positions\Index as PositionIndex;
 use App\Livewire\Student\Quiz\PackageIndex as StudentQuizIndex;
 use App\Livewire\Student\Quiz\Attempt as StudentQuizAttempt;
 use App\Livewire\Student\Profile\Index as StudentProfileIndex;
+use App\Livewire\Student\Transactions\Index as StudentTransactionIndex;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Dashboard;
@@ -129,6 +130,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/instruction/{transaction:reference}', StudentPackageInstruction::class)->name('packages.instruction');
         Route::get('/checkout/{package_type}', StudentPackageCheckout::class)->name('packages.checkout');
 
+        Route::get('/history-pembelian', StudentTransactionIndex::class)->name('transactions.index');
         Route::get('/soal', StudentQuizIndex::class)->name('soal.index');
         Route::get('/quiz/{quiz_package}/attempt', StudentQuizAttempt::class)->name('quiz.attempt');
     });
