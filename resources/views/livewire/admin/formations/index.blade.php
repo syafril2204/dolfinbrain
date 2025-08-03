@@ -68,7 +68,7 @@
                     </tbody>
                 </table>
             </div>
-            {{ $formations->links() }}
+            {{ $formations->links('partials.custom-pagination') }}
         </div>
     </div>
 

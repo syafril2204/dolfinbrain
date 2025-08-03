@@ -58,7 +58,7 @@
     </div>
 
     <div class="mt-3">
-        {{ $spaces->links() }}
+        {{ $spaces->links('partials.custom-pagination') }}
     </div>
 </div>
 @push('scripts')

@@ -86,7 +86,7 @@
     </div>
 
     <div class="mt-3">
-        {{ $materials->links() }}
+        {{ $materials->links('partials.custom-pagination') }}
     </div>
 
     {{-- Modal untuk Detail Materi --}}

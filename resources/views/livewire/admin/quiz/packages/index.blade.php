@@ -68,7 +68,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3">{{ $packages->links() }}</div>
+            <div class="mt-3">{{ $packages->links('partials.custom-pagination') }}</div>
         </div>
     </div>
 </div>
