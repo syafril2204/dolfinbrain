@@ -1,6 +1,5 @@
 <div>
     <div class="card bg-light-info shadow-none position-relative overflow-hidden">
-        {{-- Header --}}
         <div class="card-body px-4 py-3">
             <div class="row align-items-center">
                 <div class="col-9">
@@ -15,10 +14,36 @@
             </div>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="formation" class="form-label">Filter Berdasarkan Formasi</label>
+                    <select id="formation" class="form-select" wire:model.live="selectedFormation">
+                        <option value="">Semua Formasi</option>
+                        @foreach ($formations as $formation)
+                            <option value="{{ $formation->id }}">{{ $formation->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="position" class="form-label">Filter Berdasarkan Jabatan</label>
+                    <select id="position" class="form-select" wire:model.live="selectedPosition"
+                        @if (!$selectedFormation) disabled @endif>
+                        <option value="">Semua Jabatan</option>
+                        @foreach ($positions as $position)
+                            <option value="{{ $position->id }}">{{ $position->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title fw-semibold mb-0">Daftar Paket Kuis</h5>
-            {{-- HAPUS wire:navigate DARI SINI --}}
             <a href="{{ route('admin.quiz-packages.create') }}" class="btn btn-primary">Tambah Paket</a>
         </div>
         <div class="card-body">
@@ -50,10 +75,8 @@
                                 <td>
                                     <a href="{{ route('admin.quiz-packages.questions.index', $package) }}"
                                         class="btn btn-sm btn-info">Soal</a>
-
                                     <a href="{{ route('admin.quiz-packages.show', $package) }}"
                                         class="btn btn-sm btn-outline-secondary">Lihat</a>
-
                                     <a href="{{ route('admin.quiz-packages.edit', $package) }}"
                                         class="btn btn-sm btn-warning">Edit</a>
                                     <button wire:click="delete({{ $package->id }})" wire:confirm="Yakin?"
@@ -62,13 +85,14 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">Belum ada paket kuis.</td>
+                                <td colspan="4" class="text-center">Tidak ada paket kuis yang cocok dengan filter.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            <div class="mt-3">{{ $packages->links('partials.custom-pagination') }}</div>
+            <div class="mt-3">{{ $packages->links() }}</div>
         </div>
     </div>
 </div>

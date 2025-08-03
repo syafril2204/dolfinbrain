@@ -12,7 +12,7 @@ class Dashboard extends Component
         if (Auth::user()->hasRole('admin')) {
             return view('livewire.admin-dashboard-wrapper');
         } else {
-            return view('livewire.dashboard-student-wrapper');
+            return view('livewire.dashboard');
         }
     }
 }
