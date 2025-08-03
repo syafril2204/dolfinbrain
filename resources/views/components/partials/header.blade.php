@@ -22,9 +22,9 @@
                                                 <span
                                                     class="fs-1 text-muted">{{ auth()->user()->position->formation->name }}</span>
                                             </div>
-                                            @if (auth()->user()->positionUser)
+                                            @if (auth()->user()->latestPositionUser)
                                                 <span class="badge bg-primary rounded-pill py-1 px-2">
-                                                    {{ auth()->user()->positionUser[0]->package_type }}
+                                                    {{ auth()->user()->latestPositionUser->package_type }}
                                                 </span>
                                             @else
                                                 <span class="badge bg-secondary rounded-pill py-1 px-2">
