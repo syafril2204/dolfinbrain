@@ -115,7 +115,8 @@
                 {{-- Call to Action (SUDAH DIPERBAIKI) --}}
                 <div class="text-center">
                     <h4 class="fw-bold">Yuk mulai, capai karirmu!</h4>
-                    <a href="#" class="btn btn-primary btn-lg mt-3 px-4 rounded-full">Mulai Sekarang</a>
+                    <a href="{{ route('students.packages.index') }}"
+                        class="btn btn-primary btn-lg mt-3 px-4 rounded-full">Mulai Sekarang</a>
 
                     {{-- Gambar dipindahkan ke bawah tombol --}}
                     <img src="{{ asset('assets/img/card/pro/Non profit.png') }}" alt="Mulai Sekarang"
