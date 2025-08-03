@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Auth;
 
-use App\Enums\RoleEnum;
 use App\Models\Formation;
 use App\Models\Position;
 use App\Models\User;
@@ -35,6 +34,22 @@ class Register extends Component
     // Memeriksa session saat komponen dimuat
     public function mount()
     {
+        // Skenario 1: User sudah login (dari Google) tapi profil belum lengkap
+        if (Auth::check()) {
+            $user = Auth::user();
+            if (!$user->position_id) {
+                // Langsung loncat ke step 2 (Lengkapi Profil)
+                $this->step = 2;
+                $this->name = $user->name;
+                $this->email = $user->email;
+            } else {
+                // Jika sudah lengkap, jangan biarkan di halaman register, lempar ke dashboard
+                return redirect()->route('dashboard');
+            }
+            return; // Hentikan eksekusi mount lebih lanjut
+        }
+
+        // Skenario 2: User me-refresh halaman di tengah proses registrasi
         if (session()->has('user_id_for_registration')) {
             $user = User::find(session('user_id_for_registration'));
 
@@ -47,7 +62,7 @@ class Register extends Component
             $this->name = $user->name;
             $this->email = $user->email;
             $this->gender = $user->gender;
-            $this->date_of_birth = $user->date_of_birth;
+            $this->date_of_birth = $user->date_of_birth ? $user->date_of_birth->format('Y-m-d') : null;
             $this->domicile = $user->domicile;
             $this->position_id = $user->position_id;
 
@@ -63,7 +78,7 @@ class Register extends Component
             } else if ($this->step == 4 && !$user->position_id) {
                 // Jika user merefresh halaman di step 4 tapi belum memilih posisi,
                 // kita perlu tahu formasi apa yang sedang dipilih.
-                // Logika ini bisa menjadi kompleks, untuk sementara kita arahkan kembali ke step 3.
+                // Untuk amannya, kita arahkan kembali ke step 3.
                 $this->step = 3;
                 session(['registration_step' => 3]);
             }
@@ -84,7 +99,9 @@ class Register extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
-        $user->assignRole(RoleEnum::STUDENT->value);
+
+        // Assign role 'student' saat user baru dibuat
+        $user->assignRole('student');
 
         session(['user_id_for_registration' => $user->id]);
 
@@ -102,7 +119,7 @@ class Register extends Component
             'domicile' => 'required|string|max:255',
         ]);
 
-        $userId = session('user_id_for_registration');
+        $userId = session('user_id_for_registration') ?? Auth::id();
         if ($userId) {
             $user = User::find($userId);
             $user->update([
@@ -117,7 +134,6 @@ class Register extends Component
         session(['registration_step' => 3]);
     }
 
-    // STEP 3: Pilih formasi, lanjut ke Step 4
     public function selectFormation($formationId)
     {
         $this->selectedFormation = Formation::with('positions')->find($formationId);
@@ -125,30 +141,25 @@ class Register extends Component
         session(['registration_step' => 4]);
     }
 
-    // STEP 4: Ambil user dari session, update posisi, LOGIN, lalu redirect
     public function submitStep4()
     {
         $this->validate(['position_id' => 'required|exists:positions,id']);
 
-        $userId = session('user_id_for_registration');
+        $userId = session('user_id_for_registration') ?? Auth::id();
         if ($userId) {
             $user = User::find($userId);
             $user->update(['position_id' => $this->position_id]);
 
-            // Login user setelah semua langkah selesai
             Auth::login($user);
 
-            // Hapus session setelah tidak dibutuhkan lagi
             $this->resetRegistrationSession();
 
             return redirect()->route('dashboard');
         }
 
-        // Jika session tidak ada karena suatu hal, kembalikan ke awal
         return redirect()->route('register');
     }
 
-    // Kembali ke langkah sebelumnya
     public function back()
     {
         if ($this->step > 1) {
@@ -157,7 +168,6 @@ class Register extends Component
         }
     }
 
-    // Helper untuk membersihkan session
     public function resetRegistrationSession()
     {
         session()->forget('user_id_for_registration');

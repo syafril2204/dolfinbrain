@@ -2,11 +2,37 @@
     <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
         <div class="col-sm-8 col-md-6 col-xl-9">
 
+            {{-- =============================================== --}}
             {{-- LANGKAH 1: BUAT AKUN --}}
+            {{-- =============================================== --}}
             @if ($step == 1)
-                {{-- ... Kode Step 1 tidak berubah ... --}}
                 <h2 class="mb-3 fs-7 fw-bolder">Buat Akun DolfinBrain</h2>
                 <p class="mb-4">Daftar sekarang untuk akses penuh ke materi, soal, dan fitur belajar pintar.</p>
+
+                {{-- Tombol Google & Facebook --}}
+                <div class="row">
+                    <div class="col-6 mb-2 mb-sm-0">
+                        <a class="btn btn-white text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
+                            href="{{ route('auth.google.redirect') }}" role="button">
+                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/google-icon.svg"
+                                alt="" class="img-fluid me-2" width="18" height="18">
+                            <span class="d-none d-sm-block me-1 flex-shrink-0">Daftar dengan</span>Google
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a class="btn btn-white text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
+                            href="javascript:void(0)" role="button">
+                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/facebook-icon.svg"
+                                alt="" class="img-fluid me-2" width="18" height="18">
+                            <span class="d-none d-sm-block me-1 flex-shrink-0">Daftar dengan</span>FB
+                        </a>
+                    </div>
+                </div>
+                <div class="position-relative text-center my-4">
+                    <p class="mb-0 fs-4 px-3 d-inline-block bg-white text-dark z-index-5 position-relative">atau daftar
+                        dengan email</p>
+                    <span class="border-top w-100 position-absolute top-50 start-50 translate-middle"></span>
+                </div>
 
                 <form wire:submit.prevent="submitStep1">
                     <div class="mb-3">
@@ -43,7 +69,9 @@
                 </form>
             @endif
 
+            {{-- =============================================== --}}
             {{-- LANGKAH 2: LENGKAPI PROFIL --}}
+            {{-- =============================================== --}}
             @if ($step == 2)
                 <h2 class="mb-3 fs-7 fw-bolder">Lengkapi Profil Kamu</h2>
                 <p class="mb-4">Isi data dirimu untuk pengalaman belajar yang lebih personal dan maksimal</p>
@@ -100,7 +128,9 @@
                 </form>
             @endif
 
+            {{-- =============================================== --}}
             {{-- LANGKAH 3: PILIH KATEGORI FORMASI --}}
+            {{-- =============================================== --}}
             @if ($step == 3)
                 <h2 class="mb-3 fs-7 fw-bolder">Pilih Kategori Formasi</h2>
                 <p class="mb-4">Silakan pilih kategori formasi sesuai minat dan kualifikasi anda</p>
@@ -120,7 +150,9 @@
                 <a href="#" wire:click.prevent="back" class="d-block text-center mt-3">Kembali</a>
             @endif
 
+            {{-- =============================================== --}}
             {{-- LANGKAH 4: PILIH JABATAN (POSISI) --}}
+            {{-- =============================================== --}}
             @if ($step == 4)
                 <h2 class="mb-3 fs-7 fw-bolder">{{ $selectedFormation->name }}</h2>
                 <p class="mb-4">Pilih Jabatan yang ingin dipelajari</p>
@@ -150,12 +182,8 @@
     </div>
 </div>
 
-{{-- 👇 [BAGIAN BARU] TAMBAHKAN BLOK INI --}}
 @push('styles')
     <style>
-        /* CSS ini mencari elemen .form-check (kartu)
-                  yang di dalamnya terdapat input radio yang sedang dipilih (:checked)
-                */
         .form-check:has(input[type="radio"]:checked) {
             border-color: var(--bs-primary) !important;
             background-color: var(--bs-primary-bg-subtle) !important;

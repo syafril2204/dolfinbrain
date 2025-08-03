@@ -40,6 +40,7 @@ use App\Livewire\Student\Lms\Content\Videos as LmsVideos;
 use App\Livewire\Student\Lms\Content\Quizzes as LmsQuizzes;
 use App\Livewire\Student\Lms\Content\Files as LmsFiles;
 use App\Livewire\Student\Lms\Content\Audio as LmsAudio;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Livewire\Student\Contact\Index as StudentContactIndex;
 use App\Livewire\Student\MyPackages\Index as MyPackagesIndex;
 use App\Models\Material;
@@ -65,6 +66,9 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
+
+    Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
 Route::middleware(['auth'])->group(function () {

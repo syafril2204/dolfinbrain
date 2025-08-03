@@ -84,7 +84,7 @@
                         <a class="sidebar-link {{ request()->routeIs('students.profile.update') ? 'active' : '' }}"
                             href="{{ route('students.profile.update') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-user-circle"></i></span>
-                            <span class="hide-menu">Profi</span>
+                            <span class="hide-menu">Profil</span>
                         </a>
                     </li>
                 @endrole
