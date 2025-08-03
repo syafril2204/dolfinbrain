@@ -41,29 +41,30 @@
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-3">Menu</h5>
                     <div class="row">
-                        <div class="col-6 mb-3"><a href="#"
+                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.materials', $lms_space) }}"
                                 class="card card-body text-center text-decoration-none"><i class="ti ti-book fs-7"></i>
                                 <p class="mb-0 mt-2" style="font-size: 12.5px">Materi</p>
                             </a></div>
-                        <div class="col-6 mb-3"><a href="#"
+                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.coaching', $lms_space) }}"
                                 class="card card-body text-center text-decoration-none"><i
                                     class="ti ti-microphone fs-7"></i>
                                 <p class="mb-0 mt-2" style="font-size: 12.5px">Coaching</p>
                             </a></div>
-                        <div class="col-6 mb-3"><a href="#"
+                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.videos', $lms_space) }}"
                                 class="card card-body text-center text-decoration-none"><i class="ti ti-video fs-7"></i>
                                 <p class="mb-0 mt-2" style="font-size: 12.5px">Rekaman</p>
                             </a></div>
-                        <div class="col-6 mb-3"><a href="#"
+                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.quizzes', $lms_space) }}"
                                 class="card card-body text-center text-decoration-none"><i
                                     class="ti ti-file-text fs-7"></i>
                                 <p class="mb-0 mt-2" style="font-size: 12.5px">Kuis</p>
                             </a></div>
-                        <div class="col-6"><a href="#" class="card card-body text-center text-decoration-none"><i
-                                    class="ti ti-files fs-7"></i>
+                        <div class="col-6"><a href="{{ route('students.lms.content.files', $lms_space) }}"
+                                class="card card-body text-center text-decoration-none"><i class="ti ti-files fs-7"></i>
                                 <p class="mb-0 mt-2" style="font-size: 12.5px">File</p>
                             </a></div>
-                        <div class="col-6"><a href="#" class="card card-body text-center text-decoration-none"><i
+                        <div class="col-6"><a href="{{ route('students.lms.content.audio', $lms_space) }}"
+                                class="card card-body text-center text-decoration-none"><i
                                     class="ti ti-volume fs-7"></i>
                                 <p class="mb-0 mt-2" style="font-size: 12.5px">Audio</p>
                             </a></div>

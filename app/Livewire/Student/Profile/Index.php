@@ -10,16 +10,12 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    // Mengontrol bagian mana yang aktif
     public $activeSection = 'main';
 
-    // Properti untuk Ubah Profile
     public $name, $email, $phone_number, $domicile;
 
-    // Properti untuk Ubah Password
     public $current_password, $password, $password_confirmation;
 
-    // Properti untuk Ubah Formasi
     public $formations, $selectedFormation, $position_id;
     public $formationStep = 1;
 

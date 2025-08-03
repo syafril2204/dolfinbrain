@@ -75,6 +75,18 @@
                             <span class="hide-menu">LMS Space</span>
                         </a>
                     </li>
+                    <li class="nav-small-cap">
+                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                        <span class="hide-menu">Akun Saya</span>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.profile.update') ? 'active' : '' }}"
+                            href="{{ route('students.profile.update') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-user-circle"></i></span>
+                            <span class="hide-menu">Profi</span>
+                        </a>
+                    </li>
                 @endrole
 
                 {{-- ========== MENU SISWA ========= --}}
@@ -88,6 +100,13 @@
                             href="{{ route('students.packages.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-shopping-cart"></i></span>
                             <span class="hide-menu">Beli Paket</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.my-packages.index') ? 'active' : '' }}"
+                            href="{{ route('students.my-packages.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-wallet"></i></span>
+                            <span class="hide-menu">Paket Saya</span>
                         </a>
                     </li>
 

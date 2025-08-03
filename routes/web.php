@@ -7,6 +7,7 @@ use App\Livewire\Admin\Positions\Index as PositionIndex;
 use App\Livewire\Student\Quiz\PackageIndex as StudentQuizIndex;
 use App\Livewire\Student\Quiz\Attempt as StudentQuizAttempt;
 use App\Livewire\Student\Profile\Index as StudentProfileIndex;
+use App\Livewire\Student\Profile\Update as StudentProfileUpdate;
 use App\Livewire\Student\Transactions\Index as StudentTransactionIndex;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
@@ -33,6 +34,14 @@ use App\Livewire\Admin\Lms\Content\Videos\Form as VideoForm;
 use App\Livewire\Admin\Lms\Content\Files as LmsContentFiles;
 use App\Livewire\Admin\Users\Index as UserIndex;
 use App\Livewire\Student\Packages\Checkout as StudentPackageCheckout;
+use App\Livewire\Student\Lms\Content\Materials as LmsMaterials;
+use App\Livewire\Student\Lms\Content\Coaching as LmsCoaching;
+use App\Livewire\Student\Lms\Content\Videos as LmsVideos;
+use App\Livewire\Student\Lms\Content\Quizzes as LmsQuizzes;
+use App\Livewire\Student\Lms\Content\Files as LmsFiles;
+use App\Livewire\Student\Lms\Content\Audio as LmsAudio;
+use App\Livewire\Student\Contact\Index as StudentContactIndex;
+use App\Livewire\Student\MyPackages\Index as MyPackagesIndex;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use App\Models\LmsResource;
@@ -124,13 +133,24 @@ Route::middleware(['auth'])->group(function () {
         });
     });
     Route::prefix('students')->name('students.')->group(function () {
+        Route::get('/kontak', StudentContactIndex::class)->name('contact.index');
         Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
 
         Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
+        Route::get('/profile-update', StudentProfileUpdate::class)->name('profile.update');
 
         Route::get('/lms-space', LmsIndex::class)->name('lms.index');
         Route::get('/lms-space/{lms_space}', LmsShow::class)->name('lms.show');
+        Route::prefix('/lms-space/{lms_space}')->name('lms.content.')->group(function () {
+            Route::get('/materials', LmsMaterials::class)->name('materials');
+            Route::get('/coaching', LmsCoaching::class)->name('coaching');
+            Route::get('/videos', LmsVideos::class)->name('videos');
+            Route::get('/quizzes', LmsQuizzes::class)->name('quizzes');
+            Route::get('/files', LmsFiles::class)->name('files');
+            Route::get('/audio', LmsAudio::class)->name('audio');
+        });
 
+        Route::get('/paket-saya', MyPackagesIndex::class)->name('my-packages.index');
         Route::get('/beli-paket', StudentPackageIndex::class)->name('packages.index');
         Route::get('/instruction/{transaction:reference}', StudentPackageInstruction::class)->name('packages.instruction');
         Route::get('/checkout/{package_type}', StudentPackageCheckout::class)->name('packages.checkout');

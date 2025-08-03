@@ -23,14 +23,12 @@
                 <div class="card-body">
                     {{-- Menu Utama --}}
                     <div class="list-group list-group-flush">
-                        <a href="#" wire:click.prevent="switchSection('purchase_history')"
-                            style="padding: 1.25rem 1rem;"
+                        <a href="{{ route('students.transactions.index') }}" style="padding: 1.25rem 1rem;"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-bottom">
                             History Pembelian
                             <i class="ti ti-chevron-right"></i>
                         </a>
-                        <a href="#" wire:click.prevent="switchSection('change_profile')"
-                            style="padding: 1.25rem 1rem;"
+                        <a href="{{ route('students.profile.update') }}" style="padding: 1.25rem 1rem;"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-bottom">
                             Ubah Profile
                             <i class="ti ti-chevron-right"></i>
@@ -41,10 +39,9 @@
                             Ubah Password
                             <i class="ti ti-chevron-right"></i>
                         </a>
-                        <a href="#" wire:click.prevent="contactAdmin" style="padding: 1.25rem 1rem;"
+                        <a href="{{ route('students.contact.index') }}" style="padding: 1.25rem 1rem;"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Hubungi Admin
-                            <i class="ti ti-chevron-right"></i>
+                            Hubungi Admin <i class="ti ti-chevron-right"></i>
                         </a>
                     </div>
 
@@ -71,8 +68,8 @@
                     <div class="text-center">
                         <img src="{{ asset('dist/images/profile/user-1.jpg') }}" alt="avatar"
                             class="img-fluid rounded-circle mb-3" width="120">
-                            <h5 class="fw-semibold">{{ $user->name }}</h5>
-                            <p class="badge bg-light-primary text-primary fs-2 rounded-pill px-3 py-1 mb-2">Free</p>
+                        <h5 class="fw-semibold">{{ $user->name }}</h5>
+                        <p class="badge bg-light-primary text-primary fs-2 rounded-pill px-3 py-1 mb-2">Free</p>
                     </div>
 
                     <hr class="my-4">
@@ -101,4 +98,4 @@
         </div>
     </div>
 
-</div> ```
+</div>
