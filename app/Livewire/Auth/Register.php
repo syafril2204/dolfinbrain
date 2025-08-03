@@ -31,61 +31,49 @@ class Register extends Component
     public $selectedFormation = null;
     public $position_id = null;
 
-    // Memeriksa session saat komponen dimuat
     public function mount()
     {
-        // Skenario 1: User sudah login (dari Google) tapi profil belum lengkap
         if (Auth::check()) {
             $user = Auth::user();
             if (!$user->position_id) {
-                // Langsung loncat ke step 2 (Lengkapi Profil)
+                // Jika sudah login tapi profil belum lengkap
                 $this->step = 2;
                 $this->name = $user->name;
                 $this->email = $user->email;
             } else {
-                // Jika sudah lengkap, jangan biarkan di halaman register, lempar ke dashboard
                 return redirect()->route('dashboard');
             }
-            return; // Hentikan eksekusi mount lebih lanjut
+            return;
         }
 
-        // Skenario 2: User me-refresh halaman di tengah proses registrasi
         if (session()->has('user_id_for_registration')) {
             $user = User::find(session('user_id_for_registration'));
-
             if (!$user) {
                 $this->resetRegistrationSession();
                 return;
             }
 
-            // Ambil data yang sudah ada untuk mengisi form
             $this->name = $user->name;
             $this->email = $user->email;
             $this->gender = $user->gender;
             $this->date_of_birth = $user->date_of_birth ? $user->date_of_birth->format('Y-m-d') : null;
             $this->domicile = $user->domicile;
             $this->position_id = $user->position_id;
-
-            // Ambil langkah terakhir dari session, default ke langkah 2
             $this->step = session('registration_step', 2);
 
-            // Jika refresh di step 4 (pilih posisi), kita perlu muat ulang data $selectedFormation
             if ($this->step == 4 && $user->position_id) {
                 $position = Position::with('formation')->find($user->position_id);
                 if ($position) {
                     $this->selectedFormation = $position->formation;
                 }
             } else if ($this->step == 4 && !$user->position_id) {
-                // Jika user merefresh halaman di step 4 tapi belum memilih posisi,
-                // kita perlu tahu formasi apa yang sedang dipilih.
-                // Untuk amannya, kita arahkan kembali ke step 3.
                 $this->step = 3;
                 session(['registration_step' => 3]);
             }
         }
     }
 
-    // STEP 1: Buat user, JANGAN login, simpan ID ke session
+    // STEP 1: Buat user dan kirim email verifikasi
     public function submitStep1()
     {
         $this->validate([
@@ -100,16 +88,19 @@ class Register extends Component
             'password' => Hash::make($this->password),
         ]);
 
-        // Assign role 'student' saat user baru dibuat
         $user->assignRole('student');
 
+        // Kirim email verifikasi
+        $user->sendEmailVerificationNotification();
+
         session(['user_id_for_registration' => $user->id]);
+        session()->flash('status', 'Link verifikasi telah dikirim ke email Anda! Silakan cek kotak masuk atau folder spam Anda.');
 
         $this->step = 2;
         session(['registration_step' => 2]);
     }
 
-    // STEP 2: Ambil user dari session, update profil, lanjut ke Step 3
+    // STEP 2: Update profil
     public function submitStep2()
     {
         $this->validate([
@@ -141,6 +132,7 @@ class Register extends Component
         session(['registration_step' => 4]);
     }
 
+    // STEP 4: Finalisasi, cek verifikasi, lalu login
     public function submitStep4()
     {
         $this->validate(['position_id' => 'required|exists:positions,id']);
@@ -150,14 +142,31 @@ class Register extends Component
             $user = User::find($userId);
             $user->update(['position_id' => $this->position_id]);
 
+            // Cek apakah email sudah diverifikasi
+            if (!$user->hasVerifiedEmail()) {
+                session()->flash('error', 'Anda harus memverifikasi alamat email Anda sebelum dapat melanjutkan. Silakan periksa email Anda.');
+                return; // Hentikan proses
+            }
+
             Auth::login($user);
-
             $this->resetRegistrationSession();
-
             return redirect()->route('dashboard');
         }
 
         return redirect()->route('register');
+    }
+
+    // Method baru untuk kirim ulang verifikasi
+    public function resendVerificationEmail()
+    {
+        $userId = session('user_id_for_registration') ?? Auth::id();
+        if ($userId) {
+            $user = User::find($userId);
+            if ($user && !$user->hasVerifiedEmail()) {
+                $user->sendEmailVerificationNotification();
+                session()->flash('status', 'Link verifikasi baru telah dikirim ke email Anda!');
+            }
+        }
     }
 
     public function back()
@@ -170,17 +179,14 @@ class Register extends Component
 
     public function resetRegistrationSession()
     {
-        session()->forget('user_id_for_registration');
-        session()->forget('registration_step');
+        session()->forget(['user_id_for_registration', 'registration_step']);
     }
 
     public function render()
     {
-        // Muat data formasi hanya saat di Step 3
         if ($this->step == 3) {
             $this->formations = Formation::all();
         }
-
         return view('livewire.auth.register');
     }
 }

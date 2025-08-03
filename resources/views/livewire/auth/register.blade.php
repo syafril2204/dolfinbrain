@@ -2,29 +2,30 @@
     <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
         <div class="col-sm-8 col-md-6 col-xl-9">
 
-            {{-- =============================================== --}}
-            {{-- LANGKAH 1: BUAT AKUN --}}
-            {{-- =============================================== --}}
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+
             @if ($step == 1)
                 <h2 class="mb-3 fs-7 fw-bolder">Buat Akun DolfinBrain</h2>
                 <p class="mb-4">Daftar sekarang untuk akses penuh ke materi, soal, dan fitur belajar pintar.</p>
 
-                {{-- Tombol Google & Facebook --}}
                 <div class="row">
-                    <div class="col-6 mb-2 mb-sm-0">
+                    <div class="col-12 mb-2 mb-sm-0">
                         <a class="btn btn-white text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
                             href="{{ route('auth.google.redirect') }}" role="button">
                             <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/google-icon.svg"
                                 alt="" class="img-fluid me-2" width="18" height="18">
                             <span class="d-none d-sm-block me-1 flex-shrink-0">Daftar dengan</span>Google
-                        </a>
-                    </div>
-                    <div class="col-6">
-                        <a class="btn btn-white text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
-                            href="javascript:void(0)" role="button">
-                            <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/facebook-icon.svg"
-                                alt="" class="img-fluid me-2" width="18" height="18">
-                            <span class="d-none d-sm-block me-1 flex-shrink-0">Daftar dengan</span>FB
                         </a>
                     </div>
                 </div>
@@ -74,7 +75,7 @@
             {{-- =============================================== --}}
             @if ($step == 2)
                 <h2 class="mb-3 fs-7 fw-bolder">Lengkapi Profil Kamu</h2>
-                <p class="mb-4">Isi data dirimu untuk pengalaman belajar yang lebih personal dan maksimal</p>
+                <p class="mb-4">Isi data dirimu untuk pengalaman belajar yang lebih personal dan maksimal.</p>
                 <form wire:submit.prevent="submitStep2">
                     <div class="mb-3">
                         <label for="name_step2" class="form-label">Nama Lengkap</label>
@@ -154,28 +155,40 @@
             {{-- LANGKAH 4: PILIH JABATAN (POSISI) --}}
             {{-- =============================================== --}}
             @if ($step == 4)
-                <h2 class="mb-3 fs-7 fw-bolder">{{ $selectedFormation->name }}</h2>
-                <p class="mb-4">Pilih Jabatan yang ingin dipelajari</p>
+                <h2 class="mb-3 fs-7 fw-bolder">{{ $selectedFormation->name ?? 'Pilih Jabatan' }}</h2>
+                <p class="mb-4">Pilih Jabatan yang ingin dipelajari. **Pastikan Anda sudah memverifikasi email Anda
+                    sebelum melanjutkan.**</p>
 
                 <form wire:submit.prevent="submitStep4">
-                    @foreach ($selectedFormation->positions as $position)
-                        <div class="form-check card card-body border mb-2 position-relative">
-                            <input class="form-check-input" type="radio" name="position"
-                                id="pos-{{ $position->id }}" value="{{ $position->id }}" wire:model="position_id"
-                                style="position: absolute; top: 1rem; right: 1rem; cursor: pointer;">
-                            <label class="form-check-label w-100" for="pos-{{ $position->id }}"
-                                style="cursor: pointer;">
-                                {{ $position->name }}
-                            </label>
-                        </div>
-                    @endforeach
+                    @if ($selectedFormation)
+                        @foreach ($selectedFormation->positions as $position)
+                            <div class="form-check card card-body border mb-2 position-relative">
+                                <input class="form-check-input" type="radio" name="position"
+                                    id="pos-{{ $position->id }}" value="{{ $position->id }}"
+                                    wire:model="position_id"
+                                    style="position: absolute; top: 1rem; right: 1rem; cursor: pointer;">
+                                <label class="form-check-label w-100" for="pos-{{ $position->id }}"
+                                    style="cursor: pointer;">
+                                    {{ $position->name }}
+                                </label>
+                            </div>
+                        @endforeach
+                    @endif
                     @error('position_id')
                         <span class="text-danger d-block mb-3">{{ $message }}</span>
                     @enderror
 
-                    <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Pilih Jabatan</button>
+                    <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Selesaikan
+                        Pendaftaran</button>
                     <a href="#" wire:click.prevent="back" class="d-block text-center">Kembali</a>
                 </form>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <p class="fs-4 mb-2 fw-medium">Tidak menerima email verifikasi?</p>
+                    <button type="button" class="btn btn-link" wire:click="resendVerificationEmail">
+                        Kirim Ulang Email Verifikasi
+                    </button>
+                </div>
             @endif
 
         </div>
