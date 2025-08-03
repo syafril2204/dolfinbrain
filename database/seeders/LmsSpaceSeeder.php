@@ -3,13 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\LmsSpace;
+use App\Models\Position;
 use Illuminate\Database\Seeder;
 
 class LmsSpaceSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $spacePolhut = LmsSpace::create([
@@ -58,6 +56,12 @@ class LmsSpaceSeeder extends Seeder
         $spacePolhut->materials()->attach(range(1, 10));
         $spacePolhut->quizPackages()->attach(1);
 
+        $posisiPolhut = Position::where('name', 'Polisi Kehutanan')->first();
+        if ($posisiPolhut) {
+            $spacePolhut->positions()->attach($posisiPolhut->id);
+        }
+
+        // --------------------------------------------------------------------
 
         $spacePenyuluh = LmsSpace::create([
             'title' => 'Bimbingan Intensif Formasi Penyuluh Kehutanan',
@@ -71,13 +75,6 @@ class LmsSpaceSeeder extends Seeder
             'meeting_url' => 'http://googleusercontent.com/meet/penyuluh-1',
             'start_at' => now()->addDays(8),
             'end_at' => now()->addDays(8)->addHours(2),
-        ]);
-        $spacePenyuluh->coachings()->create([
-            'title' => 'Sesi 2: Merancang Proposal Perhutanan Sosial',
-            'trainer_name' => 'Ibu Lestari Handayani, S.Hut',
-            'meeting_url' => 'http://googleusercontent.com/meet/penyuluh-2',
-            'start_at' => now()->addDays(15),
-            'end_at' => now()->addDays(15)->addHours(2),
         ]);
 
         $spacePenyuluh->videos()->create([
@@ -94,16 +91,13 @@ class LmsSpaceSeeder extends Seeder
             'file_type' => 'pdf',
             'type' => 'recap_file'
         ]);
-        $spacePenyuluh->resources()->create([
-            'title' => 'Audio: Roleplay Teknik Public Speaking untuk Penyuluh',
-            'file_path' => 'files/public-speaking.mp3',
-            'file_size' => 8500,
-            'file_type' => 'mp3',
-            'type' => 'audio_recording'
-        ]);
 
-        // Menghubungkan materi (ID 11-20) dan kuis (ID 2)
         $spacePenyuluh->materials()->attach(range(11, 20));
         $spacePenyuluh->quizPackages()->attach(2);
+
+        $posisiPenyuluh = Position::where('name', 'Penyuluh Kehutanan')->first();
+        if ($posisiPenyuluh) {
+            $spacePenyuluh->positions()->attach($posisiPenyuluh->id);
+        }
     }
 }

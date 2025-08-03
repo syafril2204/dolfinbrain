@@ -17,13 +17,33 @@
         </div>
     </div>
 
-    {{-- Tombol Aksi & Pencarian --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
+  
+    <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
         <a href="{{ route('admin.materials.create') }}" class="btn btn-primary">Tambah Materi</a>
-        <div class="position-relative" style="width: 250px;">
-            <input type="text" class="form-control" placeholder="Cari materi..."
-                wire:model.live.debounce.300ms="searchTerm">
-            <i class="ti ti-search position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);"></i>
+
+        <div class="d-flex gap-2" style="width: 60%;">
+            <select class="form-select" wire:model.live="selectedFormation">
+                <option value="">Semua Formasi</option>
+                @foreach ($formations as $formation)
+                    <option value="{{ $formation->id }}">{{ $formation->name }}</option>
+                @endforeach
+            </select>
+
+            @if ($selectedFormation)
+                <select class="form-select" wire:model.live="selectedPosition">
+                    <option value="">Semua Jabatan</option>
+                    @foreach ($positions as $position)
+                        <option value="{{ $position->id }}">{{ $position->name }}</option>
+                    @endforeach
+                </select>
+            @endif
+
+            <div class="position-relative" style="min-width: 250px;">
+                <input type="text" class="form-control" placeholder="Cari materi..."
+                    wire:model.live.debounce.300ms="searchTerm">
+                <i class="ti ti-search position-absolute"
+                    style="top: 50%; right: 10px; transform: translateY(-50%);"></i>
+            </div>
         </div>
     </div>
 
