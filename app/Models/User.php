@@ -78,4 +78,21 @@ class User extends Authenticatable
             ->where('position_id', auth()->user()->position_id)
             ->latestOfMany();
     }
+
+    /**
+     * hasLmsAccess
+     *
+     * @return bool
+     */
+    public function hasLmsAccess(): bool
+    {
+        if (!$this->position_id) {
+            return false;
+        }
+
+        return $this->purchasedPositions()
+            ->where('position_id', $this->position_id)
+            ->where('package_type', 'bimbingan')
+            ->exists();
+    }
 }

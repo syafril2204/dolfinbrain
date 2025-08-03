@@ -105,6 +105,13 @@
                             <span class="hide-menu">Soal</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('students.lms.*') ? 'active' : '' }}"
+                            href="{{ route('students.lms.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-layout-grid"></i></span>
+                            <span class="hide-menu">LMS Space</span>
+                        </a>
+                    </li>
 
                     <li class="nav-small-cap mt-4">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>

@@ -21,6 +21,8 @@ use App\Livewire\Admin\Lms\Spaces\Index as LmsSpaceIndex;
 use App\Livewire\Admin\Lms\Spaces\Form as LmsSpaceForm;
 use App\Livewire\Admin\Lms\Content\Index as LmsContentIndex;
 use App\Livewire\Student\Packages\Index as StudentPackageIndex;
+use App\Livewire\Student\Lms\Index as LmsIndex;
+use App\Livewire\Student\Lms\Show as LmsShow;
 use App\Livewire\Admin\Lms\Content\Coaching\Index as CoachingIndex;
 use App\Livewire\Admin\Lms\Content\Coaching\Form as CoachingForm;
 use App\Livewire\Admin\Lms\Content\Attachments as LmsContentAttachments;
@@ -125,6 +127,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
 
         Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
+
+        Route::get('/lms-space', LmsIndex::class)->name('lms.index');
+        Route::get('/lms-space/{lms_space}', LmsShow::class)->name('lms.show');
 
         Route::get('/beli-paket', StudentPackageIndex::class)->name('packages.index');
         Route::get('/instruction/{transaction:reference}', StudentPackageInstruction::class)->name('packages.instruction');
