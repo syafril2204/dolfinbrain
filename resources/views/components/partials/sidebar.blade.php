@@ -89,68 +89,135 @@
                     </li>
                 @endrole
 
-                {{-- ========== MENU SISWA ========= --}}
+                {{-- ========== MENU SISWA (DENGAN KONDISI CEK PROFIL) ========= --}}
                 @role('student')
-                    <li class="nav-small-cap mt-4">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">Pembelajaran Siswa</span>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.packages.index') ? 'active' : '' }}"
-                            href="{{ route('students.packages.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-shopping-cart"></i></span>
-                            <span class="hide-menu">Beli Paket</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.my-packages.index') ? 'active' : '' }}"
-                            href="{{ route('students.my-packages.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-wallet"></i></span>
-                            <span class="hide-menu">Paket Saya</span>
-                        </a>
-                    </li>
+                    {{-- Kondisi jika user belum melengkapi profil (position_id == null) --}}
+                    @if (is_null(auth()->user()->position_id))
+                        <li class="nav-small-cap mt-4">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Pembelajaran Siswa</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" style="cursor: not-allowed;"
+                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                aria-expanded="false">
+                                <span><i class="ti ti-lock"></i></span>
+                                <span class="hide-menu">Beli Paket</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" style="cursor: not-allowed;"
+                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                aria-expanded="false">
+                                <span><i class="ti ti-lock"></i></span>
+                                <span class="hide-menu">Paket Saya</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" style="cursor: not-allowed;"
+                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                aria-expanded="false">
+                                <span><i class="ti ti-lock"></i></span>
+                                <span class="hide-menu">Materi</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" style="cursor: not-allowed;"
+                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                aria-expanded="false">
+                                <span><i class="ti ti-lock"></i></span>
+                                <span class="hide-menu">Soal</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" style="cursor: not-allowed;"
+                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                aria-expanded="false">
+                                <span><i class="ti ti-lock"></i></span>
+                                <span class="hide-menu">LMS Space</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap mt-4">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Akun Saya</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" style="cursor: not-allowed;"
+                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                aria-expanded="false">
+                                <span><i class="ti ti-lock"></i></span>
+                                <span class="hide-menu">History Pembelian</span>
+                            </a>
+                        </li>
+                        {{-- Menu Profil TETAP AKTIF agar user bisa melengkapi profilnya --}}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.profile.index') ? 'active' : '' }}"
+                                href="{{ route('students.profile.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-user-circle"></i></span>
+                                <span class="hide-menu">Profil</span>
+                            </a>
+                        </li>
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.materi.index') ? 'active' : '' }}"
-                            href="{{ route('students.materi.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-book"></i></span>
-                            <span class="hide-menu">Materi</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.soal.*') ? 'active' : '' }}"
-                            href="{{ route('students.soal.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-file-text"></i></span>
-                            <span class="hide-menu">Soal</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.lms.*') ? 'active' : '' }}"
-                            href="{{ route('students.lms.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-layout-grid"></i></span>
-                            <span class="hide-menu">LMS Space</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-small-cap mt-4">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">Akun Saya</span>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.transactions.index') ? 'active' : '' }}"
-                            href="{{ route('students.transactions.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-receipt"></i></span>
-                            <span class="hide-menu">History Pembelian</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item">
-                        <a class="sidebar-link {{ request()->routeIs('students.profile.index') ? 'active' : '' }}"
-                            href="{{ route('students.profile.index') }}" wire:navigate aria-expanded="false">
-                            <span><i class="ti ti-user-circle"></i></span>
-                            <span class="hide-menu">Profil</span>
-                        </a>
-                    </li>
+                        {{-- Kondisi jika user SUDAH melengkapi profil (menu normal) --}}
+                    @else
+                        <li class="nav-small-cap mt-4">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Pembelajaran Siswa</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.packages.index') ? 'active' : '' }}"
+                                href="{{ route('students.packages.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-shopping-cart"></i></span>
+                                <span class="hide-menu">Beli Paket</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.my-packages.index') ? 'active' : '' }}"
+                                href="{{ route('students.my-packages.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-wallet"></i></span>
+                                <span class="hide-menu">Paket Saya</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.materi.index') ? 'active' : '' }}"
+                                href="{{ route('students.materi.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-book"></i></span>
+                                <span class="hide-menu">Materi</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.soal.*') ? 'active' : '' }}"
+                                href="{{ route('students.soal.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-file-text"></i></span>
+                                <span class="hide-menu">Soal</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.lms.*') ? 'active' : '' }}"
+                                href="{{ route('students.lms.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-layout-grid"></i></span>
+                                <span class="hide-menu">LMS Space</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap mt-4">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Akun Saya</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.transactions.index') ? 'active' : '' }}"
+                                href="{{ route('students.transactions.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-receipt"></i></span>
+                                <span class="hide-menu">History Pembelian</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->routeIs('students.profile.index') ? 'active' : '' }}"
+                                href="{{ route('students.profile.index') }}" wire:navigate aria-expanded="false">
+                                <span><i class="ti ti-user-circle"></i></span>
+                                <span class="hide-menu">Profil</span>
+                            </a>
+                        </li>
+                    @endif
                 @endrole
             </ul>
 

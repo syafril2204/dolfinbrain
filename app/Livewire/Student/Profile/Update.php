@@ -2,25 +2,31 @@
 
 namespace App\Livewire\Student\Profile;
 
+use App\Models\Formation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
-use Livewire\WithFileUploads; // <-- Tambahkan ini untuk upload file
+use Livewire\WithFileUploads;
 
 class Update extends Component
 {
-    use WithFileUploads; // <-- Gunakan trait ini
+    use WithFileUploads;
 
-    // Properti untuk mengontrol tab yang aktif
     public $activeTab = 'profile';
 
-    // Properti untuk Ubah Profile
-    public $name, $gender, $date_of_birth, $domicile;
-    public $avatar; // Properti baru untuk file upload
+    // Properti untuk Tab "Ubah Profile"
+    public $name, $gender, $avatar;
 
-    // Properti untuk Ubah Password
+    // Properti untuk Tab "Ubah Password"
     public $current_password, $password, $password_confirmation;
+
+    // Properti untuk Tab "Ubah Formasi"
+    public $formations = []; // Diinisialisasi sebagai array kosong untuk mencegah error
+    public $selectedFormation = null;
+    public $new_position_id = null;
+    public $formationStep = 1;
+    public $date_of_birth, $domicile;
 
     public function mount()
     {
@@ -33,32 +39,31 @@ class Update extends Component
         $this->domicile = $user->domicile;
     }
 
-    // Fungsi untuk berganti tab
     public function switchTab($tab)
     {
         $this->activeTab = $tab;
-        $this->resetErrorBag(); // Hapus pesan error lama saat ganti tab
+        $this->resetErrorBag();
+
+        if ($tab === 'formation') {
+            // Data akan diisi saat tab ini diklik
+            $this->formations = Formation::with('positions')->get();
+            $this->formationStep = 1;
+        }
     }
 
-    // Fungsi untuk menyimpan perubahan profil
     public function updateProfile()
     {
         $user = Auth::user();
         $validatedData = $this->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:Laki-laki,Perempuan',
-            'date_of_birth' => 'required|date',
-            'domicile' => 'required|string|max:255',
-            'avatar' => 'nullable|image|max:2048', // Validasi avatar: gambar, max 2MB
+            'avatar' => 'nullable|image|max:2048',
         ]);
 
-        // Logika untuk upload avatar
         if ($this->avatar) {
-            // Hapus avatar lama jika ada
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            // Simpan avatar baru
             $validatedData['avatar'] = $this->avatar->store('avatars', 'public');
         }
 
@@ -66,7 +71,6 @@ class Update extends Component
         session()->flash('message', 'Profil berhasil diperbarui.');
     }
 
-    // Fungsi untuk menyimpan password baru
     public function updatePassword()
     {
         $validatedData = $this->validate([
@@ -80,6 +84,27 @@ class Update extends Component
 
         $this->reset('current_password', 'password', 'password_confirmation');
         session()->flash('message', 'Password berhasil diubah.');
+    }
+
+    public function selectFormation($formationId)
+    {
+        $this->selectedFormation = Formation::with('positions')->find($formationId);
+        $this->formationStep = 2;
+    }
+
+    public function updatePosition()
+    {
+        $validatedData = $this->validate([
+            'new_position_id' => 'required|exists:positions,id',
+        ]);
+
+        Auth::user()->update([
+            'position_id' => $validatedData['new_position_id'],
+        ]);
+
+        session()->flash('message', 'Formasi dan Jabatan berhasil diperbarui.');
+
+        return $this->redirect(route('students.profile.update'), navigate: true);
     }
 
     public function render()

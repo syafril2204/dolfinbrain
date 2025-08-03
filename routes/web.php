@@ -137,30 +137,34 @@ Route::middleware(['auth'])->group(function () {
         });
     });
     Route::prefix('students')->name('students.')->group(function () {
-        Route::get('/kontak', StudentContactIndex::class)->name('contact.index');
-        Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
 
         Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
         Route::get('/profile-update', StudentProfileUpdate::class)->name('profile.update');
+        Route::middleware('profile.completed')->group(function () {
 
-        Route::get('/lms-space', LmsIndex::class)->name('lms.index');
-        Route::get('/lms-space/{lms_space}', LmsShow::class)->name('lms.show');
-        Route::prefix('/lms-space/{lms_space}')->name('lms.content.')->group(function () {
-            Route::get('/materials', LmsMaterials::class)->name('materials');
-            Route::get('/coaching', LmsCoaching::class)->name('coaching');
-            Route::get('/videos', LmsVideos::class)->name('videos');
-            Route::get('/quizzes', LmsQuizzes::class)->name('quizzes');
-            Route::get('/files', LmsFiles::class)->name('files');
-            Route::get('/audio', LmsAudio::class)->name('audio');
+            Route::get('/kontak', StudentContactIndex::class)->name('contact.index');
+            Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
+
+
+            Route::get('/lms-space', LmsIndex::class)->name('lms.index');
+            Route::get('/lms-space/{lms_space}', LmsShow::class)->name('lms.show');
+            Route::prefix('/lms-space/{lms_space}')->name('lms.content.')->group(function () {
+                Route::get('/materials', LmsMaterials::class)->name('materials');
+                Route::get('/coaching', LmsCoaching::class)->name('coaching');
+                Route::get('/videos', LmsVideos::class)->name('videos');
+                Route::get('/quizzes', LmsQuizzes::class)->name('quizzes');
+                Route::get('/files', LmsFiles::class)->name('files');
+                Route::get('/audio', LmsAudio::class)->name('audio');
+            });
+
+            Route::get('/paket-saya', MyPackagesIndex::class)->name('my-packages.index');
+            Route::get('/beli-paket', StudentPackageIndex::class)->name('packages.index');
+            Route::get('/instruction/{transaction:reference}', StudentPackageInstruction::class)->name('packages.instruction');
+            Route::get('/checkout/{package_type}', StudentPackageCheckout::class)->name('packages.checkout');
+
+            Route::get('/history-pembelian', StudentTransactionIndex::class)->name('transactions.index');
+            Route::get('/soal', StudentQuizIndex::class)->name('soal.index');
+            Route::get('/quiz/{quiz_package}/attempt', StudentQuizAttempt::class)->name('quiz.attempt');
         });
-
-        Route::get('/paket-saya', MyPackagesIndex::class)->name('my-packages.index');
-        Route::get('/beli-paket', StudentPackageIndex::class)->name('packages.index');
-        Route::get('/instruction/{transaction:reference}', StudentPackageInstruction::class)->name('packages.instruction');
-        Route::get('/checkout/{package_type}', StudentPackageCheckout::class)->name('packages.checkout');
-
-        Route::get('/history-pembelian', StudentTransactionIndex::class)->name('transactions.index');
-        Route::get('/soal', StudentQuizIndex::class)->name('soal.index');
-        Route::get('/quiz/{quiz_package}/attempt', StudentQuizAttempt::class)->name('quiz.attempt');
     });
 });

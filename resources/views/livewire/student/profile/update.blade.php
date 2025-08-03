@@ -29,6 +29,10 @@
                     <a class="nav-link {{ $activeTab === 'password' ? 'active' : '' }}" href="#"
                         wire:click.prevent="switchTab('password')">Ubah Password</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $activeTab === 'formation' ? 'active' : '' }}" href="#"
+                        wire:click.prevent="switchTab('formation')">Ubah Formasi</a>
+                </li>
             </ul>
 
             {{-- Konten Tab --}}
@@ -129,10 +133,44 @@
                             <input type="password" class="form-control" wire:model="password_confirmation">
                         </div>
                         <div class="d-flex justify-content-end mt-3">
-                            <button type="button" class="btn btn-outline-secondary me-2">Batal</button>
+                            <button type="button" class="btn btn-outline-secondary me-2"
+                                wire:click="reset('current_password', 'password', 'password_confirmation')">Batal</button>
                             <button type="submit" class="btn btn-primary">Simpan Password</button>
                         </div>
                     </form>
+                </div>
+
+                {{-- Form Ubah Formasi --}}
+                <div class="{{ $activeTab === 'formation' ? 'd-block' : 'd-none' }}">
+                    @if ($formationStep === 1)
+                        <h5 class="mb-3">Pilih Kategori Formasi</h5>
+                        @foreach ($formations as $formation)
+                            <div class="card card-body border mb-2"
+                                wire:click="selectFormation({{ $formation->id }})" style="cursor: pointer;">
+                                {{ $formation->name }}
+                            </div>
+                        @endforeach
+                    @elseif ($formationStep === 2)
+                        <h5 class="mb-3">Pilih Jabatan: {{ $selectedFormation->name }}</h5>
+                        <form wire:submit.prevent="updatePosition">
+                            @foreach ($selectedFormation->positions as $position)
+                                <div class="form-check card card-body border mb-2">
+                                    <input class="form-check-input" type="radio" value="{{ $position->id }}"
+                                        wire:model="new_position_id" id="pos-{{ $position->id }}">
+                                    <label class="form-check-label w-100"
+                                        for="pos-{{ $position->id }}">{{ $position->name }}</label>
+                                </div>
+                            @endforeach
+                            @error('new_position_id')
+                                <span class="text-danger d-block mb-2">{{ $message }}</span>
+                            @enderror
+                            <div class="d-flex justify-content-end mt-3">
+                                <button type="button" class="btn btn-outline-secondary me-2"
+                                    wire:click="switchTab('profile')">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan Jabatan</button>
+                            </div>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>
@@ -141,7 +179,6 @@
 
 @push('styles')
     <style>
-        /* CSS untuk highlight pilihan jenis kelamin */
         .form-check:has(input[type="radio"]:checked) {
             border-color: var(--bs-primary) !important;
             background-color: var(--bs-primary-bg-subtle) !important;

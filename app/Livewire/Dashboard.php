@@ -7,14 +7,20 @@ use Livewire\Component;
 
 class Dashboard extends Component
 {
+
+    public function mount()
+    {
+        if (!Auth::user()->hasRole('admin') && auth()->user()->position_id == null) {
+            $this->redirect(route('students.profile.update'), navigate: true);
+        }
+    }
+
+
     public function render()
     {
         if (Auth::user()->hasRole('admin')) {
             return view('livewire.admin-dashboard-wrapper');
         } else {
-            if (auth()->user()->position_id == null) {
-                return redirect()->route('students.profile.update');
-            }
             return view('livewire.dashboard');
         }
     }
