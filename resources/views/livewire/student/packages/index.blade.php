@@ -68,7 +68,7 @@
                     @if (auth()->user()->lastTransaction)
                         @if (auth()->user()->lastTransaction->package_type == 'mandiri' && auth()->user()->lastTransaction->status == 'pending')
                             <a href="{{ route('students.packages.instruction', auth()->user()->lastTransaction->reference) }}"
-                                class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
+                                class="btn btn-warning w-100 mt-auto" @if (!$currentPosition) disabled @endif
                                 wire:navigate>
                                 Selesaikan Pembayaran
                             </a>
@@ -77,16 +77,21 @@
                                 @if (!$currentPosition) disabled @endif wire:navigate>
                                 Anda sudah membeli paket ini
                             </button>
+                        @elseif(auth()->user()->lastTransaction->package_type == 'bimbingan' && auth()->user()->lastTransaction->status == 'paid')
+                            <button href="#" disabled class="btn btn-success w-100 mt-auto"
+                                @if (!$currentPosition) disabled @endif wire:navigate>
+                                Anda sudah membeli paket bimbingan
+                            </button>
                         @else
                             <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
-                                class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
+                                class="btn btn-primary w-100 mt-auto" @if (!$currentPosition) disabled @endif
                                 wire:navigate>
                                 Pilih Paket Aplikasi
                             </a>
                         @endif
                     @else
                         <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
-                            class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
+                            class="btn btn-primary w-100 mt-auto" @if (!$currentPosition) disabled @endif
                             wire:navigate>
                             Pilih Paket Aplikasi
                         </a>
@@ -130,17 +135,23 @@
                     </ul>
 
                     @if (auth()->user()->lastTransaction)
-                        @if (auth()->user()->lastTransaction->package_type == 'bimbingan')
+                        @if (auth()->user()->lastTransaction->package_type == 'bimbingan' &&
+                                auth()->user()->lastTransaction->status == 'pending')
                             <a href="{{ route('students.packages.instruction', auth()->user()->lastTransaction->reference) }}"
                                 class="btn btn-success w-100 mt-auto" @if (!$currentPosition) disabled @endif
                                 wire:navigate>
                                 Selesaikan Pembayaran
                             </a>
+                        @elseif(auth()->user()->lastTransaction->package_type == 'bimbingan' && auth()->user()->lastTransaction->status == 'paid')
+                            <button href="#" disabled class="btn btn-success w-100 mt-auto"
+                                @if (!$currentPosition) disabled @endif wire:navigate>
+                                Anda sudah membeli paket ini
+                            </button>
                         @else
                             <a href="{{ route('students.packages.checkout', ['package_type' => 'bimbingan']) }}"
                                 class="btn btn-primary w-100 mt-auto" @if (!$currentPosition) disabled @endif
                                 wire:navigate>
-                                Pilih Paket Bimbel
+                                Pilih Paket Aplikasi
                             </a>
                         @endif
                     @else
