@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'domicile' => $this->domicile,
             'phone_number' => $this->phone_number,
             'avatar_url' => $this->avatar ? Storage::disk('public')->url($this->avatar) : null,
+            'package_type' => $this->latestPositionUser ? $this->latestPositionUser->package_type : 'Free',
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
