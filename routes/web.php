@@ -49,6 +49,7 @@ use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use App\Models\LmsResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,13 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    Route::get('/email/verify', Register::class)
+        ->middleware('auth')
+        ->name('verification.notice');
+
 
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
