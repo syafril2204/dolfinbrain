@@ -2,6 +2,9 @@
     <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
         <div class="col-sm-8 col-md-6 col-xl-9">
 
+            {{-- =============================================== --}}
+            {{-- BAGIAN NOTIFIKASI (ALERT) --}}
+            {{-- =============================================== --}}
             @if (session('status'))
                 <div class="alert alert-success" role="alert">
                     {{ session('status') }}
@@ -14,17 +17,20 @@
                 </div>
             @endif
 
-
+            {{-- =============================================== --}}
+            {{-- LANGKAH 1: BUAT AKUN --}}
+            {{-- =============================================== --}}
             @if ($step == 1)
                 <h2 class="mb-3 fs-7 fw-bolder">Buat Akun DolfinBrain</h2>
                 <p class="mb-4">Daftar sekarang untuk akses penuh ke materi, soal, dan fitur belajar pintar.</p>
 
+                {{-- Tombol Google --}}
                 <div class="row">
                     <div class="col-12 mb-2 mb-sm-0">
                         <a class="btn btn-white text-dark border fw-normal d-flex align-items-center justify-content-center rounded-2 py-8"
                             href="{{ route('auth.google.redirect') }}" role="button">
                             <img src="https://demos.adminmart.com/premium/bootstrap/modernize-bootstrap/package/dist/images/svgs/google-icon.svg"
-                                alt="" class="img-fluid me-2" width="18" height="18">
+                                alt="Google Icon" class="img-fluid me-2" width="18" height="18">
                             <span class="d-none d-sm-block me-1 flex-shrink-0">Daftar dengan</span>Google
                         </a>
                     </div>
@@ -38,21 +44,21 @@
                 <form wire:submit.prevent="submitStep1">
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="name" wire:model="name">
+                        <input type="text" class="form-control" id="name" wire:model.defer="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" wire:model="email">
+                        <input type="email" class="form-control" id="email" wire:model.defer="email">
                         @error('email')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" wire:model="password">
+                        <input type="password" class="form-control" id="password" wire:model.defer="password">
                         @error('password')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -60,7 +66,7 @@
                     <div class="mb-4">
                         <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
                         <input type="password" class="form-control" id="password_confirmation"
-                            wire:model="password_confirmation">
+                            wire:model.defer="password_confirmation">
                     </div>
                     <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Daftar</button>
                     <div class="d-flex align-items-center justify-content-center">
@@ -79,7 +85,7 @@
                 <form wire:submit.prevent="submitStep2">
                     <div class="mb-3">
                         <label for="name_step2" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="name_step2" wire:model="name">
+                        <input type="text" class="form-control" id="name_step2" wire:model.defer="name">
                         @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -89,7 +95,7 @@
                         <div class="d-flex gap-3">
                             <div class="form-check card card-body border flex-fill text-center">
                                 <input class="form-check-input d-none" type="radio" name="gender" id="gender_male"
-                                    value="Laki-laki" wire:model="gender">
+                                    value="Laki-laki" wire:model.defer="gender">
                                 <label class="form-check-label w-100" for="gender_male" style="cursor: pointer;">
                                     <img src="{{ asset('assets/avatar/male.png') }}" class="rounded-circle mb-2"
                                         alt="Laki-laki"><br>
@@ -98,7 +104,7 @@
                             </div>
                             <div class="form-check card card-body border flex-fill text-center">
                                 <input class="form-check-input d-none" type="radio" name="gender" id="gender_female"
-                                    value="Perempuan" wire:model="gender">
+                                    value="Perempuan" wire:model.defer="gender">
                                 <label class="form-check-label w-100" for="gender_female" style="cursor: pointer;">
                                     <img src="{{ asset('assets/avatar/female.png') }}" class="rounded-circle mb-2"
                                         alt="Perempuan"><br>
@@ -112,20 +118,24 @@
                     </div>
                     <div class="mb-3">
                         <label for="date_of_birth" class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="date_of_birth" wire:model="date_of_birth">
+                        <input type="date" class="form-control" id="date_of_birth"
+                            wire:model.defer="date_of_birth">
                         @error('date_of_birth')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <label for="domicile" class="form-label">Domisili</label>
-                        <input type="text" class="form-control" id="domicile" wire:model="domicile"
+                        <input type="text" class="form-control" id="domicile" wire:model.defer="domicile"
                             placeholder="Contoh: Jakarta">
                         @error('domicile')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Lanjutkan</button>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" wire:click="back">Kembali</button>
+                        <button type="submit" class="btn btn-primary">Lanjutkan</button>
+                    </div>
                 </form>
             @endif
 
@@ -156,8 +166,7 @@
             {{-- =============================================== --}}
             @if ($step == 4)
                 <h2 class="mb-3 fs-7 fw-bolder">{{ $selectedFormation->name ?? 'Pilih Jabatan' }}</h2>
-                <p class="mb-4">Pilih Jabatan yang ingin dipelajari. **Pastikan Anda sudah memverifikasi email Anda
-                    sebelum melanjutkan.**</p>
+                <p class="mb-4">Pilih Jabatan yang ingin dipelajari.</p>
 
                 <form wire:submit.prevent="submitStep4">
                     @if ($selectedFormation)
@@ -165,7 +174,7 @@
                             <div class="form-check card card-body border mb-2 position-relative">
                                 <input class="form-check-input" type="radio" name="position"
                                     id="pos-{{ $position->id }}" value="{{ $position->id }}"
-                                    wire:model="position_id"
+                                    wire:model.defer="position_id"
                                     style="position: absolute; top: 1rem; right: 1rem; cursor: pointer;">
                                 <label class="form-check-label w-100" for="pos-{{ $position->id }}"
                                     style="cursor: pointer;">
@@ -178,16 +187,40 @@
                         <span class="text-danger d-block mb-3">{{ $message }}</span>
                     @enderror
 
-                    <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Selesaikan
-                        Pendaftaran</button>
-                    <a href="#" wire:click.prevent="back" class="d-block text-center">Kembali</a>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary" wire:click="back">Kembali</button>
+                        <button type="submit" class="btn btn-primary">Lanjutkan & Kirim Verifikasi</button>
+                    </div>
                 </form>
+            @endif
 
-                <div class="text-center mt-4 border-top pt-3">
-                    <p class="fs-4 mb-2 fw-medium">Tidak menerima email verifikasi?</p>
-                    <button type="button" class="btn btn-link" wire:click="resendVerificationEmail">
-                        Kirim Ulang Email Verifikasi
-                    </button>
+            {{-- =============================================== --}}
+            {{-- LANGKAH 5: TUNGGU VERIFIKASI EMAIL --}}
+            {{-- =============================================== --}}
+            @if ($step == 5)
+                <div class="text-center">
+                    <img src="{{ asset('assets/logo/mail-success.png') }}" alt="Email Sent" width="150"
+                        class="mb-4">
+                    <h2 class="mb-3 fs-7 fw-bolder">Satu Langkah Terakhir!</h2>
+                    <p class="mb-4">Kami telah mengirimkan link verifikasi ke email Anda:
+                        <strong>{{ $email }}</strong>.
+                        <br>Silakan periksa kotak masuk (atau folder spam) dan klik link tersebut untuk menyelesaikan
+                        pendaftaran Anda.
+                    </p>
+
+                    <div class="mt-4">
+                        <p class="fs-4 mb-2 fw-medium">Tidak menerima email?</p>
+                        <button type="button" class="btn btn-link" wire:click="resendVerificationEmail">
+                            Kirim Ulang Email Verifikasi
+                        </button>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary" wire:click="back">Pilih Ulang
+                            Jabatan</button>
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary ms-2" wire:navigate>Pergi ke
+                            Halaman Login</a>
+                    </div>
                 </div>
             @endif
 

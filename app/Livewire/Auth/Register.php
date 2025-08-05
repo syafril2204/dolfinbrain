@@ -15,18 +15,15 @@ class Register extends Component
 {
     public $step = 1;
 
-    // Properti Step 1: Buat Akun
     public $name = '';
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
 
-    // Properti Step 2: Lengkapi Profil
     public $gender = '';
     public $date_of_birth = '';
     public $domicile = '';
 
-    // Properti Step 3 & 4: Pilih Formasi & Posisi
     public $formations;
     public $selectedFormation = null;
     public $position_id = null;
@@ -36,7 +33,6 @@ class Register extends Component
         if (Auth::check()) {
             $user = Auth::user();
             if (!$user->position_id) {
-                // Jika sudah login tapi profil belum lengkap
                 $this->step = 2;
                 $this->name = $user->name;
                 $this->email = $user->email;
@@ -61,19 +57,15 @@ class Register extends Component
             $this->position_id = $user->position_id;
             $this->step = session('registration_step', 2);
 
-            if ($this->step == 4 && $user->position_id) {
+            if (($this->step == 4 || $this->step == 5) && $user->position_id) {
                 $position = Position::with('formation')->find($user->position_id);
                 if ($position) {
                     $this->selectedFormation = $position->formation;
                 }
-            } else if ($this->step == 4 && !$user->position_id) {
-                $this->step = 3;
-                session(['registration_step' => 3]);
             }
         }
     }
 
-    // STEP 1: Buat user dan kirim email verifikasi
     public function submitStep1()
     {
         $this->validate([
@@ -90,17 +82,12 @@ class Register extends Component
 
         $user->assignRole('student');
 
-        // Kirim email verifikasi
-        $user->sendEmailVerificationNotification();
-
         session(['user_id_for_registration' => $user->id]);
-        session()->flash('status', 'Link verifikasi telah dikirim ke email Anda! Silakan cek kotak masuk atau folder spam Anda.');
 
         $this->step = 2;
         session(['registration_step' => 2]);
     }
 
-    // STEP 2: Update profil
     public function submitStep2()
     {
         $this->validate([
@@ -132,7 +119,6 @@ class Register extends Component
         session(['registration_step' => 4]);
     }
 
-    // STEP 4: Finalisasi, cek verifikasi, lalu login
     public function submitStep4()
     {
         $this->validate(['position_id' => 'required|exists:positions,id']);
@@ -142,21 +128,19 @@ class Register extends Component
             $user = User::find($userId);
             $user->update(['position_id' => $this->position_id]);
 
-            // Cek apakah email sudah diverifikasi
-            if (!$user->hasVerifiedEmail()) {
-                session()->flash('error', 'Anda harus memverifikasi alamat email Anda sebelum dapat melanjutkan. Silakan periksa email Anda.');
-                return; // Hentikan proses
-            }
+            $user->sendEmailVerificationNotification();
 
-            Auth::login($user);
-            $this->resetRegistrationSession();
-            return redirect()->route('dashboard');
+            session()->flash('status', 'Pendaftaran hampir selesai! Link verifikasi telah dikirim ke email Anda. Silakan cek kotak masuk/spam.');
+
+            $this->step = 5;
+            session(['registration_step' => 5]);
+
+            return;
         }
 
         return redirect()->route('register');
     }
 
-    // Method baru untuk kirim ulang verifikasi
     public function resendVerificationEmail()
     {
         $userId = session('user_id_for_registration') ?? Auth::id();
@@ -171,7 +155,11 @@ class Register extends Component
 
     public function back()
     {
-        if ($this->step > 1) {
+        if ($this->step == 5) {
+            $this->step = 4;
+            session(['registration_step' => 4]);
+        }
+        else if ($this->step > 1) {
             $this->step--;
             session(['registration_step' => $this->step]);
         }
