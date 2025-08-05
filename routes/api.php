@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\TripayCallbackController;
 
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle'])->name('api.tripay.callback');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
