@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuizAttemptController;
+use App\Http\Controllers\Api\QuizHistoryController;
 use App\Http\Controllers\Api\QuizPackageController;
 use App\Http\Controllers\Api\TransactionHistoryController;
 use Illuminate\Http\Request;
@@ -32,11 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
     Route::get('/quiz-packages/{quiz_package}', [QuizPackageController::class, 'show']);
-    
+
     Route::post('/quiz-packages/{quiz_package}/start', [QuizAttemptController::class, 'start']);
     Route::post('/quiz-attempts/{attempt}/answer', [QuizAttemptController::class, 'answer']);
     Route::post('/quiz-attempts/{attempt}/finish', [QuizAttemptController::class, 'finish']);
     Route::get('/quiz-attempts/{attempt}/result', [QuizAttemptController::class, 'result']);
+    Route::get('/quiz-history', [QuizHistoryController::class, 'index']);
 
     Route::get('/transactions', [TransactionHistoryController::class, 'index']);
+    Route::get('/quiz-attempts/{attempt}/result', [App\Http\Controllers\Api\QuizAttemptController::class, 'result'])->name('api.quiz.result');
 });
