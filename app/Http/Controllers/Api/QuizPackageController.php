@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\QuizPackageResource;
 use App\Models\Position;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class QuizPackageController extends Controller
@@ -16,12 +17,7 @@ class QuizPackageController extends Controller
         $user = $request->user();
 
         if (!$user->position_id) {
-            dd('test');
             ResponseHelper::error(null, 'Anda belum memilih formasi/jabatan.', Response::HTTP_FORBIDDEN);
-        }
-
-        if (!$user->hasMaterialAccess()) {
-            ResponseHelper::error(null, 'Akses ditolak. Silakan beli paket untuk mengakses soal ini.', Response::HTTP_FORBIDDEN);
         }
 
         $position = Position::with('quizPackages.questions')->find($user->position_id);
@@ -30,7 +26,17 @@ class QuizPackageController extends Controller
             ResponseHelper::error(null, 'Posisi tidak ditemukan.', Response::HTTP_NOT_FOUND);
         }
 
-        $data = QuizPackageResource::collection($position->quizPackages);
+
+        $quiz_packages = $position->quizPackages;
+
+        $data = QuizPackageResource::collection($quiz_packages)->resolve();
+
+        if (!$quiz_packages->isEmpty()) {
+            $firstMaterial = $quiz_packages->first();
+            if ($firstMaterial) {
+                $data[0]['download_url'] = url(Storage::url($firstMaterial->file_path));
+            }
+        }
         return ResponseHelper::success($data, 'Berhasil mengambil data paket kuis.');
     }
 }
