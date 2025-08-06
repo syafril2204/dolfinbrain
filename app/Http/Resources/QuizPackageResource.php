@@ -7,11 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuizPackageResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -22,6 +17,7 @@ class QuizPackageResource extends JsonResource
             'total_questions' => $this->whenLoaded('questions', function () {
                 return $this->questions->count();
             }),
+            'questions' => QuestionResource::collection($this->whenLoaded('questions')),
         ];
     }
 }

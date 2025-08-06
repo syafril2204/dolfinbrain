@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\QuestionController;
+use App\Http\Controllers\Api\QuizAttemptController;
 use App\Http\Controllers\Api\QuizPackageController;
 use App\Http\Controllers\Api\TransactionHistoryController;
 use Illuminate\Http\Request;
@@ -28,7 +29,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/materials', [MaterialController::class, 'index']);
+
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
+    Route::get('/quiz-packages/{quiz_package}', [QuizPackageController::class, 'show']);
+    
+    Route::post('/quiz-packages/{quiz_package}/start', [QuizAttemptController::class, 'start']);
+    Route::post('/quiz-attempts/{attempt}/answer', [QuizAttemptController::class, 'answer']);
+    Route::post('/quiz-attempts/{attempt}/finish', [QuizAttemptController::class, 'finish']);
+    Route::get('/quiz-attempts/{attempt}/result', [QuizAttemptController::class, 'result']);
+
     Route::get('/transactions', [TransactionHistoryController::class, 'index']);
-    Route::get('/quiz-packages/{quiz_package}/questions', [QuestionController::class, 'index']);
 });

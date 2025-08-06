@@ -6,6 +6,7 @@ use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\QuizPackageResource;
 use App\Models\Position;
+use App\Models\QuizPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,5 +39,23 @@ class QuizPackageController extends Controller
             }
         }
         return ResponseHelper::success($data, 'Berhasil mengambil data paket kuis.');
+    }
+    public function show(Request $request, QuizPackage $quiz_package)
+    {
+        $user = $request->user();
+
+        // if (!$user->hasMaterialAccess()) {
+        //     ResponseHelper::error(null, 'Akses ditolak. Silakan beli paket untuk mengakses soal ini.', Response::HTTP_FORBIDDEN);
+        // }
+
+        $isAssigned = $user->position->quizPackages()->where('quiz_package_id', $quiz_package->id)->exists();
+        if (!$isAssigned) {
+            ResponseHelper::error(null, 'Paket kuis ini tidak tersedia untuk formasi Anda.', Response::HTTP_FORBIDDEN);
+        }
+
+        $quiz_package->load('questions.answers');
+
+        $data = new QuizPackageResource($quiz_package);
+        return ResponseHelper::success($data, 'Berhasil mengambil detail paket kuis.');
     }
 }
