@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\QuizPackageController;
+use App\Http\Controllers\Api\TransactionHistoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TripayCallbackController;
@@ -27,4 +28,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/materials', [MaterialController::class, 'index']);
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
+    Route::get('/transactions', [TransactionHistoryController::class, 'index']);
 });
