@@ -20,9 +20,7 @@ class MaterialController extends Controller
             ResponseHelper::error(null, 'Anda belum memilih formasi/jabatan.', Response::HTTP_FORBIDDEN);
         }
 
-        // if (!$user->hasMaterialAccess()) {
-        //     ResponseHelper::error(null, 'Akses ditolak. Silakan beli paket untuk mengakses materi ini.', Response::HTTP_FORBIDDEN);
-        // }
+
 
         $position = Position::with('materials')->find($user->position_id);
 
