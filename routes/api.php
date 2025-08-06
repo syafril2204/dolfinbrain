@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuizAttemptController;
 use App\Http\Controllers\Api\QuizHistoryController;
@@ -17,6 +18,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'show']);
+        Route::post('/update', [ProfileController::class, 'update']);
+        Route::post('/change-password', [ProfileController::class, 'changePassword']); 
+        Route::post('/change-position', [ProfileController::class, 'changePosition']);
+    });
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

@@ -99,7 +99,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" style="cursor: not-allowed;"
-                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                onclick="alert('Harap lengkapi profil serta formasi Anda untuk mengakses menu ini.')"
                                 aria-expanded="false">
                                 <span><i class="ti ti-lock"></i></span>
                                 <span class="hide-menu">Beli Paket</span>
@@ -107,7 +107,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" style="cursor: not-allowed;"
-                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                onclick="alert('Harap lengkapi profil serta formasi Anda untuk mengakses menu ini.')"
                                 aria-expanded="false">
                                 <span><i class="ti ti-lock"></i></span>
                                 <span class="hide-menu">Paket Saya</span>
@@ -115,7 +115,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" style="cursor: not-allowed;"
-                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                onclick="alert('Harap lengkapi profil serta formasi Anda untuk mengakses menu ini.')"
                                 aria-expanded="false">
                                 <span><i class="ti ti-lock"></i></span>
                                 <span class="hide-menu">Materi</span>
@@ -123,7 +123,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" style="cursor: not-allowed;"
-                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                onclick="alert('Harap lengkapi profil serta formasi Anda untuk mengakses menu ini.')"
                                 aria-expanded="false">
                                 <span><i class="ti ti-lock"></i></span>
                                 <span class="hide-menu">Soal</span>
@@ -131,7 +131,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" style="cursor: not-allowed;"
-                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                onclick="alert('Harap lengkapi profil serta formasi Anda untuk mengakses menu ini.')"
                                 aria-expanded="false">
                                 <span><i class="ti ti-lock"></i></span>
                                 <span class="hide-menu">LMS Space</span>
@@ -143,7 +143,7 @@
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" style="cursor: not-allowed;"
-                                onclick="alert('Harap lengkapi profil Anda untuk mengakses menu ini.')"
+                                onclick="alert('Harap lengkapi profil serta formasi Anda untuk mengakses menu ini.')"
                                 aria-expanded="false">
                                 <span><i class="ti ti-lock"></i></span>
                                 <span class="hide-menu">History Pembelian</span>
