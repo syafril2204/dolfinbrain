@@ -68,6 +68,18 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function hasMaterialAccess(): bool
+    {
+        if (!$this->position_id) {
+            return false;
+        }
+
+        return $this->purchasedPositions()
+            ->where('position_id', $this->position_id)
+            ->whereIn('package_type', ['mandiri', 'bimbingan'])
+            ->exists();
+    }
+
     /**
      * positionUser
      *
