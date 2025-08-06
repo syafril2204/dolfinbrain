@@ -4,9 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
-class MaterialResource extends JsonResource
+class QuizPackageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,17 +14,14 @@ class MaterialResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $download_url = "Silahkan Beli Paket Terlebih Dahulu";
-        if (auth()->user()->hasMaterialAccess()) {
-            $download_url = url(Storage::url($this->file_path));
-        }
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'file_type' => $this->file_type,
-            'file_size_kb' => number_format($this->file_size / 1024, 2),
-            'download_url' => $download_url
+            'duration_in_minutes' => $this->duration_in_minutes,
+            'total_questions' => $this->whenLoaded('questions', function () {
+                return $this->questions->count();
+            }),
         ];
     }
 }
