@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'show']);
         Route::post('/update', [ProfileController::class, 'update']);
-        Route::post('/change-password', [ProfileController::class, 'changePassword']); 
+        Route::post('/change-password', [ProfileController::class, 'changePassword']);
         Route::post('/change-position', [ProfileController::class, 'changePosition']);
     });
 
