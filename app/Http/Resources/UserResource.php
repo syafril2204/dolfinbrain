@@ -32,12 +32,7 @@ class UserResource extends JsonResource
                 return [
                     'id' => $this->position->id,
                     'name' => $this->position->name,
-                    'formation' => $this->whenLoaded('position.formation', function () {
-                        return [
-                            'id' => $this->position->formation->id,
-                            'name' => $this->position->formation->name,
-                        ];
-                    })
+                    'formation' => $this->position->formation
                 ];
             }),
         ];
