@@ -17,7 +17,7 @@ class MaterialController extends Controller
         $user = $request->user();
 
         if (!$user->position_id) {
-            ResponseHelper::error(null, 'Anda belum memilih formasi/jabatan.', Response::HTTP_FORBIDDEN);
+            ResponseHelper::error(null, 'Anda belum memilih formasi atau jabatan.', Response::HTTP_FORBIDDEN);
         }
 
         $position = Position::with('materials')->find($user->position_id);
