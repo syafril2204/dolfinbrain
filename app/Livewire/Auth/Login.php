@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
@@ -26,10 +27,14 @@ class Login extends Component
     {
         $this->validate();
 
+        $user = User::where('email', $this->email)->first();
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             session()->regenerate();
 
             return $this->redirectRoute('dashboard', navigate: true);
+        }
+        if (!$user->hasVerifiedEmail()) {
+            $this->addError('email', 'Email Anda belum diverifikasi. Silakan periksa kotak masuk Anda.'); // 403
         }
 
         $this->addError('email', 'Email atau password yang Anda masukkan salah.');
