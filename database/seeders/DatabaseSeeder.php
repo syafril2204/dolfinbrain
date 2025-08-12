@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            // FormationAndPositionSeeder::class,
-            // MaterialAndQuizSeeder::class,
-            // LmsSpaceSeeder::class,
+            FormationAndPositionSeeder::class,
+            MaterialAndQuizSeeder::class,
+            LmsSpaceSeeder::class,
         ]);
     }
 }
