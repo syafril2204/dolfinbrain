@@ -83,11 +83,19 @@
                                 Anda sudah membeli paket bimbingan
                             </button>
                         @else
-                            <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
-                                class="btn btn-primary w-100 mt-auto" @if (!$currentPosition) disabled @endif
-                                wire:navigate>
-                                Pilih Paket Aplikasi
-                            </a>
+                            @if ($pendingTransaction)
+                                <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
+                                    class="btn btn-primary w-100 mt-auto"
+                                    @if (!$currentPosition) disabled @endif wire:navigate>
+                                    Lanjutkan Pembayaran
+                                </a>
+                            @else
+                                <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"
+                                    class="btn btn-primary w-100 mt-auto"
+                                    @if (!$currentPosition) disabled @endif wire:navigate>
+                                    Pilih Paket Aplikasi
+                                </a>
+                            @endif
                         @endif
                     @else
                         <a href="{{ route('students.packages.checkout', ['package_type' => 'mandiri']) }}"

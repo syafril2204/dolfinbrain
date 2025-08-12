@@ -23,6 +23,7 @@ class Transaction extends Model
         'payment_method',
         'amount',
         'status',
+        'phone_number',
         'checkout_url',
         'payment_code',
         'qr_url',

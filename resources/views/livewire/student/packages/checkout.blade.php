@@ -144,6 +144,13 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="form-check mb-3">
+                        <label for="">Nomor HP</label>
+                        <input type="number" wire:model="phone_number" name="phone_number" class="form-control">
+                        @error('phone_number')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="agree" wire:model="agree">
                         <label class="form-check-label" for="agree">
                             Dengan mencentang ini, saya menyetujui <a href="#">Syarat & Ketentuan</a> dan <a

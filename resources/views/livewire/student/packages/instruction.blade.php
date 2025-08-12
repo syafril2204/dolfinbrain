@@ -69,8 +69,9 @@
                     <div class="mt-4">
                         <a href="{{ $transaction->checkout_url }}" target="_blank" class="btn btn-primary btn-lg">Bayar
                             Sekarang</a>
-                        <a href="{{ route('students.packages.index') }}"
-                            class="btn btn-outline-secondary btn-lg mt-2 mt-md-0">Pilih Metode Lain</a>
+                        <a href="/students/checkout/{{ $type }}"
+                            class="btn btn-outline-secondary btn-lg mt-2 mt-md-0">Pilih
+                            Metode Lain</a>
                     </div>
 
                 </div>

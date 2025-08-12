@@ -50,7 +50,6 @@
                                     <td><span class="badge bg-secondary">{{ strtoupper($file->file_type) }}</span></td>
                                     <td>{{ number_format($file->file_size / 1024, 2) }} KB</td>
                                     <td>
-                                        {{-- 👇 Tombol Unduh untuk File --}}
                                         <a href="{{ route('admin.lms-resources.download', $file) }}"
                                             class="btn btn-sm btn-outline-secondary">Unduh</a>
                                         <button wire:click="edit({{ $file->id }})"
@@ -94,7 +93,6 @@
                                     <td><span class="badge bg-warning">{{ strtoupper($audio->file_type) }}</span></td>
                                     <td>{{ number_format($audio->file_size / 1024, 2) }} KB</td>
                                     <td>
-                                        {{-- 👇 Tombol Preview & Unduh untuk Audio --}}
                                         <button wire:click="showPreview({{ $audio->id }})"
                                             class="btn btn-sm btn-outline-info">Preview</button>
                                         <a href="{{ route('admin.lms-resources.download', $audio) }}"
@@ -117,9 +115,49 @@
         </div>
     </div>
 
-    {{-- ... Modal Form Tambah/Edit (tidak berubah) ... --}}
+    {{-- Modal Form Tambah/Edit --}}
+    @if ($isModalOpen)
+        <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $isEditMode ? 'Edit' : 'Tambah' }}
+                            {{ $type === 'recap_file' ? 'File Rekap' : 'Audio' }}</h5>
+                        <button type="button" class="btn-close" wire:click="closeModal"></button>
+                    </div>
+                    <form wire:submit.prevent="store">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Judul</label>
+                                <input type="text" class="form-control" wire:model="title">
+                                @error('title')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Upload File</label>
+                                <input type="file" class="form-control" wire:model="file">
+                                @if ($isEditMode && !$file)
+                                    <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah
+                                        file.</small>
+                                @endif
+                                <div wire:loading wire:target="file" class="text-primary mt-1">Uploading...</div>
+                                @error('file')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" wire:click="closeModal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 
-    {{-- 👇 [BAGIAN BARU] Modal untuk Preview Audio --}}
+    {{-- Modal untuk Preview Audio --}}
     @if ($isPreviewModalOpen && $previewingAudio)
         <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
@@ -129,7 +167,6 @@
                         <button type="button" class="btn-close" wire:click="closePreviewModal"></button>
                     </div>
                     <div class="modal-body">
-                        {{-- Pemutar Audio HTML5 --}}
                         <audio controls class="w-100">
                             <source src="{{ Storage::url($previewingAudio->file_path) }}"
                                 type="audio/{{ $previewingAudio->file_type }}">

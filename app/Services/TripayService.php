@@ -32,7 +32,7 @@ class TripayService
         return $response->json()['data'] ?? [];
     }
 
-    public function createTransaction($transaction, $user, $position, $packageType)
+    public function createTransaction($transaction, $user, $position, $packageType, $paymentChannels, $phone_number)
     {
         $signature = hash_hmac(
             'sha256',
@@ -40,15 +40,14 @@ class TripayService
             $this->privateKey
         );
 
-        $paymentChannels = $this->getPaymentChannels();
 
         $payload = [
-            'method'         => $paymentChannels[0]['code'],
+            'method'         => $paymentChannels,
             'merchant_ref'   => $transaction->reference,
             'amount'         => $transaction->amount,
             'customer_name'  => $user->name,
             'customer_email' => $user->email,
-            'customer_phone' => $user->phone_number,
+            'customer_phone' => $phone_number,
             'order_items'    => [
                 [
                     'sku'      => $packageType . '-' . $position->id,

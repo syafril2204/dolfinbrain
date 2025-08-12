@@ -13,20 +13,27 @@ class Files extends Component
     use WithFileUploads;
 
     public LmsSpace $lms_space;
-    public $activeTab = 'files';
+    public $activeTab = 'files'; // 'files' atau 'audio'
     protected $queryString = ['activeTab' => ['except' => 'files', 'as' => 'tab']];
 
-    // Properti untuk Modal Form
+    // Properti untuk Modal Form Tambah/Edit
     public $isModalOpen = false;
     public $isEditMode = false;
     public ?LmsResource $resource = null;
     public $title = '', $type = '', $file;
 
-    // 👇 [PROPERTI BARU] Untuk Modal Preview Audio
+    // Properti untuk Modal Preview Audio
     public $isPreviewModalOpen = false;
     public ?LmsResource $previewingAudio = null;
 
-    // ... (Metode rules, mount, switchTab, create, edit, store tidak berubah) ...
+    protected function rules()
+    {
+        return [
+            'title' => 'required|string|max:255',
+            'type' => 'required|in:recap_file,audio_recording',
+            'file' => $this->isEditMode ? 'nullable|file|max:10240' : 'required|file|max:10240', // 10MB
+        ];
+    }
 
     public function mount(LmsSpace $lms_space)
     {
@@ -79,20 +86,6 @@ class Files extends Component
         $this->closeModal();
     }
 
-    // 👇 [FUNGSI BARU] Untuk menampilkan modal preview
-    public function showPreview(LmsResource $resource)
-    {
-        $this->previewingAudio = $resource;
-        $this->isPreviewModalOpen = true;
-    }
-
-    // 👇 [FUNGSI BARU] Untuk menutup modal preview
-    public function closePreviewModal()
-    {
-        $this->isPreviewModalOpen = false;
-        $this->previewingAudio = null;
-    }
-
     public function delete(LmsResource $resource)
     {
         if ($resource->file_path && Storage::disk('public')->exists($resource->file_path)) {
@@ -112,6 +105,18 @@ class Files extends Component
     {
         $this->reset(['isModalOpen', 'isEditMode', 'resource', 'title', 'type', 'file']);
         $this->resetErrorBag();
+    }
+
+    public function showPreview(LmsResource $resource)
+    {
+        $this->previewingAudio = $resource;
+        $this->isPreviewModalOpen = true;
+    }
+
+    public function closePreviewModal()
+    {
+        $this->isPreviewModalOpen = false;
+        $this->previewingAudio = null;
     }
 
     public function render()

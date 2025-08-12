@@ -15,16 +15,19 @@ class Checkout extends Component
     public ?Position $position;
     public $packageName;
     public $price;
+    public $phone_number;
     public $originalPrice;
     public $discountAmount;
     public $transactionId;
     public $agree = false;
+    public $pendingTransaction;
 
     public $paymentChannels = [];
     public $selectedPaymentMethod;
 
     public function mount($package_type)
     {
+        $this->phone_number = auth()->user()->phone_number ?? '';
         if (!in_array($package_type, ['mandiri', 'bimbingan'])) {
             abort(404);
         }
@@ -39,16 +42,18 @@ class Checkout extends Component
 
         $pendingTransaction = Transaction::where('user_id', $user->id)
             ->where('status', 'pending')
+            ->latest()
             ->first();
+        $this->pendingTransaction = $pendingTransaction;
 
-        if ($pendingTransaction) {
-            if ($pendingTransaction->position_id == $user->position_id && $pendingTransaction->package_type == $this->packageType) {
-                session()->flash('message', 'Anda sudah memiliki transaksi tertunda untuk paket ini. Silakan selesaikan pembayaran.');
-                return $this->redirect(route('students.packages.instruction', ['transaction' => $pendingTransaction->reference]));
-            } else {
-                $pendingTransaction->delete();
-            }
-        }
+        // if ($pendingTransaction) {
+        //     if ($pendingTransaction->position_id == $user->position_id && $pendingTransaction->package_type == $this->packageType) {
+        //         session()->flash('message', 'Anda sudah memiliki transaksi tertunda untuk paket ini. Silakan selesaikan pembayaran.');
+        //         return $this->redirect(route('students.packages.instruction', ['transaction' => $pendingTransaction->reference]));
+        //     } else {
+        //         $pendingTransaction->delete();
+        //     }
+        // }
 
         $this->setupCheckout();
     }
@@ -78,29 +83,39 @@ class Checkout extends Component
         $this->validate([
             'agree' => 'accepted',
             'selectedPaymentMethod' => 'required',
+            'phone_number' => 'required',
         ], [
             'agree.accepted' => 'Anda harus menyetujui Syarat & Ketentuan.',
             'selectedPaymentMethod.required' => 'Silakan pilih metode pembayaran.',
+            'phone_number.required' => 'Silahkan inputkan Nomor HP anda'
         ]);
 
         $user = Auth::user();
 
+
+        if ($this->pendingTransaction) {
+            $this->pendingTransaction->delete();
+        }
         $transaction = Transaction::create([
             'user_id' => $user->id,
             'position_id' => $this->position->id,
             'package_type' => $this->packageType,
             'reference' => 'INV-' . $user->id . '-' . time(),
             'payment_method' => $this->selectedPaymentMethod,
+            'phone_number' => $this->phone_number,
             'amount' => $this->price,
             'status' => 'pending',
         ]);
 
+        auth()->user()->update([
+            'phone_number' => $this->phone_number
+        ]);
+
         $tripay = new TripayService();
-        $tripayResponse = $tripay->createTransaction($transaction, $user, $this->position, $this->packageType, $this->selectedPaymentMethod);
+        $tripayResponse = $tripay->createTransaction($transaction, $user, $this->position, $this->packageType, $this->selectedPaymentMethod, $this->phone_number);
 
         if (isset($tripayResponse['success']) && $tripayResponse['success'] == true) {
             $tripayData = $tripayResponse['data'];
-
             $transaction->update([
                 'checkout_url' => $tripayData['checkout_url'],
                 'payment_code' => $tripayData['pay_code'] ?? null,
