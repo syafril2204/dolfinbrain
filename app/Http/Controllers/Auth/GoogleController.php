@@ -35,6 +35,9 @@ class GoogleController extends Controller
             }
 
             Auth::login($user);
+            if ($user->status == 'blocked') {
+                return redirect()->route('login')->with('error', 'Gagal login, akun anda diblokir.');
+            }
 
             if ($user->position_id) {
                 return redirect()->route('dashboard');
