@@ -20,6 +20,7 @@ class Transaction extends Model
         'position_id',
         'package_type',
         'reference',
+        'affiliate_id',
         'payment_method',
         'amount',
         'status',

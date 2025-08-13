@@ -48,8 +48,11 @@
                         </table>
                     </div>
                     <hr>
-                    <label for="referral" class="form-label">Kode Referral</label>
-                    <input type="text" id="referral" class="form-control" placeholder="Masukkan kode">
+                    <input type="text" id="referral" class="form-control" placeholder="Masukkan kode"
+                        wire:model="referral_code">
+                    @error('referral_code')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 

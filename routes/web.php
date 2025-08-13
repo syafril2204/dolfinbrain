@@ -45,6 +45,7 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Student\Contact\Index as StudentContactIndex;
 use App\Livewire\Student\MyPackages\Index as MyPackagesIndex;
+use App\Livewire\Admin\Affiliates\Index as AffiliateIndex;
 use App\Models\Material;
 use Illuminate\Support\Facades\Route;
 use App\Models\LmsResource;
@@ -105,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
 
+        Route::get('/affiliates', AffiliateIndex::class)->name('affiliates.index');
         Route::get('/users', UserIndex::class)->name('users.index');
         Route::get('/formations', FormationIndex::class)->name('formations.index');
         Route::get('/formations/{formation}/positions', PositionIndex::class)->name('positions.index');

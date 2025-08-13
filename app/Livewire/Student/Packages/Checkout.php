@@ -5,6 +5,7 @@ namespace App\Livewire\Student\Packages;
 use App\Models\Position;
 use App\Models\Transaction;
 use App\Services\TripayService;
+use App\Models\Affiliate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -21,6 +22,7 @@ class Checkout extends Component
     public $transactionId;
     public $agree = false;
     public $pendingTransaction;
+    public $referral_code = '';
 
     public $paymentChannels = [];
     public $selectedPaymentMethod;
@@ -84,10 +86,12 @@ class Checkout extends Component
             'agree' => 'accepted',
             'selectedPaymentMethod' => 'required',
             'phone_number' => 'required',
+            'referral_code' => 'nullable|exists:affiliates,code',
         ], [
             'agree.accepted' => 'Anda harus menyetujui Syarat & Ketentuan.',
             'selectedPaymentMethod.required' => 'Silakan pilih metode pembayaran.',
-            'phone_number.required' => 'Silahkan inputkan Nomor HP anda'
+            'phone_number.required' => 'Silahkan inputkan Nomor HP anda',
+            'referral_code.exists' => 'Kode referral tidak valid.'
         ]);
 
         $user = Auth::user();
@@ -96,6 +100,12 @@ class Checkout extends Component
         if ($this->pendingTransaction) {
             $this->pendingTransaction->delete();
         }
+        $affiliateId = null;
+        if ($this->referral_code) {
+            $affiliate = Affiliate::where('code', $this->referral_code)->first();
+            $affiliateId = $affiliate->id;
+        }
+
         $transaction = Transaction::create([
             'user_id' => $user->id,
             'position_id' => $this->position->id,
@@ -104,6 +114,7 @@ class Checkout extends Component
             'payment_method' => $this->selectedPaymentMethod,
             'phone_number' => $this->phone_number,
             'amount' => $this->price,
+            'affiliate_id' => $affiliateId,
             'status' => 'pending',
         ]);
 
