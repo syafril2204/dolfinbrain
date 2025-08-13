@@ -34,14 +34,16 @@ class GoogleController extends Controller
                 $user->assignRole('student');
             }
 
+            Auth::login($user);
             if ($user->status == 'blocked') {
                 return redirect()->route('login')->with('error', 'Gagal login, akun anda diblokir.');
-            } elseif ($user->position_id) {
+            }
+
+            if ($user->position_id) {
                 return redirect()->route('dashboard');
             } else {
                 return redirect()->route('register');
             }
-            Auth::login($user);
         } catch (\Exception $e) {
             return redirect()->route('login')->with('error', 'Gagal login dengan Google.');
         }
