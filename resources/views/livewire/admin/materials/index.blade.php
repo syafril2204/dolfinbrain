@@ -17,11 +17,15 @@
         </div>
     </div>
 
-  
-    <div class="d-flex justify-content-between align-items-center mb-4 gap-3">
-        <a href="{{ route('admin.materials.create') }}" class="btn btn-primary">Tambah Materi</a>
 
-        <div class="d-flex gap-2" style="width: 60%;">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <a href="{{ route('admin.materials.create') }}" class="btn btn-primary  text-nowrap">
+            <i class="ti ti-plus me-1"></i> Tambah Materi
+        </a>
+        <div class="d-none d-md-block w-50">
+            {{-- Isi konten Anda di sini, misalnya form filter atau search bar --}}
+        </div>
+        <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
             <select class="form-select" wire:model.live="selectedFormation">
                 <option value="">Semua Formasi</option>
                 @foreach ($formations as $formation)
@@ -38,13 +42,14 @@
                 </select>
             @endif
 
-            <div class="position-relative" style="min-width: 250px;">
+            <div class="position-relative w-100 w-sm-auto">
                 <input type="text" class="form-control" placeholder="Cari materi..."
-                    wire:model.live.debounce.300ms="searchTerm">
-                <i class="ti ti-search position-absolute"
-                    style="top: 50%; right: 10px; transform: translateY(-50%);"></i>
+                    wire:model.live.debounce.300ms="searchTerm" style="min-width: 220px;">
+                <i class="ti ti-search position-absolute top-50 end-0 translate-middle-y me-2 text-muted"></i>
             </div>
         </div>
+
+        {{-- Grup Filter & Pencarian --}}
     </div>
 
     @if (session()->has('message'))

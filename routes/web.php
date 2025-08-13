@@ -152,7 +152,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('students')->name('students.')->group(function () {
 
         Route::get('/profile', StudentProfileIndex::class)->name('profile.index');
-        Route::get('/profile-update', StudentProfileUpdate::class)->name('profile.update');
+        Route::get('/profile-update/{status?}', StudentProfileUpdate::class)->name('profile.update');
         Route::middleware('profile.completed')->group(function () {
 
             Route::get('/kontak', StudentContactIndex::class)->name('contact.index');

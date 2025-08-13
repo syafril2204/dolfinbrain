@@ -15,21 +15,21 @@ class Update extends Component
 
     public $activeTab = 'profile';
 
-    // Properti untuk Tab "Ubah Profile"
     public $name, $gender, $avatar;
 
-    // Properti untuk Tab "Ubah Password"
     public $current_password, $password, $password_confirmation;
 
-    // Properti untuk Tab "Ubah Formasi"
-    public $formations = []; // Diinisialisasi sebagai array kosong untuk mencegah error
+    public $formations = [];
     public $selectedFormation = null;
     public $new_position_id = null;
     public $formationStep = 1;
     public $date_of_birth, $domicile;
 
-    public function mount()
+    public function mount(?string $status = null)
     {
+        if ($status) {
+            $this->activeTab = $status;
+        }
         $user = Auth::user();
         $this->name = $user->name;
         $this->gender = $user->gender;

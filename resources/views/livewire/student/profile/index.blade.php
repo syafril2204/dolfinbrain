@@ -28,12 +28,13 @@
                             History Pembelian
                             <i class="ti ti-chevron-right"></i>
                         </a>
-                        <a href="{{ route('students.profile.update') }}" style="padding: 1.25rem 1rem;"
+                        <a href="{{ route('students.profile.update', ['status' => 'profile']) }}"
+                            style="padding: 1.25rem 1rem;"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-bottom">
                             Ubah Profile
                             <i class="ti ti-chevron-right"></i>
                         </a>
-                        <a href="#" wire:click.prevent="switchSection('change_password')"
+                        <a href="{{ route('students.profile.update', ['status' => 'password']) }}"
                             style="padding: 1.25rem 1rem;"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border-bottom">
                             Ubah Password
