@@ -39,6 +39,10 @@
         <div class="card border mb-3" wire:key="{{ $question->id }}">
             <div class="card-body">
                 <p class="mb-2"><strong>Soal #{{ $loop->iteration }}</strong></p>
+                @if ($question->image)
+                    <img src="{{ Storage::url($question->image) }}" class="img-fluid rounded mb-3"
+                        style="max-height: 300px;" alt="Gambar Soal">
+                @endif
                 <p>{!! nl2br(e($question->question_text)) !!}</p>
                 <hr>
                 <small>Pilihan Jawaban:</small>

@@ -16,6 +16,7 @@ class Question extends Model
         'question_text',
         'explanation',
         'points',
+        'image',
         'type'
     ];
 

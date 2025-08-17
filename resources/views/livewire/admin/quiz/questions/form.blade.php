@@ -4,8 +4,7 @@
             <h4 class="fw-semibold mb-8">{{ $isEditMode ? 'Edit Soal' : 'Tambah Soal Baru' }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-muted" href="{{ route('admin.quiz-packages.index') }}">Paket
-                            Kuis</a></li>
+                    <li class="breadcrumb-item"><a class="text-muted" href="{{ route('admin.quiz-packages.index') }}">Paket Kuis</a></li>
                     <li class="breadcrumb-item"><a class="text-muted"
                             href="{{ route('admin.quiz-packages.questions.index', $quiz_package) }}">Soal</a></li>
                     <li class="breadcrumb-item" aria-current="page">{{ $isEditMode ? 'Edit' : 'Tambah' }}</li>
@@ -24,6 +23,20 @@
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Gambar Soal (Opsional)</label>
+                    <input type="file" id="image" class="form-control" wire:model="image">
+                    <div wire:loading wire:target="image" class="text-primary mt-1">Uploading...</div>
+                    @if ($image)
+                        <img src="{{ $image->temporaryUrl() }}" class="img-thumbnail mt-2" style="max-height: 200px;">
+                    @elseif ($existingImageUrl)
+                        <img src="{{ Storage::url($existingImageUrl) }}" class="img-thumbnail mt-2"
+                            style="max-height: 200px;">
+                    @endif
+                    @error('image')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
 
                 <div class="mb-4">
                     <h5 class="card-title">Pilihan Jawaban</h5>
@@ -36,17 +49,16 @@
                             <input class="form-check-input mt-0" type="radio" wire:model="correctAnswerIndex"
                                 value="{{ $index }}" aria-label="Tandai sebagai jawaban benar">
                         </div>
-                        <input type="text" class="form-control" wire:model="answers.{{ $index }}.text"
+                        <input type="text" class="form-control" wire:model="answers.{{ $index }}.answer_text"
                             placeholder="Pilihan Jawaban {{ $index + 1 }}">
                     </div>
-                    @error("answers.{$index}.text")
+                    @error("answers.{$index}.answer_text")
                         <div class="text-danger mb-2" style="margin-top: -10px;">{{ $message }}</div>
                     @enderror
                 @endforeach
                 @error('correctAnswerIndex')
                     <div class="text-danger mb-3">{{ $message }}</div>
                 @enderror
-
 
                 <div class="mb-3 mt-4">
                     <label for="explanation" class="form-label">Pembahasan Jawaban (Opsional)</label>
@@ -57,7 +69,8 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Simpan Soal</button>
-                <a href="{{ route('admin.quiz-packages.questions.index', $quiz_package) }}" class="btn btn-secondary">Batal</a>
+                <a href="{{ route('admin.quiz-packages.questions.index', $quiz_package) }}"
+                    class="btn btn-secondary" wire:navigate>Batal</a>
             </form>
         </div>
     </div>

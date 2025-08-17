@@ -4,26 +4,32 @@ namespace App\Livewire\Admin\Quiz\Questions;
 
 use App\Models\Question;
 use App\Models\QuizPackage;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Form extends Component
 {
+    use WithFileUploads;
+
     public QuizPackage $quiz_package;
     public ?Question $question = null;
 
     public $question_text = '';
     public $explanation = '';
     public $answers = [];
-    public $correctAnswerIndex = 0;
+    public $correctAnswerIndex = null; // Diubah ke null untuk state awal yang lebih jelas
     public $isEditMode = false;
+    public $image;
+    public $existingImageUrl = null;
 
     protected function rules()
     {
         return [
             'question_text' => 'required|string',
             'explanation' => 'nullable|string',
-            'answers.*.text' => 'required|string',
+            'image' => 'nullable|image', // Maks 1MB
+            'answers.*.answer_text' => 'required|string', // [FIX] Key disamakan menjadi 'answer_text'
             'correctAnswerIndex' => 'required|integer|between:0,4',
         ];
     }
@@ -35,42 +41,35 @@ class Form extends Component
             'correctAnswerIndex.required' => 'Anda harus memilih satu jawaban benar.',
         ];
         foreach ($this->answers as $index => $answer) {
-            $messages["answers.{$index}.text.required"] = 'Pilihan jawaban ' . ($index + 1) . ' tidak boleh kosong.';
+            // [FIX] Key disamakan menjadi 'answer_text'
+            $messages["answers.{$index}.answer_text.required"] = 'Pilihan jawaban ' . ($index + 1) . ' tidak boleh kosong.';
         }
         return $messages;
     }
 
-    /**
-     * PERBAIKAN UTAMA:
-     * Samakan nama argumen ($quiz_package, $question) dengan
-     * nama parameter di route ({quiz_package}, {question})
-     */
-    public function mount($quiz_package, $question = null)
+    // [FIX] Method mount disederhanakan untuk langsung menerima model
+    public function mount(QuizPackage $quiz_package, $question = null)
     {
-        $this->quiz_package = QuizPackage::findOrFail($quiz_package->id);
+        $this->quiz_package = $quiz_package;
 
         if ($question) {
             $this->isEditMode = true;
-            $this->question = Question::with('answers')->findOrFail($question->id);
-            $this->question_text = $this->question->question_text;
-            $this->explanation = $this->question->explanation;
+            $this->question = $question;
+            $this->question_text = $question->question_text;
+            $this->explanation = $question->explanation;
+            $this->existingImageUrl = $question->image;
 
-            foreach ($this->question->answers as $index => $answer) {
-                $this->answers[$index] = ['text' => $answer->answer_text];
+            foreach ($question->answers as $index => $answer) {
+                // [FIX] Key disamakan menjadi 'answer_text'
+                $this->answers[$index] = ['answer_text' => $answer->answer_text];
                 if ($answer->is_correct) {
                     $this->correctAnswerIndex = $index;
                 }
             }
-        }
-
-        $this->initializeAnswers();
-    }
-
-    public function initializeAnswers()
-    {
-        for ($i = 0; $i < 5; $i++) {
-            if (!isset($this->answers[$i])) {
-                $this->answers[$i] = ['text' => ''];
+        } else {
+            // Inisialisasi 5 jawaban kosong untuk form create
+            for ($i = 0; $i < 5; $i++) {
+                $this->answers[] = ['answer_text' => ''];
             }
         }
     }
@@ -79,30 +78,35 @@ class Form extends Component
     {
         $this->validate();
 
-        DB::transaction(function () {
-            $questionData = [
-                'quiz_package_id' => $this->quiz_package->id,
-                'question_text' => $this->question_text,
-                'explanation' => $this->explanation,
-            ];
+        $data = [
+            'quiz_package_id' => $this->quiz_package->id,
+            'question_text' => $this->question_text,
+            'explanation' => $this->explanation,
+        ];
 
-            if ($this->isEditMode) {
-                $this->question->update($questionData);
-                $this->question->answers()->delete();
-            } else {
-                $this->question = Question::create($questionData);
+        if ($this->image) {
+            if ($this->isEditMode && $this->question->image) {
+                Storage::disk('public')->delete($this->question->image);
             }
+            $data['image'] = $this->image->store('questions', 'public');
+        }
 
-            foreach ($this->answers as $index => $answerData) {
-                $this->question->answers()->create([
-                    'answer_text' => $answerData['text'],
-                    'is_correct' => ($index == $this->correctAnswerIndex),
-                ]);
-            }
-        });
+        if ($this->isEditMode) {
+            $this->question->update($data);
+            $this->question->answers()->delete(); // Hapus jawaban lama untuk diganti
+        } else {
+            $this->question = Question::create($data);
+        }
+
+        foreach ($this->answers as $index => $answer) {
+            $this->question->answers()->create([
+                'answer_text' => $answer['answer_text'],
+                'is_correct' => ($this->correctAnswerIndex == $index),
+            ]);
+        }
 
         session()->flash('message', 'Soal berhasil disimpan.');
-        return $this->redirectRoute('admin.quiz-packages.questions.index', ['quiz_package' => $this->quiz_package->id]);
+        return $this->redirectRoute('admin.quiz-packages.questions.index', $this->quiz_package);
     }
 
     public function render()
