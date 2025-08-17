@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FormationController;
 use App\Http\Controllers\Api\MaterialController;
@@ -45,6 +46,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
     Route::get('/quiz-packages/{quiz_package}', [QuizPackageController::class, 'show']);
+
+    Route::prefix('articles')->name('api.articles.')->group(function () {
+        Route::get('/', [ArticleController::class, 'index'])->name('index');
+        Route::get('/{article:slug}', [ArticleController::class, 'show'])->name('show');
+    });
 
     Route::post('/quiz-packages/{quiz_package}/start', [QuizAttemptController::class, 'start']);
     Route::post('/quiz-attempts/{attempt}/answer', [QuizAttemptController::class, 'answer']);
