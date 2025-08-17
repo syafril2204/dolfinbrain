@@ -32,12 +32,14 @@ class Login extends Component
             session()->regenerate();
 
             return $this->redirectRoute('dashboard', navigate: true);
-        }
-        if (!$user->hasVerifiedEmail()) {
-            $this->addError('email', 'Email Anda belum diverifikasi. Silakan periksa kotak masuk Anda.'); // 403
-        }
-        if ($user->status == 'blocked') {
-            $this->addError('email', 'Akun anda dinonaktifkan, silahkan hubungi admin.'); 
+            if (!$user->hasVerifiedEmail()) {
+                $this->addError('email', 'Email Anda belum diverifikasi. Silakan periksa kotak masuk Anda.'); // 403
+            }
+            if ($user->status) {
+                if ($user->status  == 'blocked') {
+                    $this->addError('email', 'Akun anda dinonaktifkan, silahkan hubungi admin.');
+                }
+            }
         }
 
         $this->addError('email', 'Email atau password yang Anda masukkan salah.');

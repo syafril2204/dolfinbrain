@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Admin\Users;
 
+use App\Exports\UsersExport;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -38,6 +40,11 @@ class Index extends Component
         $this->isDetailModalOpen = false;
         $this->selectedUser = null;
     }
+    public function exportExcel()
+    {
+        return Excel::download(new UsersExport(), 'daftar-pengguna.xlsx');
+    }
+
 
     public function render()
     {

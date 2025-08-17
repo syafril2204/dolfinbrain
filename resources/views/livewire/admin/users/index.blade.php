@@ -13,6 +13,15 @@
     @endif
 
     <div class="card">
+        <div class="px-4 py-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="card-title fw-semibold mb-0 lh-sm">Daftar Pengguna</h5>
+
+            <button wire:click="exportExcel" class="btn btn-success">
+                <i class="ti ti-file-excel me-1"></i>
+                Export Excel
+            </button>
+        </div>
+
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table border">
