@@ -37,7 +37,7 @@
                         <a class="sidebar-link {{ request()->routeIs('admin.formations.*', 'admin.positions.*') ? 'active' : '' }}"
                             href="{{ route('admin.formations.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-sitemap"></i></span>
-                            <span class="hide-menu">Formasi & Posisi</span>
+                            <span class="hide-menu">Formasi & Jabatan</span>
                         </a>
                     </li>
                     <li class="sidebar-item">

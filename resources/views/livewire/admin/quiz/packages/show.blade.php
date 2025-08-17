@@ -23,7 +23,7 @@
                     Nonaktif
                 @endif
             </p>
-            <p class="mb-0"><strong>Untuk Posisi:</strong>
+            <p class="mb-0"><strong>Untuk Jabatan:</strong>
                 @forelse($quiz_package->positions as $position)
                     <span class="badge bg-light-primary text-primary">{{ $position->formation->name }} -
                         {{ $position->name }}</span>

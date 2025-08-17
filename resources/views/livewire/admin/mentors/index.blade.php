@@ -28,7 +28,7 @@
                                 <h6 class="fs-4 fw-semibold mb-0">Mentor</h6>
                             </th>
                             <th>
-                                <h6 class="fs-4 fw-semibold mb-0">Posisi</h6>
+                                <h6 class="fs-4 fw-semibold mb-0">Jabatan</h6>
                             </th>
                             <th>
                                 <h6 class="fs-4 fw-semibold mb-0">Aksi</h6>
@@ -87,9 +87,9 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="position_id" class="form-label">Posisi</label>
+                                <label for="position_id" class="form-label">Jabatan</label>
                                 <select class="form-select" wire:model="position_id">
-                                    <option value="">-- Pilih Posisi --</option>
+                                    <option value="">-- Pilih Jabatan --</option>
                                     @foreach ($positions as $position)
                                         <option value="{{ $position->id }}">{{ $position->formation->name }} -
                                             {{ $position->name }}</option>

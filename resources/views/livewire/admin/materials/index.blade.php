@@ -131,12 +131,12 @@
                         <p><strong>Ukuran File:</strong> {{ number_format($selectedMaterial->file_size / 1024, 2) }} KB
                         </p>
                         <div>
-                            <strong>Untuk Posisi:</strong><br>
+                            <strong>Untuk Jabatan:</strong><br>
                             @forelse($selectedMaterial->positions as $position)
                                 <span class="badge bg-light-primary text-primary mt-1">{{ $position->formation->name }}
                                     - {{ $position->name }}</span>
                             @empty
-                                <span class="text-muted">Tidak ditugaskan ke posisi manapun.</span>
+                                <span class="text-muted">Tidak ditugaskan ke Jabatan manapun.</span>
                             @endforelse
                         </div>
                     </div>

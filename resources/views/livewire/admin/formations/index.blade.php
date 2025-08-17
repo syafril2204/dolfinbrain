@@ -52,7 +52,7 @@
                                 <td>{{ $formation->short_description }}</td>
                                 <td>
                                     <a href="{{ route('admin.positions.index', $formation) }}"
-                                        class="btn btn-sm btn-info">Posisi</a>
+                                        class="btn btn-sm btn-info">Jabatan</a>
                                     <button wire:click="edit({{ $formation->id }})"
                                         class="btn btn-sm btn-warning">Edit</button>
                                     <button wire:click="delete({{ $formation->id }})"

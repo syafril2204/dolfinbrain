@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="mb-3" wire:ignore>
-                    <label class="form-label">Tugaskan ke Posisi</label>
+                    <label class="form-label">Tugaskan ke Jabatan</label>
                     <select class="form-control" id="select-positions" multiple>
                         @foreach ($allPositions as $position)
                             <option value="{{ $position->id }}">{{ $position->formation->name }} - {{ $position->name }}
@@ -73,7 +73,7 @@
             let select = $('#select-positions');
 
             select.select2({
-                placeholder: "Pilih satu atau lebih posisi",
+                placeholder: "Pilih satu atau lebih jabatan",
                 width: '100%'
             });
 
