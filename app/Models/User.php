@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use Attribute;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Spatie\Permission\Traits\HasRoles; // Import trait
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasRoles, HasApiTokens; // Gunakan trait
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     protected $fillable = [
         'name',
@@ -29,7 +28,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar',
         'position_id',
     ];
-
 
     protected $hidden = [
         'password',
@@ -46,14 +44,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Position::class);
     }
+
     /**
-     * purchasedPositions
-     *
-     * @return BelongsToMany
+     * Relasi untuk posisi yang telah dibeli oleh pengguna.
      */
     public function purchasedPositions(): BelongsToMany
     {
-        return $this->belongsToMany(Position::class, 'position_user');
+        // DITAMBAHKAN: withPivot untuk mempermudah akses data 'package_type'
+        return $this->belongsToMany(Position::class, 'position_user')
+            ->withPivot('package_type', 'created_at');
     }
 
     public function transactions(): HasMany
@@ -61,6 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Transaction::class);
     }
 
+    /**
+     * Mengambil transaksi terakhir yang belum kedaluwarsa untuk posisi aktif pengguna.
+     */
     public function lastTransaction(): HasOne
     {
         return $this->hasOne(Transaction::class)->ofMany(
@@ -68,11 +70,15 @@ class User extends Authenticatable implements MustVerifyEmail
             function ($query) {
                 $query
                     ->where('expired_at', '>=', now())
-                    ->where('position_id', auth()->user()->position_id);
+                    // DIPERBAIKI: Menggunakan '$this' bukan 'auth()->user()'
+                    ->where('position_id', $this->position_id);
             }
         );
     }
 
+    /**
+     * Memeriksa apakah pengguna memiliki akses ke materi (telah membeli paket).
+     */
     public function hasMaterialAccess(): bool
     {
         if (!$this->position_id) {
@@ -86,21 +92,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * positionUser
-     *
-     * @return HasMany
+     * Mengambil data pembelian posisi terakhir untuk posisi yang sedang aktif.
      */
     public function latestPositionUser(): HasOne
     {
         return $this->hasOne(PositionUser::class)
-            ->where('position_id', auth()->user()->position_id)
+            // DIPERBAIKI: Menggunakan '$this' bukan 'auth()->user()'
+            ->where('position_id', $this->position_id)
             ->latestOfMany();
     }
 
     /**
-     * hasLmsAccess
-     *
-     * @return bool
+     * Memeriksa apakah pengguna memiliki akses LMS (paket bimbingan) untuk posisi aktif.
      */
     public function hasLmsAccess(): bool
     {
