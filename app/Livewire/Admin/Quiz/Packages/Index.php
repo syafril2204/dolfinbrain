@@ -12,54 +12,75 @@ class Index extends Component
 {
     use WithPagination;
 
-    public $selectedFormation = '';
-    public $selectedPosition = '';
+    public ?Formation $currentFormation = null;
+    public ?Position $currentPosition = null;
+    public array $breadcrumbs = [];
 
-    public function updatedSelectedFormation()
+    public function mount()
     {
-        $this->selectedPosition = '';
-        $this->resetPage();
+        $this->updateBreadcrumbs();
     }
 
-    public function updatedSelectedPosition()
+    public function selectFormation($formationId)
     {
+        $this->currentFormation = Formation::findOrFail($formationId);
+        $this->currentPosition = null;
         $this->resetPage();
+        $this->updateBreadcrumbs();
+    }
+
+    public function selectPosition($positionId)
+    {
+        $this->currentPosition = Position::findOrFail($positionId);
+        $this->resetPage();
+        $this->updateBreadcrumbs();
+    }
+
+    public function goToBreadcrumb($level)
+    {
+        if ($level === 0) {
+            $this->currentFormation = null;
+            $this->currentPosition = null;
+        } elseif ($level === 1) {
+            $this->currentPosition = null;
+        }
+        $this->resetPage();
+        $this->updateBreadcrumbs();
+    }
+
+    private function updateBreadcrumbs()
+    {
+        $this->breadcrumbs = [];
+        $this->breadcrumbs[] = ['label' => 'Paket Kuis', 'level' => 0];
+
+        if ($this->currentFormation) {
+            $this->breadcrumbs[] = ['label' => $this->currentFormation->name, 'level' => 1];
+        }
+
+        if ($this->currentPosition) {
+            $this->breadcrumbs[] = ['label' => $this->currentPosition->name, 'level' => 2];
+        }
+    }
+
+    public function deletePackage(QuizPackage $quiz_package)
+    {
+        $quiz_package->delete();
+        session()->flash('message', 'Paket kuis berhasil dihapus.');
     }
 
     public function render()
     {
-        $formations = Formation::all();
-        $positions = collect();
+        $data = [];
 
-        if ($this->selectedFormation) {
-            $positions = Position::where('formation_id', $this->selectedFormation)->get();
+        if ($this->currentPosition) {
+            $data['items'] = $this->currentPosition->quizPackages()->paginate(10);
+        } elseif ($this->currentFormation) {
+            $data['items'] = $this->currentFormation->positions()->get();
+        } else {
+            $data['items'] = Formation::all();
         }
 
-        $packagesQuery = QuizPackage::query();
-
-        if ($this->selectedPosition) {
-            $packagesQuery->whereHas('positions', function ($query) {
-                $query->where('position_id', $this->selectedPosition);
-            });
-        }
-        elseif ($this->selectedFormation) {
-            $packagesQuery->whereHas('positions', function ($query) {
-                $query->where('formation_id', $this->selectedFormation);
-            });
-        }
-
-        $packages = $packagesQuery->latest()->paginate(10);
-
-        return view('livewire.admin.quiz.packages.index', [
-            'packages' => $packages,
-            'formations' => $formations,
-            'positions' => $positions,
-        ])->layout('components.layouts.app');
-    }
-
-    public function delete(QuizPackage $quizPackage)
-    {
-        $quizPackage->delete();
-        session()->flash('message', 'Paket kuis berhasil dihapus.');
+        return view('livewire.admin.quiz.packages.index', $data)
+            ->layout('components.layouts.app');
     }
 }

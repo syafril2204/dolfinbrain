@@ -40,7 +40,7 @@ class Form extends Component
     }
 
     // 2. Ubah argumen mount ke snake_case agar cocok dengan route
-    public function mount($quiz_package = null)
+    public function mount($quiz_package = null, $position_id = null)
     {
         if ($quiz_package) {
             $this->isEditMode = true;
@@ -50,6 +50,9 @@ class Form extends Component
             $this->duration_in_minutes = $this->quiz_package->duration_in_minutes;
             $this->is_active = $this->quiz_package->is_active;
             $this->assignedPositions = $this->quiz_package->positions->pluck('id')->toArray();
+        }
+        if ($position_id) {
+            $this->assignedPositions = [$position_id];
         }
     }
 

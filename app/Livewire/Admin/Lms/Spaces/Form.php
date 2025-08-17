@@ -39,7 +39,7 @@ class Form extends Component
         ];
     }
 
-    public function mount($lms_space = null)
+    public function mount($lms_space = null, $position_id = null)
     {
         if ($lms_space) {
             $this->isEditMode = true;
@@ -49,6 +49,9 @@ class Form extends Component
             $this->existing_image_path = $this->lms_space->image_path;
             $this->is_active = $this->lms_space->is_active;
             $this->assignedPositions = $this->lms_space->positions->pluck('id')->toArray();
+        }
+        if ($position_id) {
+            $this->assignedPositions = [$position_id];
         }
     }
 

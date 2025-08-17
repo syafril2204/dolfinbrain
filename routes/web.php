@@ -122,7 +122,7 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::prefix('lms-spaces')->name('lms-spaces.')->group(function () {
             Route::get('/', LmsSpaceIndex::class)->name('index');
-            Route::get('/create', LmsSpaceForm::class)->name('create');
+            Route::get('/create/{position_id?}', LmsSpaceForm::class)->name('create');
             Route::get('/{lms_space}/edit', LmsSpaceForm::class)->name('edit');
 
             Route::prefix('/{lms_space}/content')->name('content.')->group(function () {
@@ -146,7 +146,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('quiz-packages')->name('quiz-packages.')->group(function () {
             Route::get('/', QuizPackageIndex::class)->name('index');
-            Route::get('/create', QuizPackageForm::class)->name('create');
+            Route::get('/create/{position_id?}', QuizPackageForm::class)->name('create');
             Route::get('/{quiz_package}/edit', QuizPackageForm::class)->name('edit');
             Route::get('/{quiz_package}', QuizPackageShow::class)->name('show');
 

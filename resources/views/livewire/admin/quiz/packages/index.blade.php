@@ -1,98 +1,137 @@
 <div>
-    <div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    {{-- Breadcrumb Dinamis --}}
+    <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body px-4 py-3">
-            <div class="row align-items-center">
-                <div class="col-9">
-                    <h4 class="fw-semibold mb-8">Manajemen Kuis</h4>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-muted" href="#">Dashboard</a></li>
-                            <li class="breadcrumb-item" aria-current="page">Paket Kuis</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+            <h4 class="fw-semibold mb-8">Manajemen Paket Kuis</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    @foreach ($breadcrumbs as $crumb)
+                        @if ($loop->last)
+                            <li class="breadcrumb-item active" aria-current="page">{{ $crumb['label'] }}</li>
+                        @else
+                            <li class="breadcrumb-item">
+                                <a class="text-muted" href="#"
+                                    wire:click.prevent="goToBreadcrumb({{ $crumb['level'] }})">{{ $crumb['label'] }}</a>
+                            </li>
+                        @endif
+                    @endforeach
+                </ol>
+            </nav>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="formation" class="form-label">Filter Berdasarkan Formasi</label>
-                    <select id="formation" class="form-select" wire:model.live="selectedFormation">
-                        <option value="">Semua Formasi</option>
-                        @foreach ($formations as $formation)
-                            <option value="{{ $formation->id }}">{{ $formation->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="position" class="form-label">Filter Berdasarkan Jabatan</label>
-                    <select id="position" class="form-select" wire:model.live="selectedPosition"
-                        @if (!$selectedFormation) disabled @endif>
-                        <option value="">Semua Jabatan</option>
-                        @foreach ($positions as $position)
-                            <option value="{{ $position->id }}">{{ $position->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
+    @if (session()->has('message'))
+        <div class="alert alert-success">{{ session('message') }}</div>
+    @endif
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title fw-semibold mb-0">Daftar Paket Kuis</h5>
-            <a href="{{ route('admin.quiz-packages.create') }}" class="btn btn-primary">Tambah Paket</a>
-        </div>
-        <div class="card-body">
-            @if (session()->has('message'))
-                <div class="alert alert-success">{{ session('message') }}</div>
-            @endif
-            <div class="table-responsive">
-                <table class="table border">
-                    <thead>
-                        <tr>
-                            <th>Judul</th>
-                            <th>Durasi (Menit)</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($packages as $package)
-                            <tr>
-                                <td>{{ $package->title }}</td>
-                                <td>{{ $package->duration_in_minutes }}</td>
-                                <td>
-                                    @if ($package->is_active)
-                                        <span class="badge bg-success">Aktif</span>
-                                    @else
-                                        <span class="badge bg-danger">Nonaktif</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('admin.quiz-packages.questions.index', $package) }}"
-                                        class="btn btn-sm btn-info">Soal</a>
-                                    <a href="{{ route('admin.quiz-packages.show', $package) }}"
-                                        class="btn btn-sm btn-outline-secondary">Lihat</a>
-                                    <a href="{{ route('admin.quiz-packages.edit', $package) }}"
-                                        class="btn btn-sm btn-warning">Edit</a>
-                                    <button wire:click="delete({{ $package->id }})" wire:confirm="Yakin?"
-                                        class="btn btn-sm btn-danger">Hapus</button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center">Tidak ada paket kuis yang cocok dengan filter.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+    {{-- Tampilan Konten Dinamis --}}
+    @if ($currentPosition)
+        {{-- LEVEL 3: DAFTAR PAKET KUIS --}}
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title fw-semibold mb-0">Daftar Kuis untuk {{ $currentPosition->name }}</h5>
+                <a href="{{ route('admin.quiz-packages.create', ['position_id' => $currentPosition->id]) }}"
+                    class="btn btn-primary" wire:navigate>
+                    Tambah Paket Kuis
+                </a>
             </div>
-            <div class="mt-3">{{ $packages->links() }}</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table border">
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Durasi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($items as $package)
+                                <tr>
+                                    <td>{{ $package->title }}</td>
+                                    <td>{{ $package->duration_in_minutes }} Menit</td>
+                                    <td>
+                                        @if ($package->is_active)
+                                            <span class="badge bg-success">Aktif</span>
+                                        @else
+                                            <span class="badge bg-danger">Nonaktif</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.quiz-packages.questions.index', $package) }}"
+                                            class="btn btn-sm btn-outline-info" wire:navigate>Soal</a>
+                                        <a href="{{ route('admin.quiz-packages.edit', $package) }}"
+                                            class="btn btn-sm btn-warning" wire:navigate>Edit</a>
+                                        <button wire:click="deletePackage({{ $package->id }})" wire:confirm="Yakin?"
+                                            class="btn btn-sm btn-danger">Hapus</button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">Belum ada paket kuis untuk posisi ini.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                @if ($items->hasPages())
+                    <div class="mt-3">{{ $items->links() }}</div>
+                @endif
+            </div>
         </div>
-    </div>
+    @elseif ($currentFormation)
+        {{-- LEVEL 2: FOLDER POSISI --}}
+        <div class="row">
+            @forelse($items as $position)
+                <div class="col-md-4 col-lg-3">
+                    <div class="card text-center shadow-sm hover-scale-up"
+                        wire:click="selectPosition({{ $position->id }})" style="cursor: pointer;">
+                        <div class="card-body">
+                            <i class="ti ti-folder text-warning" style="font-size: 4rem;"></i>
+                            <h5 class="card-title mt-3">{{ $position->name }}</h5>
+                            <p class="card-text text-muted">{{ $position->quizPackages()->count() }} Kuis</p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12">
+                    <p class="text-center">Tidak ada posisi di dalam formasi ini.</p>
+                </div>
+            @endforelse
+        </div>
+    @else
+        {{-- LEVEL 1: FOLDER FORMASI --}}
+        <div class="row">
+            @forelse($items as $formation)
+                <div class="col-md-4 col-lg-3">
+                    <div class="card text-center shadow-sm hover-scale-up"
+                        wire:click="selectFormation({{ $formation->id }})" style="cursor: pointer;">
+                        <div class="card-body">
+                            <i class="ti ti-folder text-warning" style="font-size: 4rem;"></i>
+                            <h5 class="card-title mt-3">{{ $formation->name }}</h5>
+                            <p class="card-text text-muted">{{ $formation->positions()->count() }} Posisi</p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12">
+                    <p class="text-center">Belum ada formasi yang dibuat.</p>
+                </div>
+            @endforelse
+        </div>
+    @endif
 </div>
+
+@push('styles')
+    <style>
+        .hover-scale-up {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .hover-scale-up:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07) !important;
+        }
+    </style>
+@endpush
