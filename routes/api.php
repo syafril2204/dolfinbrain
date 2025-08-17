@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FormationController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuizAttemptController;
@@ -36,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return new UserResource($user);
     });
 
+    Route::get('/formations', [FormationController::class, 'index']);
+    Route::get('/positions', [PositionController::class, 'index']);
 
     Route::get('/materials', [MaterialController::class, 'index']);
 
