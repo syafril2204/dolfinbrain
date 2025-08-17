@@ -1,169 +1,129 @@
 <div>
-    {{-- Header & Breadcrumb --}}
+    {{-- Breadcrumb Dinamis --}}
     <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body px-4 py-3">
-            <div class="row align-items-center">
-                <div class="col-9">
-                    <h4 class="fw-semibold mb-8">Manajemen Materi</h4>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a class="text-muted" href="{{ route('dashboard') }}">Dashboard</a>
+            <h4 class="fw-semibold mb-8">Manajemen Materi</h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    @foreach ($breadcrumbs as $index => $crumb)
+                        @if ($loop->last)
+                            <li class="breadcrumb-item active" aria-current="page">{{ $crumb['label'] }}</li>
+                        @else
+                            <li class="breadcrumb-item">
+                                <a class="text-muted" href="#"
+                                    wire:click.prevent="goToBreadcrumb({{ $crumb['level'] }})">{{ $crumb['label'] }}</a>
                             </li>
-                            <li class="breadcrumb-item" aria-current="page">Materi</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-        <a href="{{ route('admin.materials.create') }}" class="btn btn-primary  text-nowrap">
-            <i class="ti ti-plus me-1"></i> Tambah Materi
-        </a>
-        <div class="d-none d-md-block w-50">
-            {{-- Isi konten Anda di sini, misalnya form filter atau search bar --}}
-        </div>
-        <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-md-auto">
-            <select class="form-select" wire:model.live="selectedFormation">
-                <option value="">Semua Formasi</option>
-                @foreach ($formations as $formation)
-                    <option value="{{ $formation->id }}">{{ $formation->name }}</option>
-                @endforeach
-            </select>
-
-            @if ($selectedFormation)
-                <select class="form-select" wire:model.live="selectedPosition">
-                    <option value="">Semua Jabatan</option>
-                    @foreach ($positions as $position)
-                        <option value="{{ $position->id }}">{{ $position->name }}</option>
+                        @endif
                     @endforeach
-                </select>
-            @endif
-
-            <div class="position-relative w-100 w-sm-auto">
-                <input type="text" class="form-control" placeholder="Cari materi..."
-                    wire:model.live.debounce.300ms="searchTerm" style="min-width: 220px;">
-                <i class="ti ti-search position-absolute top-50 end-0 translate-middle-y me-2 text-muted"></i>
-            </div>
+                </ol>
+            </nav>
         </div>
-
-        {{-- Grup Filter & Pencarian --}}
     </div>
 
     @if (session()->has('message'))
         <div class="alert alert-success">{{ session('message') }}</div>
     @endif
 
-    {{-- Daftar Kartu Materi --}}
-    <div class="row">
-        @forelse ($materials as $material)
-            <div class="col-md-6 col-lg-4" wire:key="{{ $material->id }}">
-                <div class="card border">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="d-flex align-items-center">
-                                <i class="ti ti-file-text fs-8 text-primary"></i>
-                                <div class="ms-3">
-                                    <h6 class="fw-semibold mb-0 fs-4">{{ Str::limit($material->title, 25) }}</h6>
-                                    <span class="fs-2 text-muted">{{ number_format($material->file_size / 1024, 2) }}
-                                        KB</span>
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <a href="#" class="text-muted" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti ti-dots-vertical fs-6"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="#"
-                                            wire:click.prevent="showDetail({{ $material->id }})">
-                                            <i class="fs-4 ti ti-eye"></i>Detail
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3"
-                                            href="{{ route('admin.materials.edit', $material) }}">
-                                            <i class="fs-4 ti ti-edit"></i>Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3 text-danger"
-                                            href="#" wire:click.prevent="delete({{ $material->id }})"
-                                            wire:confirm="Anda yakin ingin menghapus materi ini?">
-                                            <i class="fs-4 ti ti-trash"></i>Hapus
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    {{-- Tampilan Konten Dinamis --}}
+    @if ($currentPosition)
+        {{-- LEVEL 3: TAMPILKAN DAFTAR MATERI --}}
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title fw-semibold mb-0">Daftar Materi untuk {{ $currentPosition->name }}</h5>
+                {{-- Tombol Tambah Materi mengarah ke form dengan menyertakan ID posisi --}}
+                <a href="{{ route('admin.materials.create', ['position_id' => $currentPosition->id]) }}"
+                    class="btn btn-primary" wire:navigate>
+                    Tambah Materi Baru
+                </a>
             </div>
-        @empty
-            <div class="col-12 text-center py-5">
-                <h5 class="mt-2 text-muted">Materi Tidak Ditemukan</h5>
-                <p class="text-muted">Tidak ada materi yang cocok dengan pencarian Anda atau belum ada materi yang
-                    dibuat.</p>
-            </div>
-        @endforelse
-    </div>
-
-    <div class="mt-3">
-        {{ $materials->links('partials.custom-pagination') }}
-    </div>
-
-    {{-- Modal untuk Detail Materi --}}
-    @if ($isDetailModalOpen && $selectedMaterial)
-        <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Detail Materi</h5>
-                        <button type="button" class="btn-close" wire:click="closeDetailModal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <h6 class="fw-semibold">{{ $selectedMaterial->title }}</h6>
-                        <p class="text-muted">{{ $selectedMaterial->description ?? 'Tidak ada deskripsi.' }}</p>
-                        <hr>
-                        <p><strong>Tipe File:</strong> {{ strtoupper($selectedMaterial->file_type) }}</p>
-                        <p><strong>Ukuran File:</strong> {{ number_format($selectedMaterial->file_size / 1024, 2) }} KB
-                        </p>
-                        <div>
-                            <strong>Untuk Jabatan:</strong><br>
-                            @forelse($selectedMaterial->positions as $position)
-                                <span class="badge bg-light-primary text-primary mt-1">{{ $position->formation->name }}
-                                    - {{ $position->name }}</span>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table border">
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Tipe File</th>
+                                <th>Ukuran</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($items as $material)
+                                <tr>
+                                    <td>{{ $material->title }}</td>
+                                    <td><span class="badge bg-secondary">{{ strtoupper($material->file_type) }}</span>
+                                    </td>
+                                    <td>{{ number_format($material->file_size / 1024, 2) }} KB</td>
+                                    <td>
+                                        <a href="{{ route('admin.materials.edit', $material) }}"
+                                            class="btn btn-sm btn-warning" wire:navigate>Edit</a>
+                                        <button wire:click="deleteMaterial({{ $material->id }})" wire:confirm="Yakin?"
+                                            class="btn btn-sm btn-danger">Hapus</button>
+                                    </td>
+                                </tr>
                             @empty
-                                <span class="text-muted">Tidak ditugaskan ke Jabatan manapun.</span>
+                                <tr>
+                                    <td colspan="4" class="text-center">Belum ada materi untuk posisi ini.</td>
+                                </tr>
                             @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                {{ $items->links() }}
+            </div>
+        </div>
+    @elseif ($currentFormation)
+        {{-- LEVEL 2: TAMPILKAN FOLDER POSISI --}}
+        <div class="row">
+            @forelse($items as $position)
+                <div class="col-md-4 col-lg-3">
+                    <div class="card text-center shadow-sm hover-scale-up"
+                        wire:click="selectPosition({{ $position->id }})" style="cursor: pointer;">
+                        <div class="card-body">
+                            <i class="ti ti-folder text-primary" style="font-size: 4rem;"></i>
+                            <h5 class="card-title mt-3">{{ $position->name }}</h5>
+                            <p class="card-text text-muted">{{ $position->materials()->count() }} Materi</p>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeDetailModal">Tutup</button>
-                        <a href="{{ route('materials.download', $selectedMaterial) }}" class="btn btn-primary">Unduh
-                            File</a>
+                </div>
+            @empty
+                <div class="col-12">
+                    <p class="text-center">Tidak ada posisi di dalam formasi ini.</p>
+                </div>
+            @endforelse
+        </div>
+    @else
+        {{-- LEVEL 1: TAMPILKAN FOLDER FORMASI --}}
+        <div class="row">
+            @forelse($items as $formation)
+                <div class="col-md-4 col-lg-3">
+                    <div class="card text-center shadow-sm hover-scale-up"
+                        wire:click="selectFormation({{ $formation->id }})" style="cursor: pointer;">
+                        <div class="card-body">
+                            <i class="ti ti-folder text-primary" style="font-size: 4rem;"></i>
+                            <h5 class="card-title mt-3">{{ $formation->name }}</h5>
+                            <p class="card-text text-muted">{{ $formation->positions()->count() }} Posisi</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @empty
+                <div class="col-12">
+                    <p class="text-center">Belum ada formasi yang dibuat.</p>
+                </div>
+            @endforelse
         </div>
     @endif
 </div>
-@push('scripts')
-    <script>
-        document.addEventListener('livewire:navigated', () => {
-            const pageKey = 'reloaded_materials_page';
-            if (!sessionStorage.getItem(pageKey)) {
-                sessionStorage.setItem(pageKey, 'true');
-                window.location.reload();
-            }
-        });
 
-        document.addEventListener('livewire:navigating', () => {
-            sessionStorage.removeItem('reloaded_materials_page');
-        }, {
-            once: true
-        });
-    </script>
+@push('styles')
+    <style>
+        .hover-scale-up {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .hover-scale-up:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07) !important;
+        }
+    </style>
 @endpush

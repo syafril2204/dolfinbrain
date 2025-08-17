@@ -5,7 +5,6 @@ namespace App\Livewire\Admin\Materials;
 use App\Models\Formation;
 use App\Models\Material;
 use App\Models\Position;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,84 +12,79 @@ class Index extends Component
 {
     use WithPagination;
 
-    public $searchTerm = '';
+    public ?Formation $currentFormation = null;
+    public ?Position $currentPosition = null;
+    public array $breadcrumbs = [];
 
-    // Properti baru untuk filter
-    public $selectedFormation = '';
-    public $selectedPosition = '';
-
-    // Properti untuk modal detail
-    public $isDetailModalOpen = false;
-    public ?Material $selectedMaterial = null;
-
-    // Reset halaman saat filter atau pencarian berubah
-    public function updating()
+    public function mount()
     {
-        $this->resetPage();
+        $this->updateBreadcrumbs();
     }
 
-    // Reset filter jabatan jika formasi diubah
-    public function updatedSelectedFormation()
+    public function selectFormation($formationId)
     {
-        $this->reset('selectedPosition');
+        $this->currentFormation = Formation::findOrFail($formationId);
+        $this->currentPosition = null; // Reset posisi saat formasi dipilih
+        $this->resetPage(); // Reset paginasi
+        $this->updateBreadcrumbs();
+    }
+
+    public function selectPosition($positionId)
+    {
+        $this->currentPosition = Position::findOrFail($positionId);
+        $this->resetPage();
+        $this->updateBreadcrumbs();
+    }
+
+    public function goToBreadcrumb($level)
+    {
+        if ($level === 0) {
+            $this->currentFormation = null;
+            $this->currentPosition = null;
+        } elseif ($level === 1) {
+            $this->currentPosition = null;
+        }
+        $this->resetPage();
+        $this->updateBreadcrumbs();
+    }
+
+    private function updateBreadcrumbs()
+    {
+        $this->breadcrumbs = [];
+        $this->breadcrumbs[] = ['label' => 'Materi', 'level' => 0];
+
+        if ($this->currentFormation) {
+            $this->breadcrumbs[] = ['label' => $this->currentFormation->name, 'level' => 1];
+        }
+
+        if ($this->currentPosition) {
+            $this->breadcrumbs[] = ['label' => $this->currentPosition->name, 'level' => 2];
+        }
+    }
+
+    public function deleteMaterial(Material $material)
+    {
+        // Logika hapus materi (jika ada file terkait, hapus juga)
+        $material->delete();
+        session()->flash('message', 'Materi berhasil dihapus.');
     }
 
     public function render()
     {
-        $formations = Formation::all();
-        $positions = collect();
+        $data = [];
 
-        // Jika sebuah formasi dipilih, ambil jabatannya
-        if ($this->selectedFormation) {
-            $positions = Position::where('formation_id', $this->selectedFormation)->get();
+        if ($this->currentPosition) {
+            // Level 3: Tampilkan Materi
+            $data['items'] = $this->currentPosition->materials()->paginate(10);
+        } elseif ($this->currentFormation) {
+            // Level 2: Tampilkan Posisi
+            $data['items'] = $this->currentFormation->positions()->get();
+        } else {
+            // Level 1: Tampilkan Formasi
+            $data['items'] = Formation::all();
         }
 
-        // Mulai query materi
-        $materialsQuery = Material::query()->with('positions.formation');
-
-        // Terapkan filter berdasarkan jabatan
-        if ($this->selectedPosition) {
-            $materialsQuery->whereHas('positions', function ($query) {
-                $query->where('position_id', $this->selectedPosition);
-            });
-        }
-        // Jika hanya formasi yang dipilih, filter berdasarkan semua jabatan di formasi itu
-        elseif ($this->selectedFormation) {
-            $materialsQuery->whereHas('positions', function ($query) {
-                $query->where('formation_id', $this->selectedFormation);
-            });
-        }
-
-        // Terapkan filter pencarian
-        $materialsQuery->where('title', 'like', '%' . $this->searchTerm . '%');
-
-        $materials = $materialsQuery->latest()->paginate(12);
-
-        return view('livewire.admin.materials.index', [
-            'materials' => $materials,
-            'formations' => $formations,
-            'positions' => $positions,
-        ])->layout('components.layouts.app');
-    }
-
-    public function showDetail(Material $material)
-    {
-        $this->selectedMaterial = $material->load('positions.formation');
-        $this->isDetailModalOpen = true;
-    }
-
-    public function closeDetailModal()
-    {
-        $this->isDetailModalOpen = false;
-        $this->selectedMaterial = null;
-    }
-
-    public function delete(Material $material)
-    {
-        if ($material->file_path && Storage::disk('public')->exists($material->file_path)) {
-            Storage::disk('public')->delete($material->file_path);
-        }
-        $material->delete();
-        session()->flash('message', 'Materi berhasil dihapus.');
+        return view('livewire.admin.materials.index', $data)
+            ->layout('components.layouts.app');
     }
 }

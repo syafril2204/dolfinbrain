@@ -111,10 +111,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/formations', FormationIndex::class)->name('formations.index');
         Route::get('/formations/{formation}/positions', PositionIndex::class)->name('positions.index');
         Route::get('/materials', MaterialIndex::class)->name('materials.index');
-        Route::get('/materials/create', MaterialForm::class)->name('materials.create');
+        Route::get('/materials/create/{position_id?}', MaterialForm::class)->name('materials.create');
         Route::get('/materials/{material}/edit', MaterialForm::class)->name('materials.edit');
         Route::get('/mentors', \App\Livewire\Admin\Mentors\Index::class)->name('mentors.index');
-        
+
         Route::prefix('articles')->name('articles.')->group(function () {
             Route::get('/', \App\Livewire\Admin\Articles\Index::class)->name('index');
             Route::get('/create', \App\Livewire\Admin\Articles\Form::class)->name('create');

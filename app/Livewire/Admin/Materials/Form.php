@@ -14,6 +14,7 @@ class Form extends Component
     use WithFileUploads;
 
     public ?Material $material = null;
+    public $position_id = null;
     public $title = '';
     public $description = '';
     public $file;
@@ -31,7 +32,7 @@ class Form extends Component
         return $rules;
     }
 
-    public function mount($material = null)
+    public function mount($material = null, $position_id = null)
     {
         if ($material) {
             $this->isEditMode = true;
@@ -39,6 +40,9 @@ class Form extends Component
             $this->title = $this->material->title;
             $this->description = $this->material->description;
             $this->assignedPositions = $this->material->positions->pluck('id')->toArray();
+        }
+        if ($position_id) {
+            $this->position_id = $position_id;
         }
     }
 
@@ -64,7 +68,17 @@ class Form extends Component
         if ($this->isEditMode) {
             $this->material->update($dataToSave);
         } else {
-            $this->material = Material::create($dataToSave);
+            $newMaterial = Material::create([
+                'title' => $this->title,
+                'description' => $this->description,
+                'file_path' => $this->file->store('materials', 'public'),
+                'file_size' => $this->file->getSize(),
+                'file_type' => $this->file->getClientOriginalExtension(),
+            ]);
+
+            if ($this->position_id) {
+                $newMaterial->positions()->attach($this->position_id);
+            }
         }
 
         $this->material->positions()->sync($validatedData['assignedPositions']);
