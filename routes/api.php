@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FormationController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\MentorController;
 use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuestionController;
@@ -43,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/positions', [PositionController::class, 'index']);
 
     Route::get('/materials', [MaterialController::class, 'index']);
+    Route::get('/mentors', [MentorController::class, 'index'])->name('api.mentors.index');
 
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
     Route::get('/quiz-packages/{quiz_package}', [QuizPackageController::class, 'show']);
