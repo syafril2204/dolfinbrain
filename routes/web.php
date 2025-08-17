@@ -114,6 +114,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/materials/create', MaterialForm::class)->name('materials.create');
         Route::get('/materials/{material}/edit', MaterialForm::class)->name('materials.edit');
 
+        Route::prefix('articles')->name('articles.')->group(function () {
+            Route::get('/', \App\Livewire\Admin\Articles\Index::class)->name('index');
+            Route::get('/create', \App\Livewire\Admin\Articles\Form::class)->name('create');
+            Route::get('/{article}/edit', \App\Livewire\Admin\Articles\Form::class)->name('edit');
+        });
         Route::prefix('lms-spaces')->name('lms-spaces.')->group(function () {
             Route::get('/', LmsSpaceIndex::class)->name('index');
             Route::get('/create', LmsSpaceForm::class)->name('create');

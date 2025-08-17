@@ -76,6 +76,14 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('admin.articles.*') ? 'active' : '' }}"
+                            href="{{ route('admin.articles.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-article"></i></span>
+                            <span class="hide-menu">Artikel</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('admin.affiliates.*') ? 'active' : '' }}"
                             href="{{ route('admin.affiliates.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-share"></i></span>

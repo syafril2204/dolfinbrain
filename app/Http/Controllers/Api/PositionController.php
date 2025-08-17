@@ -15,7 +15,6 @@ class PositionController extends Controller
      */
     public function index()
     {
-        // Gunakan eager loading 'with()' untuk efisiensi query
         $positions = Position::with('formation')->get();
         $data = PositionResource::collection($positions);
 

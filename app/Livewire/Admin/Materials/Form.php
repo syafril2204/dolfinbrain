@@ -34,7 +34,6 @@ class Form extends Component
     public function mount($material = null)
     {
         if ($material) {
-
             $this->isEditMode = true;
             $this->material = Material::with('positions')->findOrFail($material->id);
             $this->title = $this->material->title;
