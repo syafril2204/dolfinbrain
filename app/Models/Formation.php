@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ class Formation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'short_description', 'slug'];
+    protected $fillable = ['name', 'short_description', 'slug', 'image'];
 
     protected static function boot()
     {

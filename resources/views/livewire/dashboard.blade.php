@@ -94,17 +94,17 @@
                 {{-- Menu Utama (Materi, Soal, LMS) --}}
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-12">
-                        <a href="#" class="text-decoration-none text-dark">
+                        <a href="{{ route('students.materi.index') }}" class="text-decoration-none text-dark">
                             <img src="{{ asset('assets/img/card/image.png') }}" alt="" srcset="">
                         </a>
                     </div>
                     <div class="col-lg-4 col-md-12">
-                        <a href="#" class="text-decoration-none text-dark">
+                        <a href="{{ route('students.soal.index') }}" class="text-decoration-none text-dark">
                             <img src="{{ asset('assets/img/card/image1.png') }}" alt="" srcset="">
                         </a>
                     </div>
                     <div class="col-lg-4 col-md-12">
-                        <a href="#" class="text-decoration-none text-dark">
+                        <a href="{{ route('students.lms.index') }}" class="text-decoration-none text-dark">
                             <img src="{{ asset('assets/img/card/image2.png') }}" alt="" srcset="">
                         </a>
                     </div>
