@@ -7,100 +7,110 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a class="text-muted" href="{{ route('admin.quiz-packages.index') }}">Paket
                             Kuis</a></li>
-                    <li class="breadcrumb-item" aria-current="page">Manajemen Soal</li>
+                    <li class="breadcrumb-item" aria-current="page">Soal</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-    {{-- Daftar Soal --}}
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0 fw-semibold">Daftar Soal</h5>
-            <a href="{{ route('admin.quiz-packages.questions.create', $quiz_package) }}" class="btn btn-primary">Tambah
-                Soal</a>
-        </div>
+    @if (session()->has('message'))
+        <div class="alert alert-success">{{ session('message') }}</div>
+    @endif
+
+    {{-- Fitur Import Excel --}}
+    <div class="card mb-4">
         <div class="card-body">
-            @if (session()->has('message'))
-                <div class="alert alert-success" role="alert">
-                    {{ session('message') }}
-                </div>
-            @endif
-
-            @forelse ($questions as $question)
-                <div class="card border shadow-sm mb-4" wire:key="{{ $question->id }}">
-                    <div class="card-body">
-                        {{-- Teks Pertanyaan & Tombol Aksi --}}
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="flex-grow-1 pe-3">
-                                <p class="mb-2"><strong>Soal #{{ $loop->iteration }}</strong></p>
-                                <div class="question-text">
-                                    {!! nl2br(e($question->question_text)) !!}
-                                </div>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <a href="{{ route('admin.quiz-packages.questions.edit', ['quiz_package' => $quiz_package, 'question' => $question]) }}"
-                                    class="btn btn-sm btn-outline-warning">Edit</a>
-                                <button wire:click="delete({{ $question->id }})"
-                                    wire:confirm="Yakin ingin menghapus soal ini?"
-                                    class="btn btn-sm btn-outline-danger">Hapus</button>
-                            </div>
-                        </div>
-
-                        {{-- Pilihan Jawaban --}}
-                        <div class="list-group">
-                            @foreach ($question->answers as $answer)
-                                <div
-                                    class="list-group-item d-flex align-items-center
-                                    @if ($answer->is_correct) border-success bg-success-subtle @endif">
-
-                                    <span class="fw-bold me-3">{{ chr(65 + $loop->index) }}.</span>
-                                    {{-- Diubah ke A, B, C --}}
-
-                                    <div class="flex-grow-1">
-                                        {{ $answer->answer_text }}
-                                    </div>
-
-                                    @if ($answer->is_correct)
-                                        <span class="badge bg-success rounded-pill ms-3">Jawaban Benar</span>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-
-                        {{-- 👇 [BAGIAN BARU] Tombol & Konten Pembahasan --}}
-                        <div class="mt-3">
-                            {{-- Tombol untuk Menampilkan Pembahasan --}}
-                            <a class="btn btn-sm btn-outline-secondary" data-bs-toggle="collapse"
-                                href="#pembahasan-{{ $question->id }}" role="button" aria-expanded="false"
-                                aria-controls="pembahasan-{{ $question->id }}">
-                                <i class="ti ti-eye"></i> Lihat Pembahasan
-                            </a>
-                        </div>
-
-                        {{-- Konten Pembahasan yang Bisa Disembunyikan --}}
-                        <div class="collapse mt-3" id="pembahasan-{{ $question->id }}">
-                            <div class="card card-body bg-light-secondary">
-                                <h6 class="fw-semibold">Pembahasan:</h6>
-                                @if ($question->explanation)
-                                    <p class="mb-0">{!! nl2br(e($question->explanation)) !!}</p>
-                                @else
-                                    <p class="mb-0 text-muted">Belum ada pembahasan untuk soal ini.</p>
-                                @endif
-                            </div>
-                        </div>
-                        {{-- 👆 [AKHIR BAGIAN BARU] --}}
-
+            <h5 class="card-title fw-semibold">Import Soal dari Excel</h5>
+            <p class="card-subtitle mb-3">
+                Unggah file Excel untuk menambahkan soal. Pastikan format sudah sesuai.
+                <a href="#" wire:click.prevent="downloadTemplate" class="fw-bold">
+                    <i class="ti ti-download me-1"></i>Unduh Format di Sini
+                </a>
+            </p>
+            <form wire:submit.prevent="importExcel">
+                <div class="row align-items-center">
+                    <div class="col-md-9 mb-2 mb-md-0">
+                        <input type="file" class="form-control" wire:model="importFile">
+                        <div wire:loading wire:target="importFile" class="text-primary mt-1">Uploading...</div>
+                        @error('importFile')
+                            <span class="text-danger d-block mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="ti ti-upload me-1"></i> Import
+                        </button>
                     </div>
                 </div>
-            @empty
-                {{-- Tampilan Jika Tidak Ada Soal --}}
-                <div class="text-center py-5">
-                    <h4 class="text-muted">📝</h4>
-                    <h5 class="mt-2">Belum Ada Soal</h5>
-                    <p class="text-muted">Silakan tambahkan soal pertama untuk paket kuis ini.</p>
+            </form>
+            @if (!empty($importErrors))
+                <div class="alert alert-danger mt-3 mb-0">
+                    <strong>Terdapat kesalahan saat import:</strong>
+                    <ul class="mb-0 ps-3">
+                        @foreach ($importErrors as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-            @endforelse
+            @endif
         </div>
+    </div>
+
+    {{-- Judul dan Tombol Tambah Soal --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="card-title fw-semibold mb-0">Daftar Soal yang Ada</h5>
+        <a href="{{ route('admin.quiz-packages.questions.create', $quiz_package) }}" class="btn btn-primary"
+            wire:navigate>
+            <i class="ti ti-plus me-1"></i> Tambah Soal Manual
+        </a>
+    </div>
+
+    {{-- [PERUBAHAN] Tampilan Daftar Soal Menggunakan Kartu --}}
+    @forelse ($questions as $question)
+        <div class="card border" wire:key="{{ $question->id }}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Soal #{{ $questions->firstItem() + $loop->index }}</h6>
+                <div>
+                    <a href="{{ route('admin.quiz-packages.questions.edit', ['quiz_package' => $quiz_package, 'question' => $question]) }}"
+                        class="btn btn-sm btn-warning" wire:navigate>Edit</a>
+                    <button wire:click="delete({{ $question->id }})" wire:confirm="Anda yakin ingin menghapus soal ini?"
+                        class="btn btn-sm btn-danger">Hapus</button>
+                </div>
+            </div>
+            <div class="card-body">
+                @if ($question->image)
+                    <img src="{{ Storage::url($question->image) }}" class="img-fluid rounded mb-3"
+                        style="max-height: 300px;" alt="Gambar Soal">
+                @endif
+                <p class="mb-3">{!! nl2br(e($question->question_text)) !!}</p>
+                <hr>
+                <small>Pilihan Jawaban:</small>
+                <ul class="list-unstyled mt-2">
+                    @foreach ($question->answers as $answer)
+                        <li class="{{ $answer->is_correct ? 'text-success fw-bold' : '' }}">
+                            {{ chr(65 + $loop->index) }}. {{ $answer->answer_text }}
+                            @if ($answer->is_correct)
+                                <i class="ti ti-check ms-1"></i>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+                @if ($question->explanation)
+                    <div class="alert alert-secondary mt-3 mb-0">
+                        <strong>Pembahasan:</strong> {{ $question->explanation }}
+                    </div>
+                @endif
+            </div>
+        </div>
+    @empty
+        <div class="card">
+            <div class="card-body">
+                <p class="text-center mb-0">Belum ada soal untuk paket ini.</p>
+            </div>
+        </div>
+    @endforelse
+
+    <div class="mt-4">
+        {{ $questions->links() }}
     </div>
 </div>
