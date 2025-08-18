@@ -9,9 +9,8 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-    use WithPagination;
-
     public $search = '';
+    public $filterType = ''; // <-- Properti baru untuk filter
     public ?Article $selectedArticle = null;
     public $isDetailModalOpen = false;
 
@@ -19,7 +18,10 @@ class Index extends Component
     {
         $this->resetPage();
     }
-
+    public function updatingFilterType()
+    {
+        $this->resetPage();
+    }
     /**
      * Menampilkan detail artikel dalam modal.
      */
@@ -46,13 +48,15 @@ class Index extends Component
         $article->delete();
         session()->flash('message', 'Artikel berhasil dihapus.');
     }
-
     public function render()
     {
         $articles = Article::with('user')
             ->where('title', 'like', '%' . $this->search . '%')
+            ->when($this->filterType, function ($query) { // <-- Logika filter
+                $query->where('type', $this->filterType);
+            })
             ->latest()
-            ->paginate(9); // Ubah ke 9 agar pas di grid 3 kolom
+            ->paginate(9);
 
         return view('livewire.admin.articles.index', [
             'articles' => $articles,

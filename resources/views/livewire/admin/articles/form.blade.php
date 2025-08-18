@@ -22,6 +22,16 @@
                     @enderror
                 </div>
 
+                <div class="mb-3">
+                    <label for="type" class="form-label">Tipe Konten</label>
+                    <select id="type" class="form-select" wire:model="type">
+                        <option value="article">Artikel</option>
+                        <option value="tips">Tips & Trik</option>
+                    </select>
+                    @error('type')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
                 {{-- Bagian Konten yang Diubah --}}
                 <div class="mb-3" wire:ignore>
                     <label for="content" class="form-label">Konten</label>

@@ -15,7 +15,9 @@ class Form extends Component
     public ?Article $article = null;
     public $isEditMode = false;
 
+    // Properti form
     public $title = '';
+    public $type = 'article'; // <-- Properti baru, default 'article'
     public $content = '';
     public $image;
     public $is_published = false;
@@ -23,17 +25,19 @@ class Form extends Component
 
     protected $rules = [
         'title' => 'required|string|max:255',
+        'type' => 'required|in:article,tips', // <-- Validasi baru
         'content' => 'required|string',
-        'image' => 'nullable|image',
+        'image' => 'nullable|image|max:2048',
         'is_published' => 'required|boolean',
     ];
 
     public function mount($article = null)
     {
-        if ($article) {
+        if ($article->exists) {
             $this->isEditMode = true;
             $this->article = $article;
             $this->title = $article->title;
+            $this->type = $article->type; // <-- Ambil data type saat edit
             $this->content = $article->content;
             $this->is_published = $article->is_published;
             $this->existingImageUrl = $article->image;
@@ -47,6 +51,7 @@ class Form extends Component
         $data = [
             'user_id' => Auth::id(),
             'title' => $this->title,
+            'type' => $this->type, // <-- Simpan data type
             'content' => $this->content,
             'is_published' => $this->is_published,
             'published_at' => $this->is_published ? now() : null,
@@ -71,7 +76,6 @@ class Form extends Component
 
     public function render()
     {
-        return view('livewire.admin.articles.form')
-            ->layout('components.layouts.app');
+        return view('livewire.admin.articles.form')->layout('components.layouts.app');
     }
 }

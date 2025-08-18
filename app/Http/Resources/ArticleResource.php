@@ -20,12 +20,10 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
+            'type' => $this->type,
             'image_url' => $this->image ? Storage::url($this->image) : null,
-
             'excerpt' => Str::limit(strip_tags($this->content), 150),
-
             'content' => $this->when($request->routeIs('api.articles.show'), $this->content),
-
             'published_at' => $this->published_at->translatedFormat('d F Y'),
             'author' => [
                 'name' => $this->user->name,

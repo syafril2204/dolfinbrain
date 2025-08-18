@@ -43,11 +43,19 @@
                     <img src="{{ $article->image ? Storage::url($article->image) : 'https://via.placeholder.com/350x200?text=No+Image' }}"
                         class="card-img-top" alt="{{ $article->title }}" style="height: 200px; object-fit: cover;">
                     <div class="card-body d-flex flex-column">
-                        @if ($article->is_published)
-                            <span class="badge bg-success mb-2 align-self-start">Published</span>
-                        @else
-                            <span class="badge bg-secondary mb-2 align-self-start">Draft</span>
-                        @endif
+                        <div>
+                            @if ($article->type == 'tips')
+                                <span class="badge bg-light-info text-info mb-2">Tips & Trik</span>
+                            @else
+                                <span class="badge bg-light-secondary text-secondary mb-2">Artikel</span>
+                            @endif
+
+                            @if ($article->is_published)
+                                <span class="badge bg-success mb-2">Published</span>
+                            @else
+                                <span class="badge bg-secondary mb-2">Draft</span>
+                            @endif
+                        </div>
                         <h5 class="card-title">{{ Str::limit($article->title, 50) }}</h5>
                         <p class="card-text text-muted small mt-auto">
                             Oleh: {{ $article->user->name }} <br>

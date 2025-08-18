@@ -16,6 +16,7 @@ class Article extends Model
         'slug',
         'content',
         'image',
+        'type',
         'is_published',
         'published_at',
     ];
