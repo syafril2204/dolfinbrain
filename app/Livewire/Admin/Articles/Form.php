@@ -33,7 +33,7 @@ class Form extends Component
 
     public function mount($article = null)
     {
-        if ($article->exists) {
+        if ($article) {
             $this->isEditMode = true;
             $this->article = $article;
             $this->title = $article->title;
