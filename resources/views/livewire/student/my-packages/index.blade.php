@@ -1,4 +1,5 @@
 <div>
+    {{-- Header --}}
     <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body px-4 py-3">
             <h4 class="fw-semibold mb-8">Paket Saya</h4>
@@ -15,96 +16,88 @@
         <div class="alert alert-success">{{ session('message') }}</div>
     @endif
 
-    <div class="row">
-        @if ($purchasedPositions->isNotEmpty())
-            @foreach ($purchasedPositions as $position)
-                @php
-                    $progress = $position->calculateProgressForUser(Auth::user());
-                    $isActive = Auth::id() && Auth::user()->position_id == $position->id;
-                @endphp
+    <div class="accordion" id="packagesAccordion">
+        @forelse ($groupedByFormation as $formationId => $positionsInFormation)
+            @php
+                $formation = $positionsInFormation->first()->formation;
+            @endphp
+            <div class="accordion-item" wire:key="formation-group-{{ $formationId }}">
+                <h2 class="accordion-header" id="heading-{{ $formationId }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse-{{ $formationId }}">
+                        <div class="d-flex align-items-center w-100">
+                            <img src="{{ $formation->image ? Storage::url($formation->image) : 'https://via.placeholder.com/100x70?text=No+Image' }}"
+                                alt="{{ $formation->name }}" class="rounded me-3" width="80" height="50"
+                                style="object-fit: cover;">
+                            <div class="me-auto">
+                                <h6 class="fw-bolder mb-0">{{ $formation->name }}</h6>
+                            </div>
+                            <span class="badge bg-light-primary text-primary me-3">{{ count($positionsInFormation) }}
+                                Posisi Dimiliki</span>
+                        </div>
+                    </button>
+                </h2>
+                <div id="collapse-{{ $formationId }}" class="accordion-collapse collapse"
+                    data-bs-parent="#packagesAccordion">
+                    <div class="accordion-body">
+                        @foreach ($positionsInFormation as $position)
+                            @php
+                                $isActive = Auth::id() && Auth::user()->position_id == $position->id;
+                                // Variabel ini hanya akan berisi paket BERBAYAR untuk posisi saat ini
+                                $packagesForThisPosition = $purchasedPositions->where('id', $position->id);
+                            @endphp
+                            <div
+                                class="d-flex flex-column flex-md-row justify-content-between align-items-md-center p-3 rounded mb-2 border">
+                                <div>
+                                    <h6 class="fw-bolder mb-1">{{ $position->name }}</h6>
+                                    <div class="d-flex flex-wrap gap-1">
 
-                <div class="col-md-6 col-lg-4 d-flex align-items-stretch" wire:key="purchased-{{ $position->id }}">
-                    <div class="card w-100 shadow-sm border">
-                        <img src="{{ $position->formation->image ? Storage::url($position->formation->image) : 'https://via.placeholder.com/350x200?text=Formation+Image' }}"
-                            class="card-img-top" alt="{{ $position->formation->name }}"
-                            style="height: 180px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title fw-bolder">{{ $position->formation->name }}</h5>
-                            <p class="mb-2">{{ $position->name }}</p>
-
-                            @if ($position->pivot->package_type == 'bimbingan')
-                                <span class="badge bg-light-success text-success align-self-start mb-3">Paket
-                                    Bimbel</span>
-                            @else
-                                <span class="badge bg-light-primary text-primary align-self-start mb-3">Paket
-                                    Aplikasi</span>
-                            @endif
-
-                            <div class="progress-section mt-auto">
-                                <div class="d-flex justify-content-between">
-                                    <p class="mb-1">Progres Belajar</p>
-                                    <p class="mb-1 fw-bold">{{ $progress }}%</p>
+                                        @if ($packagesForThisPosition->isNotEmpty())
+                                            @foreach ($packagesForThisPosition as $pkg)
+                                                @if ($pkg->pivot)
+                                                    @if ($pkg->pivot->package_type == 'bimbingan')
+                                                        <span class="badge bg-light-success text-success">Paket
+                                                            Bimbel</span>
+                                                    @else
+                                                        <span class="badge bg-light-primary text-primary">Paket
+                                                            Aplikasi</span>
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            {{-- Jika tidak ada di daftar pembelian, ini PASTI paket gratis --}}
+                                            <span class="badge bg-light-secondary text-secondary">Paket Gratis</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="progress" style="height: 10px;">
-                                    <div class="progress-bar" role="progressbar" style="width: {{ $progress }}%;"
-                                        aria-valuenow="{{ $progress }}"></div>
+                                <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                                    @if ($isActive)
+                                        <span class="badge bg-success"><i class="ti ti-player-play me-1"></i> Sedang
+                                            Aktif</span>
+                                    @else
+                                        <button class="btn btn-sm btn-primary"
+                                            wire:click="setActivePackage({{ $position->id }})">Aktifkan</button>
+                                    @endif
+                                    <a href="{{ route('dashboard') }}" class="btn btn-sm btn-outline-primary"
+                                        wire:navigate>Lanjutkan</a>
                                 </div>
                             </div>
-
-                            <div class="d-grid gap-2 mt-4">
-                                @if ($isActive)
-                                    <span class="btn btn-success disabled"><i class="ti ti-player-play me-1"></i> Sedang
-                                        Aktif</span>
-                                @else
-                                    <button class="btn btn-primary"
-                                        wire:click="setActivePackage({{ $position->id }})">Aktifkan Paket</button>
-                                @endif
-                                <a href="{{ route('dashboard') }}" class="btn btn-outline-primary"
-                                    wire:navigate>Lanjutkan Belajar</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @elseif ($freePosition)
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch" wire:key="free-{{ $freePosition->id }}">
-                <div class="card w-100 shadow-sm border">
-                    <img src="{{ $freePosition->formation->image ? Storage::url($freePosition->formation->image) : 'https://via.placeholder.com/350x200?text=Formation+Image' }}"
-                        class="card-img-top" alt="{{ $freePosition->formation->name }}"
-                        style="height: 180px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title fw-bolder">{{ $freePosition->formation->name }}</h5>
-                        <p class="mb-2">{{ $freePosition->name }}</p>
-                        <span class="badge bg-light-secondary text-secondary align-self-start mb-3">Paket Gratis</span>
-                        <div class="progress-section mt-auto">
-                            <div class="d-flex justify-content-between">
-                                <p class="mb-1">Progres Belajar</p>
-                                <p class="mb-1 fw-bold">0%</p>
-                            </div>
-                            <div class="progress" style="height: 10px;">
-                                <div class="progress-bar" role="progressbar" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                        <div class="d-grid gap-2 mt-4">
-                            <span class="btn btn-success disabled"><i class="ti ti-player-play me-1"></i> Sedang
-                                Aktif</span>
-                            <a href="{{ route('dashboard') }}" class="btn btn-outline-primary" wire:navigate>Mulai
-                                Belajar</a>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
-        @else
+        @empty
             <div class="col-12">
                 <div class="card card-body text-center py-5">
                     <img src="{{ asset('assets/illustrations/empty-box.png') }}" alt="Empty" class="mx-auto mb-3"
                         style="max-width: 150px;">
                     <h5 class="mt-2">Anda Belum Memiliki Paket Apapun</h5>
-                    <p class="text-muted">Semua paket yang Anda beli akan muncul di sini.</p>
+                    <p class="text-muted">Jika Anda mendaftar dengan posisi awal, paket gratis Anda akan muncul di sini.
+                    </p>
                     <a href="{{ route('students.packages.index') }}" class="btn btn-primary mt-2" wire:navigate>Lihat
                         Pilihan Paket</a>
                 </div>
             </div>
-        @endif
+        @endforelse
     </div>
 </div>
