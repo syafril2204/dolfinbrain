@@ -22,4 +22,11 @@ class MentorController extends Controller
 
         return ResponseHelper::success($data, 'Berhasil mengambil data mentor.');
     }
+    public function show(Mentor $mentor): JsonResponse
+    {
+        // Memuat relasi yang diperlukan untuk menghindari N+1 query problem
+        $mentor->load('position.formation');
+        $data = new MentorResource($mentor);
+        return ResponseHelper::success($data, 'Berhasil mengambil detail mentor.');
+    }
 }

@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/materials', [MaterialController::class, 'index']);
     Route::get('/mentors', [MentorController::class, 'index'])->name('api.mentors.index');
+    Route::get('/mentors/{mentor}', [MentorController::class, 'show'])->name('api.mentors.show');
 
     Route::get('/lms-spaces', [LmsController::class, 'index'])->name('api.lms.index');
     Route::get('/lms-spaces/{lms_space}', [LmsController::class, 'show'])->name('api.lms.show');
