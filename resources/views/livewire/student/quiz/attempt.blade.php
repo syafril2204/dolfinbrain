@@ -1,128 +1,100 @@
 <div>
-    {{-- Header & Breadcrumb --}}
-    <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
-        <div class="card-body px-4 py-3">
-            <h4 class="fw-semibold mb-8">Pengerjaan Soal</h4>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-muted" href="{{ route('students.soal.index') }}">Soal</a>
-                    </li>
-                    <li class="breadcrumb-item" aria-current="page">{{ $quiz_package->title }}</li>
-                </ol>
-            </nav>
+    {{-- Header --}}
+    <div class="quiz-header p-4 mb-4 rounded-lg">
+        <h5 class="fw-semibold text-dark mb-2">Soal</h5>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a class="text-muted" href="{{ route('students.soal.index') }}">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="text-muted" href="#">LMS Space</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $quiz_package->title }}</li>
+            </ol>
+        </nav>
+    </div>
+
+    {{-- Timer --}}
+    <div class="quiz-timer d-flex align-items-center justify-content-between p-3 rounded-lg mb-4">
+        <div class="d-flex align-items-center">
+            <i class="ti ti-clock fs-5 me-2"></i>
+            <span class="fw-semibold">Sisa Waktu Pengerjaan</span>
         </div>
+        <strong id="timer" class="fs-5 text-dark">00:00:00</strong>
     </div>
 
     <div class="row">
-        {{-- Kolom Utama Soal --}}
-        <div class="col-lg-8">
-            <div class="alert alert-primary d-flex align-items-center" role="alert">
-                <i class="ti ti-clock fs-5 me-2"></i>
-                Sisa Waktu Pengerjaan:
-                <strong class="ms-2" id="timer">Memuat...</strong>
-            </div>
+        {{-- Soal --}}
+        <div class="col-lg-8 mb-4">
+            <div class="quiz-card p-4 rounded-lg shadow-sm">
+                <p class="fw-semibold mb-3">Quiz : {{ $currentQuestionIndex + 1 }} / {{ $totalQuestions }}</p>
 
-            <div class="card">
-                <div class="card-body">
-                    <p class="mb-3">
-                        <strong>Soal : {{ $currentQuestionIndex + 1 }} / {{ $totalQuestions }}</strong>
-                    </p>
-
-                    {{-- [FIX] Menampilkan Gambar Soal Jika Ada --}}
-                    @if ($currentQuestion->image)
-                        <div class="text-center mb-4">
-                            <img src="{{ Storage::url($currentQuestion->image) }}" class="img-fluid rounded"
-                                style="max-height: 350px;" alt="Gambar Soal">
-                        </div>
-                    @endif
-
-                    <p class="fs-5 mb-4">{!! nl2br(e($currentQuestion->question_text)) !!}</p>
-                    <hr>
-
-                    {{-- [IMPROVEMENT] Tampilan Opsi Jawaban Disederhanakan --}}
-                    <div class="answers-container">
-                        @foreach ($currentQuestion->answers as $answer)
-                            <div class="answer-option mb-2" wire:key="{{ $answer->id }}">
-                                <input class="form-check-input" type="radio" id="ans-{{ $answer->id }}"
-                                    value="{{ $answer->id }}"
-                                    wire:click="selectAnswer({{ $currentQuestion->id }}, {{ $answer->id }})"
-                                    name="question-{{ $currentQuestion->id }}" {{-- [IMPROVEMENT] Menggunakan directive @checked --}}
-                                    @checked(isset($userAnswers[$currentQuestion->id]) && $userAnswers[$currentQuestion->id] == $answer->id)>
-                                <label class="form-check-label" for="ans-{{ $answer->id }}">
-                                    <span class="fw-bold">{{ chr(65 + $loop->index) }}.</span>
-                                    {{ $answer->answer_text }}
-                                </label>
-                            </div>
-                        @endforeach
+                {{-- Gambar Soal --}}
+                @if ($currentQuestion->image)
+                    <div class="text-center mb-4">
+                        <img src="{{ Storage::url($currentQuestion->image) }}" class="img-fluid rounded"
+                            style="max-height: 300px;" alt="Gambar Soal">
                     </div>
+                @endif
+
+                <p class="fs-6 mb-4">{!! nl2br(e($currentQuestion->question_text)) !!}</p>
+
+                {{-- Jawaban --}}
+                <div class="answer-list">
+                    @foreach ($currentQuestion->answers as $answer)
+                        <label class="answer-option p-3 rounded-lg mb-3 d-flex align-items-center"
+                            for="ans-{{ $answer->id }}" wire:key="{{ $answer->id }}">
+                            <input type="radio" id="ans-{{ $answer->id }}"
+                                name="question-{{ $currentQuestion->id }}" value="{{ $answer->id }}"
+                                wire:click="selectAnswer({{ $currentQuestion->id }}, {{ $answer->id }})"
+                                @checked(isset($userAnswers[$currentQuestion->id]) && $userAnswers[$currentQuestion->id] == $answer->id)>
+                            <span class="option-label fw-bold me-2">{{ chr(65 + $loop->index) }}.</span>
+                            <span>{{ $answer->answer_text }}</span>
+                        </label>
+                    @endforeach
                 </div>
             </div>
 
-            {{-- Tombol Navigasi --}}
-            <div class="d-flex justify-content-between">
+            {{-- Navigasi Tombol --}}
+            <div class="d-flex justify-content-between mt-3">
                 @if ($currentQuestionIndex > 0)
-                    <button class="btn btn-outline-secondary"
+                    <button class="btn btn-outline-secondary rounded-lg px-4"
                         wire:click="goToQuestion({{ $currentQuestionIndex - 1 }})">
                         <i class="ti ti-arrow-left me-1"></i> Kembali
                     </button>
                 @else
-                    <div></div> {{-- Placeholder agar tombol selanjutnya tetap di kanan --}}
+                    <div></div>
                 @endif
 
                 @if ($currentQuestionIndex < $totalQuestions - 1)
-                    <button class="btn btn-primary" wire:click="goToQuestion({{ $currentQuestionIndex + 1 }})">
+                    <button class="btn btn-primary rounded-lg px-4"
+                        wire:click="goToQuestion({{ $currentQuestionIndex + 1 }})">
                         Selanjutnya <i class="ti ti-arrow-right ms-1"></i>
                     </button>
-                @endif
-
-                @if ($currentQuestionIndex == $totalQuestions - 1)
-                    <button class="btn btn-success" wire:click="submitQuiz"
-                        wire:confirm="Anda yakin ingin menyelesaikan dan mengumpulkan kuis ini?">
-                        <i class="ti ti-check me-1"></i> Selesaikan Kuis
+                @else
+                    <button class="btn btn-success rounded-lg px-4" wire:click="submitQuiz"
+                        wire:confirm="Yakin ingin mengumpulkan kuis ini?">
+                        <i class="ti ti-check me-1"></i> Selesaikan
                     </button>
                 @endif
             </div>
         </div>
 
-        {{-- Kolom Navigasi Nomor Soal --}}
+        {{-- Navigasi Soal --}}
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Navigasi Soal</h5>
-                    <div class="d-flex flex-wrap gap-2 mt-3">
-                        @for ($i = 0; $i < $totalQuestions; $i++)
-                            <button
-                                class="btn btn-sm
-                                @if ($currentQuestionIndex == $i) btn-primary
-                                @elseif(isset($userAnswers[$questions[$i]->id]) && $userAnswers[$questions[$i]->id] !== null)
-                                    btn-dark
-                                @else
-                                    btn-outline-secondary @endif"
-                                wire:click="goToQuestion({{ $i }})" style="width: 40px; height: 40px;">
-                                {{ $i + 1 }}
-                            </button>
-                        @endfor
-                    </div>
-                </div>
-            </div>
-            <div class="card bg-light-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Keterangan</h5>
-                    <div class="mt-3">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-primary rounded-pill me-2" style="width: 20px;">&nbsp;</span> Posisi
-                            Saat Ini
-                        </div>
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="badge bg-dark rounded-pill me-2" style="width: 20px;">&nbsp;</span> Sudah
-                            Dijawab
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <span
-                                class="badge bg-light-secondary text-secondary border border-secondary rounded-pill me-2"
-                                style="width: 20px;">&nbsp;</span> Belum Dijawab
-                        </div>
-                    </div>
+            <div class="quiz-card p-4 rounded-lg shadow-sm mb-4">
+                <h6 class="fw-semibold">Daftar Pertanyaan</h6>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    @for ($i = 0; $i < $totalQuestions; $i++)
+                        <button
+                            class="quiz-number-btn
+                            @if ($currentQuestionIndex == $i) active
+                            @elseif(isset($userAnswers[$questions[$i]->id])) answered @endif"
+                            wire:click="goToQuestion({{ $i }})">
+                            {{ $i + 1 }}
+                        </button>
+                    @endfor
                 </div>
             </div>
         </div>
@@ -131,41 +103,59 @@
 
 @push('styles')
     <style>
+        .quiz-header {
+            background: #f8fafc;
+        }
+
+        .quiz-timer {
+            background: #e6f2ff;
+        }
+
+        .quiz-card {
+            background: #fff;
+            border: 1px solid #eee;
+        }
+
         .answer-option {
-            border: 1px solid #e9ecef;
-            padding: 1rem;
-            border-radius: 7px;
-            transition: all 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+            cursor: pointer;
         }
 
         .answer-option:hover {
-            background-color: #f8f9fa;
-            cursor: pointer;
+            background: #f9fafb;
         }
 
-        .answer-option input[type="radio"] {
-            transform: scale(1.4);
+        .answer-option input {
+            margin-right: 10px;
+            transform: scale(1.2);
         }
 
-        .answer-option label {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 0;
-            cursor: pointer;
+        .quiz-number-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            background: #e6f2ff;
+            color: #000;
         }
 
-        .answer-option label span {
-            margin-right: 0.75rem;
+        .quiz-number-btn.active {
+            background: #2196f3;
+            color: #fff;
+        }
+
+        .quiz-number-btn.answered {
+            background: #333;
+            color: #fff;
         }
     </style>
 @endpush
-
 @push('scripts')
-    {{-- Kode JavaScript untuk timer tidak perlu diubah, sudah benar --}}
     <script>
         document.addEventListener('livewire:navigated', () => {
-            let duration = @json($timeRemaining);
+            let duration = @json($timeRemaining); // ambil waktu dari backend (detik)
             const timerElement = document.getElementById('timer');
 
             if (window.quizTimer) {
@@ -189,11 +179,12 @@
 
                 duration--;
 
+                // Auto submit kalau waktu habis
                 if (duration < 0) {
                     clearInterval(window.quizTimer);
                     if (!window.quizSubmitted) {
                         window.quizSubmitted = true;
-                        alert('Waktu pengerjaan telah habis! Kuis akan dikumpulkan secara otomatis.');
+                        alert('Waktu pengerjaan telah habis! Kuis akan dikumpulkan otomatis.');
                         @this.submitQuiz();
                     }
                 }
