@@ -2,54 +2,43 @@
 
 namespace App\Livewire\Student\MyPackages;
 
-use App\Models\User;
+use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Index extends Component
 {
-    public $activePosition;
-    public $activePackageType;
-    public $otherPurchasedPositions;
-
-    public function mount()
-    {
-        $this->loadPackages();
-    }
-
-    public function loadPackages()
+    /**
+     * Mengubah paket aktif pengguna.
+     */
+    public function setActivePackage(Position $position)
     {
         $user = Auth::user();
+        $user->update(['position_id' => $position->id]);
 
-        // 1. Ambil posisi yang sedang aktif
-        $this->activePosition = $user->position()->with('formation')->first();
+        session()->flash('message', 'Paket untuk ' . $position->name . ' telah diaktifkan!');
 
-        // 2. Cek jenis paket untuk posisi yang aktif
-        $activePurchase = $user->purchasedPositions()->where('position_id', $user->position_id)->first();
-        $this->activePackageType = $activePurchase ? $activePurchase->pivot->package_type : 'gratis';
-
-        // 3. Ambil semua paket yang dibeli, KECUALI yang sedang aktif
-        $this->otherPurchasedPositions = $user->purchasedPositions()
-            ->where('position_id', '!=', $user->position_id)
-            ->with('formation')
-            ->get();
-    }
-
-    // Fungsi untuk mengganti paket aktif
-    public function setActivePackage($positionId)
-    {
-        $user = Auth::user();
-        $user->position_id = $positionId;
-        $user->save();
-
-        session()->flash('message', 'Paket berhasil diaktifkan.');
-
-        $this->loadPackages();
+        return $this->redirect(route('students.my-packages.index'), navigate: true);
     }
 
     public function render()
     {
-        return view('livewire.student.my-packages.index')
-            ->layout('components.layouts.app');
+        $user = Auth::user();
+
+        // Ambil semua posisi yang pernah dibeli oleh pengguna
+        $purchasedPositions = $user->purchasedPositions()->with('formation')->get();
+
+        // Variabel untuk menampung paket gratis jika tidak ada paket yang dibeli
+        $freePosition = null;
+
+        // Jika tidak ada paket yang dibeli TAPI pengguna punya posisi dari registrasi
+        if ($purchasedPositions->isEmpty() && $user->position) {
+            $freePosition = $user->position()->with('formation')->first();
+        }
+
+        return view('livewire.student.my-packages.index', [
+            'purchasedPositions' => $purchasedPositions,
+            'freePosition' => $freePosition, // Kirim data paket gratis ke view
+        ])->layout('components.layouts.app');
     }
 }

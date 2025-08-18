@@ -13,13 +13,10 @@
                         <div class="card-body">
                             <h5 class="card-title fw-semibold">{{ $formation->name }}</h5>
                             <p class="card-text text-muted">{{ $formation->short_description }}</p>
-                            <span class="badge bg-light-primary text-primary mb-3">
-                                Tersedia {{ $formation->positions_count }} Posisi Jabatan
-                            </span>
-                            <div class="d-grid">
-                                <button class="btn btn-primary" wire:click="selectFormation({{ $formation->id }})">Pilih
-                                    Formasi</button>
-                            </div>
+                            <span class="badge bg-light-primary text-primary mb-3">Tersedia
+                                {{ $formation->positions_count }} Posisi Jabatan</span>
+                            <div class="d-grid"><button class="btn btn-primary"
+                                    wire:click="selectFormation({{ $formation->id }})">Pilih Formasi</button></div>
                         </div>
                     </div>
                 </div>
@@ -44,10 +41,8 @@
                             <p class="fs-4 text-muted">Mulai dari:</p>
                             <h4 class="fw-bolder text-primary">Rp
                                 {{ number_format($position->price_mandiri, 0, ',', '.') }}</h4>
-                            <div class="d-grid mt-3">
-                                <button class="btn btn-primary" wire:click="selectPosition({{ $position->id }})">Pilih
-                                    Jabatan</button>
-                            </div>
+                            <div class="d-grid mt-3"><button class="btn btn-primary"
+                                    wire:click="selectPosition({{ $position->id }})">Pilih Jabatan</button></div>
                         </div>
                     </div>
                 </div>
@@ -55,103 +50,89 @@
                 <p>Belum ada posisi yang tersedia untuk formasi ini.</p>
             @endforelse
         </div>
-    @elseif ($step == 3)
+    @elseif ($step == 3 && !empty($mandiriPackage))
         {{-- =============================================== --}}
-        {{--      LANGKAH 3: TAMPILAN SESUAI SCREENSHOT      --}}
+        {{--        LANGKAH 3: TAMPILAN KARTU DINAMIS         --}}
         {{-- =============================================== --}}
         <div class="d-flex align-items-center mb-4">
-            {{-- Tombol kembali --}}
-            <a href="#" class="btn btn-outline-secondary me-3" wire:click.prevent="goBack">
-                <i class="ti ti-arrow-left"></i>
-            </a>
-            <h3 class="fw-bolder mb-0">Pilih Paket Belajarmu</h3>
+            <a href="#" class="btn btn-outline-secondary me-3" wire:click.prevent="goBack"><i
+                    class="ti ti-arrow-left"></i></a>
+            <h3 class="fw-bolder mb-0">Pilih Paket Belajarmu untuk {{ $selectedPosition->name }}</h3>
         </div>
-
         <div class="row justify-content-center g-4">
-            {{-- Kartu Paket Aplikasi --}}
+            {{-- Kartu Paket Aplikasi (Mandiri) --}}
             <div class="col-md-6 col-lg-5">
                 <div class="card package-card mandiri h-100 d-flex flex-column">
                     <div class="card-body d-flex flex-column">
-                        <div class="text-center mb-3">
-                            <span class="package-tag mandiri-tag">Akses Mandiri</span>
-                        </div>
+                        <div class="text-center mb-3"><span class="package-tag mandiri-tag">Akses Mandiri</span></div>
                         <h4 class="fw-bolder text-center">Paket Aplikasi</h4>
-                        <p class="text-muted text-center small mb-4">Paket ini cocok untuk anda yang ingin belajar
-                            mandiri dengan materi dan soal lengkap</p>
-
+                        <p class="text-muted text-center small mb-4">Cocok untuk Anda yang ingin belajar mandiri dengan
+                            materi dan soal lengkap.</p>
                         <div class="text-center my-3">
-                            <p class="price-original text-muted">Rp. 500.000,00</p>
-                            <h2 class="price-current text-primary-mandiri fw-bolder">Rp 275.000</h2>
+                            <p class="price-original text-muted"><s>Rp.
+                                    {{ number_format($mandiriPackage['original_price'], 0, ',', '.') }}</s></p>
+                            <h2 class="price-current text-primary-mandiri fw-bolder">Rp
+                                {{ number_format($mandiriPackage['price'], 0, ',', '.') }}</h2>
                         </div>
-
                         <ul class="list-unstyled package-features">
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Akses Penuh Selama 6 Bulan Tanpa Batas</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Full Akses Paket Materi</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Full Akses Paket Soal</span>
-                            </li>
-                            <li class="d-flex align-items-center text-muted">
-                                <i class="ti ti-circle-x text-danger me-2"></i>
-                                <span>Tidak termasuk Sesi Bimbel</span>
-                            </li>
+                            @foreach ($mandiriPackage['features'] as $feature)
+                                <li
+                                    class="d-flex align-items-center mb-2 @if (!$feature['included']) text-muted @endif">
+                                    <i
+                                        class="ti {{ $feature['included'] ? 'ti-circle-check text-success' : 'ti-circle-x text-danger' }} me-2"></i>
+                                    <span>{{ $feature['text'] }}</span>
+                                </li>
+                            @endforeach
                         </ul>
-
                         <div class="d-grid mt-auto">
-                            {{-- Anda mungkin perlu menyesuaikan method `checkout` di komponen Livewire Anda --}}
-                            <button class="btn btn-outline-primary-mandiri btn-lg"
-                                wire:click="checkout('mandiri')">Pilih Paket Aplikasi</button>
+                            @if ($hasMandiriPackage)
+                                <button class="btn btn-secondary btn-lg" disabled>Anda Sudah Memiliki Paket Ini</button>
+                            @else
+                                <button class="btn btn-outline-primary-mandiri btn-lg"
+                                    wire:click="checkout('mandiri')">Pilih Paket Aplikasi</button>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-
             {{-- Kartu Paket Bimbel --}}
             <div class="col-md-6 col-lg-5">
                 <div class="card package-card bimbingan h-100 d-flex flex-column">
                     <div class="card-body d-flex flex-column">
-                        <div class="text-center mb-3">
-                            <span class="package-tag bimbingan-tag">Paling Lengkap</span>
+                        <div class="text-center mb-3"><span class="package-tag bimbingan-tag">Paling Lengkap</span>
                         </div>
                         <h4 class="fw-bolder text-center">Paket Bimbel</h4>
-                        <p class="text-muted text-center small mb-4">Dapatkan pengalaman belajar Pengawas Perikanan
-                            dengan
-                            akses penuh ke semua fitur</p>
-
+                        <p class="text-muted text-center small mb-4">Pengalaman belajar lengkap dengan akses penuh ke
+                            semua fitur dan bimbingan mentor.</p>
                         <div class="text-center my-3">
-                            <p class="price-original text-muted">Rp. 2.500.000,00</p>
-                            <h2 class="price-current text-primary fw-bolder">Rp 1.225.000</h2>
+                            @if (!$bimbinganPackage['is_upgrade'])
+                                <p class="price-original text-muted"><s>Rp.
+                                        {{ number_format($bimbinganPackage['original_price'], 0, ',', '.') }}</s></p>
+                            @endif
+                            <h2 class="price-current text-primary fw-bolder">Rp
+                                {{ number_format($bimbinganPackage['price'], 0, ',', '.') }}</h2>
                         </div>
-
                         <ul class="list-unstyled package-features">
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Akses Penuh Selama 6 Bulan Tanpa Batas</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Full Akses Paket Materi</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Full Akses Paket Soal</span>
-                            </li>
-                            <li class="d-flex align-items-center mb-2">
-                                <i class="ti ti-circle-check text-success me-2"></i>
-                                <span>Full Akses Paket Bimbel</span>
-                            </li>
+                            @foreach ($bimbinganPackage['features'] as $feature)
+                                <li
+                                    class="d-flex align-items-center mb-2 @if (!$feature['included']) text-muted @endif">
+                                    <i
+                                        class="ti {{ $feature['included'] ? 'ti-circle-check text-success' : 'ti-circle-x text-danger' }} me-2"></i>
+                                    <span>{{ $feature['text'] }}</span>
+                                </li>
+                            @endforeach
                         </ul>
-
                         <div class="d-grid mt-auto">
-                            {{-- Anda mungkin perlu menyesuaikan method `checkout` di komponen Livewire Anda --}}
-                            <button class="btn btn-primary btn-lg" wire:click="checkout('bimbingan')">Pilih Paket
-                                Bimbel</button>
+                            @if ($hasBimbelPackage)
+                                <button class="btn btn-secondary btn-lg" disabled>Anda Sudah Memiliki Paket Ini</button>
+                            @elseif ($bimbinganPackage['is_upgrade'])
+                                <div class="alert alert-success text-center small">Harga Spesial Upgrade!</div>
+                                <button class="btn btn-success btn-lg" wire:click="checkout('bimbingan')">Upgrade ke
+                                    Paket Bimbel</button>
+                            @else
+                                <button class="btn btn-primary btn-lg" wire:click="checkout('bimbingan')">Pilih Paket
+                                    Bimbel</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -171,162 +152,48 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
         }
 
-        .package-toggle {
-            display: flex;
-            border-radius: 50px;
-            background-color: #f0f2f5;
-            padding: 5px;
-            max-width: 300px;
-        }
-
-        .package-toggle button {
-            flex: 1;
-            padding: 10px 15px;
-            border: none;
-            background-color: transparent;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #5a6a85;
-        }
-
-        .package-toggle button.active {
-            background-color: #fff;
-            color: #5D87FF;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Variabel Warna untuk kemudahan kustomisasi */
-        :root {
-            --mandiri-primary: #28a745;
-            /* Warna hijau utama */
-            --mandiri-bg: #e9f7ec;
-            /* Warna background hijau muda */
-            --bimbingan-primary: #0d6efd;
-            /* Warna biru utama (Bootstrap default) */
-            --bimbingan-bg: #e7f3ff;
-            /* Warna background biru muda */
-            --card-border-radius: 1rem;
-            /* Radius sudut kartu */
-        }
-
-        /* Styling umum untuk kedua kartu paket */
         .package-card {
-            border-width: 1px;
-            border-style: solid;
-            border-radius: var(--card-border-radius);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border-radius: 1rem;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
         }
 
-        .package-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        .package-card.bimbingan {
+            border-width: 2px;
+            border-color: var(--bs-primary) !important;
         }
 
-        /* Styling untuk Tag di atas judul (Akses Mandiri / Paling Lengkap) */
         .package-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.8rem;
-            border-radius: 50px;
-            /* Membuat bentuk pil */
             font-size: 0.8rem;
             font-weight: 600;
-            color: #fff;
-        }
-
-        /* Menambahkan titik/dot sebelum teks tag */
-        .package-tag::before {
-            content: '';
-            display: block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #fff;
-            margin-right: 8px;
-        }
-
-        /* Styling harga */
-        .price-original {
-            text-decoration: line-through;
-            font-size: 1rem;
-        }
-
-        .price-current {
-            font-size: 2.25rem;
-            /* Ukuran font harga diskon */
-            line-height: 1;
-        }
-
-        /* Styling daftar fitur */
-        .package-features {
-            padding-left: 1rem;
-            /* Sedikit indentasi untuk fitur */
-        }
-
-        .package-features .ti {
-            font-size: 1.25rem;
-            /* Ukuran ikon ceklis/silang */
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Kustomisasi Spesifik per Paket
-        |--------------------------------------------------------------------------
-        */
-
-        /* == Paket Aplikasi (Mandiri - Hijau) == */
-        .package-card.mandiri {
-            border-color: var(--mandiri-primary);
-            background-color: var(--mandiri-bg);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
         }
 
         .mandiri-tag {
-            background-color: var(--mandiri-primary);
-        }
-
-        .text-primary-mandiri {
-            color: var(--mandiri-primary) !important;
-        }
-
-        /* Mengubah tombol outline menjadi solid seperti di gambar */
-        .package-card.mandiri .btn-outline-primary-mandiri {
-            background-color: var(--mandiri-primary);
-            border-color: var(--mandiri-primary);
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .package-card.mandiri .btn-outline-primary-mandiri:hover {
-            background-color: #23903c;
-            /* Warna hijau sedikit lebih gelap saat hover */
-            border-color: #23903c;
-            color: #fff;
-        }
-
-
-        /* == Paket Bimbel (Bimbingan - Biru) == */
-        .package-card.bimbingan {
-            border-color: var(--bimbingan-primary);
-            background-color: var(--bimbingan-bg);
+            background-color: #e8f7ff;
+            color: #539bff;
         }
 
         .bimbingan-tag {
-            background-color: var(--bimbingan-primary);
+            background-color: var(--bs-primary);
+            color: #fff;
         }
 
-        .package-card.bimbingan .btn-primary {
-            background-color: var(--bimbingan-primary);
-            border-color: var(--bimbingan-primary);
-            font-weight: 600;
+        .price-original {
+            text-decoration: line-through;
         }
 
-        .package-card.bimbingan .btn-primary:hover {
-            background-color: #0b5ed7;
-            /* Warna biru sedikit lebih gelap saat hover */
-            border-color: #0a58ca;
+        .text-primary-mandiri {
+            color: #539bff;
+        }
+
+        .btn-outline-primary-mandiri {
+            --bs-btn-color: #539bff;
+            --bs-btn-border-color: #539bff;
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: #539bff;
+            --bs-btn-hover-border-color: #539bff;
         }
     </style>
 @endpush

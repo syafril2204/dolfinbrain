@@ -16,14 +16,14 @@ class Checkout extends Component
     public ?Position $position;
     public $packageName;
     public $price;
-    public $phone_number;
     public $originalPrice;
-    public $discountAmount;
-    public $transactionId;
+    public $discountAmount; // <-- [FIX] Properti ditambahkan
+    public $phone_number;
+    public $isUpgrade = false;
+
     public $agree = false;
     public $pendingTransaction;
     public $referral_code = '';
-
     public $paymentChannels = [];
     public $selectedPaymentMethod;
 
@@ -42,20 +42,10 @@ class Checkout extends Component
             return $this->redirect(route('students.packages.index'));
         }
 
-        $pendingTransaction = Transaction::where('user_id', $user->id)
+        $this->pendingTransaction = Transaction::where('user_id', $user->id)
             ->where('status', 'pending')
             ->latest()
             ->first();
-        $this->pendingTransaction = $pendingTransaction;
-
-        // if ($pendingTransaction) {
-        //     if ($pendingTransaction->position_id == $user->position_id && $pendingTransaction->package_type == $this->packageType) {
-        //         session()->flash('message', 'Anda sudah memiliki transaksi tertunda untuk paket ini. Silakan selesaikan pembayaran.');
-        //         return $this->redirect(route('students.packages.instruction', ['transaction' => $pendingTransaction->reference]));
-        //     } else {
-        //         $pendingTransaction->delete();
-        //     }
-        // }
 
         $this->setupCheckout();
     }
@@ -65,10 +55,32 @@ class Checkout extends Component
         $user = Auth::user();
         $this->position = Position::with('formation')->find($user->position_id);
         $this->packageName = ($this->packageType === 'mandiri') ? 'Paket Aplikasi' : 'Paket Bimbel';
-        $this->price = ($this->packageType === 'mandiri') ? $this->position->price_mandiri : $this->position->price_bimbingan;
-        $this->originalPrice = $this->price * 1.2;
-        $this->discountAmount = $this->originalPrice - $this->price;
-        $this->transactionId = 'TRX' . strtoupper(Str::random(10));
+
+        $mandiriFullPrice = $this->position->price_mandiri;
+        $bimbelFullPrice = $this->position->price_bimbingan;
+
+        if ($this->packageType === 'mandiri') {
+            $this->price = $mandiriFullPrice;
+            $this->originalPrice = $mandiriFullPrice;
+        } else { // Jika paket bimbingan
+            $this->price = $bimbelFullPrice;
+            $this->originalPrice = $bimbelFullPrice;
+
+            $hasMandiriPackage = $user->purchasedPositions()
+                ->where('position_id', $this->position->id)
+                ->where('package_type', 'mandiri')->exists();
+            $hasBimbelPackage = $user->purchasedPositions()
+                ->where('position_id', $this->position->id)
+                ->where('package_type', 'bimbingan')->exists();
+
+            if ($hasMandiriPackage && !$hasBimbelPackage) {
+                $this->isUpgrade = true;
+                $this->price = $bimbelFullPrice - $mandiriFullPrice;
+            }
+        }
+
+        $this->price = max(0, $this->price);
+        $this->discountAmount = $this->originalPrice - $this->price; // <-- [FIX] Kalkulasi diskon ditambahkan
 
         try {
             $tripay = new TripayService();
@@ -87,19 +99,14 @@ class Checkout extends Component
             'selectedPaymentMethod' => 'required',
             'phone_number' => 'required',
             'referral_code' => 'nullable|exists:affiliates,code',
-        ], [
-            'agree.accepted' => 'Anda harus menyetujui Syarat & Ketentuan.',
-            'selectedPaymentMethod.required' => 'Silakan pilih metode pembayaran.',
-            'phone_number.required' => 'Silahkan inputkan Nomor HP anda',
-            'referral_code.exists' => 'Kode referral tidak valid.'
         ]);
 
         $user = Auth::user();
 
-
         if ($this->pendingTransaction) {
             $this->pendingTransaction->delete();
         }
+
         $affiliateId = null;
         if ($this->referral_code) {
             $affiliate = Affiliate::where('code', $this->referral_code)->first();
@@ -118,9 +125,7 @@ class Checkout extends Component
             'status' => 'pending',
         ]);
 
-        auth()->user()->update([
-            'phone_number' => $this->phone_number
-        ]);
+        auth()->user()->update(['phone_number' => $this->phone_number]);
 
         $tripay = new TripayService();
         $tripayResponse = $tripay->createTransaction($transaction, $user, $this->position, $this->packageType, $this->selectedPaymentMethod, $this->phone_number);

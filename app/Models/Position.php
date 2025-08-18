@@ -52,4 +52,23 @@ class Position extends Model
     {
         return $this->belongsToMany(LmsSpace::class, 'lms_space_position');
     }
+
+    public function calculateProgressForUser(User $user): int
+    {
+        $totalQuizzes = $this->quizPackages()->count();
+
+        if ($totalQuizzes === 0) {
+            return 0;
+        }
+
+        $quizPackageIds = $this->quizPackages()->pluck('id');
+
+        $completedQuizzesCount = QuizAttempt::where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->whereIn('quiz_package_id', $quizPackageIds)
+            ->distinct()
+            ->count('quiz_package_id');
+
+        return round(($completedQuizzesCount / $totalQuizzes) * 100);
+    }
 }
