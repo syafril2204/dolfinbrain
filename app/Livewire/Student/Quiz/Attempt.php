@@ -110,8 +110,7 @@ class Attempt extends Component
             ]);
         });
 
-        session()->flash('message', 'Kuis telah selesai! Skor Anda: ' . round($score, 2));
-        return $this->redirectRoute('students.soal.index');
+        return $this->redirectRoute('students.quiz.result', ['quiz_attempt' => $this->attempt->id], navigate: true);
     }
 
     public function render()

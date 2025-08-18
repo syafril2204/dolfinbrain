@@ -165,6 +165,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/kontak', StudentContactIndex::class)->name('contact.index');
             Route::get('/materi', StudentMaterialIndex::class)->name('materi.index');
+            Route::get('/quiz/result/{quiz_attempt}', \App\Livewire\Student\Quiz\Result::class)->name('quiz.result');
 
 
             Route::get('/lms-space', LmsIndex::class)->name('lms.index');

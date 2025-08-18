@@ -2,32 +2,34 @@
 
 namespace App\Livewire\Student\Materials;
 
-use App\Models\Position;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Index extends Component
 {
-    public $searchTerm = '';
+    public string $searchTerm = '';
 
     public function render()
     {
-        $materials = collect();
         $user = Auth::user();
+        $materials = collect(); // Default ke koleksi kosong
 
-        if ($user && $user->position_id) {
-            $position = Position::with('materials')->find($user->position_id);
+        $userHasPosition = !is_null($user->position_id);
 
-            if ($position) {
-                $materials = $position->materials()
-                    ->where('title', 'like', '%' . $this->searchTerm . '%')
-                    ->get();
+        if ($userHasPosition) {
+            // Ambil relasi materials dan filter berdasarkan searchTerm
+            $query = $user->position->materials();
+
+            if (!empty($this->searchTerm)) {
+                $query->where('title', 'like', '%' . $this->searchTerm . '%');
             }
+
+            $materials = $query->get();
         }
 
         return view('livewire.student.materials.index', [
+            'userHasPosition' => $userHasPosition,
             'materials' => $materials,
-            'userHasPosition' => !is_null($user->position_id),
         ])->layout('components.layouts.app');
     }
 }
