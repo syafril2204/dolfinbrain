@@ -17,15 +17,31 @@ class Index extends Component
     public $isEditMode = false;
     public ?Mentor $mentor = null;
 
+    // Properti form
     public $name, $position_id, $description, $photo;
+    public $education, $motto; // <-- Properti baru
     public $existingPhotoUrl = null;
 
     protected $rules = [
         'name' => 'required|string|max:255',
+        'education' => 'nullable|string|max:255', // <-- Validasi baru
+        'motto' => 'nullable|string|max:255',     // <-- Validasi baru
         'position_id' => 'required|exists:positions,id',
         'description' => 'nullable|string|max:500',
-        'photo' => 'nullable|image', // 1MB Max
+        'photo' => 'nullable|image|max:1024',
     ];
+
+    private function resetInputFields()
+    {
+        $this->mentor = null;
+        $this->name = '';
+        $this->education = ''; // <-- Reset properti baru
+        $this->motto = '';     // <-- Reset properti baru
+        $this->position_id = '';
+        $this->description = '';
+        $this->photo = null;
+        $this->existingPhotoUrl = null;
+    }
 
     public function create()
     {
@@ -38,6 +54,8 @@ class Index extends Component
     {
         $this->mentor = $mentor;
         $this->name = $mentor->name;
+        $this->education = $mentor->education; // <-- Ambil data baru
+        $this->motto = $mentor->motto;         // <-- Ambil data baru
         $this->position_id = $mentor->position_id;
         $this->description = $mentor->description;
         $this->existingPhotoUrl = $mentor->photo;
@@ -51,6 +69,8 @@ class Index extends Component
 
         $data = [
             'name' => $this->name,
+            'education' => $this->education, // <-- Simpan data baru
+            'motto' => $this->motto,         // <-- Simpan data baru
             'position_id' => $this->position_id,
             'description' => $this->description,
         ];
@@ -85,16 +105,6 @@ class Index extends Component
     {
         $this->isModalOpen = false;
         $this->resetInputFields();
-    }
-
-    private function resetInputFields()
-    {
-        $this->mentor = null;
-        $this->name = '';
-        $this->position_id = '';
-        $this->description = '';
-        $this->photo = null;
-        $this->existingPhotoUrl = null;
     }
 
     public function render()

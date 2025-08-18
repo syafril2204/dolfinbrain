@@ -8,16 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 class MentorResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'education' => $this->education,
+            'motto' => $this->motto,
             'description' => $this->description,
             'photo_url' => $this->photo ? Storage::url($this->photo) : asset('dist/images/profile/user-1.jpg'),
             'position' => [

@@ -13,6 +13,8 @@ class Mentor extends Model
         'name',
         'position_id',
         'photo',
+        'education',
+        'motto',
         'description',
     ];
 

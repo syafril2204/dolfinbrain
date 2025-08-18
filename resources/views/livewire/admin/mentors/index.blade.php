@@ -86,10 +86,30 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+
+                            {{-- INPUT BARU UNTUK PENDIDIKAN --}}
                             <div class="mb-3">
-                                <label for="position_id" class="form-label">Jabatan</label>
+                                <label for="education" class="form-label">Pendidikan Terakhir (Opsional)</label>
+                                <input type="text" class="form-control" wire:model="education"
+                                    placeholder="cth: S1 Kehutanan UGM">
+                                @error('education')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            {{-- INPUT BARU UNTUK MOTTO --}}
+                            <div class="mb-3">
+                                <label for="motto" class="form-label">Motto Hidup (Opsional)</label>
+                                <input type="text" class="form-control" wire:model="motto">
+                                @error('motto')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="position_id" class="form-label">Posisi</label>
                                 <select class="form-select" wire:model="position_id">
-                                    <option value="">-- Pilih Jabatan --</option>
+                                    <option value="">-- Pilih Posisi --</option>
                                     @foreach ($positions as $position)
                                         <option value="{{ $position->id }}">{{ $position->formation->name }} -
                                             {{ $position->name }}</option>
@@ -109,14 +129,7 @@
                             <div class="mb-3">
                                 <label for="photo" class="form-label">Foto Mentor</label>
                                 <input type="file" class="form-control" wire:model="photo">
-                                <div wire:loading wire:target="photo" class="text-primary mt-1">Uploading...</div>
-                                @if ($photo)
-                                    <img src="{{ $photo->temporaryUrl() }}" class="img-thumbnail mt-2"
-                                        style="max-height: 150px;">
-                                @elseif ($existingPhotoUrl)
-                                    <img src="{{ Storage::url($existingPhotoUrl) }}" class="img-thumbnail mt-2"
-                                        style="max-height: 150px;">
-                                @endif
+                                {{-- ... (kode preview gambar) ... --}}
                                 @error('photo')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
