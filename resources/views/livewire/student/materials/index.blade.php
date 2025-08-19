@@ -55,12 +55,10 @@
                                     <h6 class="fw-semibold mb-0 text-truncate" title="{{ $material->title }}">
                                         {{ $material->title }}
                                     </h6>
-                                    {{-- [PERBAIKAN] Menggunakan variabel ukuran file yang dinamis --}}
                                     <small class="text-muted">{{ $displaySize }}</small>
                                 </div>
                                 <div class="ms-2 flex-shrink-0">
                                     @if ($canDownload)
-                                        {{-- [PERBAIKAN] Menggunakan route aman untuk download --}}
                                         <a href="{{ route('materials.download', $material) }}"
                                             class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center"
                                             style="width: 35px; height: 35px;" title="Unduh Materi">
