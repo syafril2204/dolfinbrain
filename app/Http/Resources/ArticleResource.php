@@ -27,6 +27,8 @@ class ArticleResource extends JsonResource
             'published_at' => $this->published_at->translatedFormat('d F Y'),
             'author' => [
                 'name' => $this->user->name,
+                'avatar_url' => $this->user->avatar ? Storage::disk('public')->url($this->user->avatar) : null,
+
             ],
         ];
     }

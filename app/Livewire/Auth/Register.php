@@ -18,6 +18,7 @@ class Register extends Component
     public $name = '';
     public $email = '';
     public $password = '';
+    public $phone_number = '';
     public $password_confirmation = '';
 
     public $gender = '';
@@ -95,6 +96,7 @@ class Register extends Component
             'gender' => 'required|in:Laki-laki,Perempuan',
             'date_of_birth' => 'required|date',
             'domicile' => 'required|string|max:255',
+            'phone_number' => 'required'
         ]);
 
         $userId = session('user_id_for_registration') ?? Auth::id();
@@ -105,6 +107,7 @@ class Register extends Component
                 'gender' => $this->gender,
                 'date_of_birth' => $this->date_of_birth,
                 'domicile' => $this->domicile,
+                'phone_number' => $this->phone_number
             ]);
         }
 
@@ -158,8 +161,7 @@ class Register extends Component
         if ($this->step == 5) {
             $this->step = 4;
             session(['registration_step' => 4]);
-        }
-        else if ($this->step > 1) {
+        } else if ($this->step > 1) {
             $this->step--;
             session(['registration_step' => $this->step]);
         }
