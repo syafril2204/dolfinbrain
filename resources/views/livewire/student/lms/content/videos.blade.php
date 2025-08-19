@@ -27,7 +27,7 @@
 
                     <div class="position-absolute bottom-0 start-0 w-100 p-3 text-white"
                         style="background: linear-gradient(transparent, rgba(0,0,0,0.7));">
-                        <h6 class="mb-1">{{ $playingVideo->title }}</h6>
+                        {{-- <h6 class="mb-1">{{ $playingVideo->title }}</h6> --}}
                         <small>{{ $playingVideo->created_at->format('d F Y') }}</small>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
 
 
                                 <div class="flex-grow-1">
-                                    {{-- <h6 class="mb-0 fw-semibold">{{ $video->title }}</h6> --}}
+                                    <h6 class="mb-0 fw-semibold">{{ $video->title }}</h6>
                                     <small class="text-muted">{{ $video->duration }}</small>
                                 </div>
 
