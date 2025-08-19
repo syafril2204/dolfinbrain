@@ -26,10 +26,17 @@
     <div class="tab-content">
         <div class="tab-pane fade {{ $activeTab === 'soal' ? 'show active' : '' }}">
             <div class="row mt-4">
-                @forelse ($packages as $package)
+                @forelse ($packages as $index => $package)
                     <div class="col-md-6 col-lg-4" wire:key="soal-{{ $package->id }}">
                         @php
-                            $isLocked = $package->id !== $latestPackageId;
+                            if (!auth()->user()->hasLmsAccess()) {
+                                $isLocked = true;
+                            } else {
+                                if ($index == 0) {
+                                    $isLocked = true;
+                                }
+                                $isLocked = false;
+                            }
                         @endphp
                         <a href="{{ !$isLocked ? route('students.quiz.attempt', $package) : '#' }}"
                             class="text-decoration-none @if ($isLocked) disabled-link @endif"
@@ -80,8 +87,8 @@
                                         <p class="fw-semibold mb-1">Kerjakan Ulang</p>
                                         <small style="font-size: 12px">Yuk, tingkatkan nilaimu lagi!</small>
                                     </div>
-                                    <a href="{{ route('students.quiz.attempt', $package) }}"
-                                        class="btn btn-primary" style="font-size:11px">Mulai Sekarang</a>
+                                    <a href="{{ route('students.quiz.attempt', $package) }}" class="btn btn-primary"
+                                        style="font-size:11px">Mulai Sekarang</a>
                                 </div>
 
                                 @foreach ($package->attempts as $attempt)

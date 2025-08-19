@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\MentorController;
 use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\QuizAttemptController;
 use App\Http\Controllers\Api\QuizHistoryController;
 use App\Http\Controllers\Api\QuizPackageController;

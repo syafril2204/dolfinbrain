@@ -124,6 +124,14 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label for="phone_number" class="form-label">Nomor HP</label>
+                        <input type="number" class="form-control" id="phone_number"
+                            wire:model.defer="phone_number">
+                        @error('phone_number')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                     <div class="mb-4">
                         <label for="domicile" class="form-label">Domisili</label>
                         <input type="text" class="form-control" id="domicile" wire:model.defer="domicile"
