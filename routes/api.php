@@ -22,7 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/formations', [FormationController::class, 'index']);
-Route::get('/positions', [PositionController::class, 'index']);
+Route::get('/positions/{formation}', [PositionController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('profile')->group(function () {
