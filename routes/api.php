@@ -21,6 +21,8 @@ Route::post('/tripay/callback', [TripayCallbackController::class, 'handle'])->na
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/formations', [FormationController::class, 'index']);
+Route::get('/positions', [PositionController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('profile')->group(function () {
@@ -40,8 +42,6 @@ Route::middleware('auth:sanctum')->group(function () {
         return new UserResource($user);
     });
 
-    Route::get('/formations', [FormationController::class, 'index']);
-    Route::get('/positions', [PositionController::class, 'index']);
 
     Route::get('/materials', [MaterialController::class, 'index']);
     Route::get('/mentors', [MentorController::class, 'index'])->name('api.mentors.index');
