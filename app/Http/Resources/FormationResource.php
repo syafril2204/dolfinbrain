@@ -20,6 +20,7 @@ class FormationResource extends JsonResource
             'name' => $this->name,
             'short_description' => $this->short_description,
             'image' => $this->image ? Storage::disk('public')->url($this->image) : null,
+            'position' => new PositionResource($this->whenLoaded('position')),
         ];
     }
 }
