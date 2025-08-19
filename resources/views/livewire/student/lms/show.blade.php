@@ -1,76 +1,196 @@
-<div>
-    {{-- Header --}}
-    <div class="card bg-light-info shadow-none position-relative overflow-hidden mb-4">
-        <div class="card-body px-4 py-3">
-            <h4 class="fw-semibold mb-8">{{ $lms_space->title }}</h4>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a class="text-muted" href="{{ route('students.lms.index') }}">LMS
-                            Space</a>
-                    </li>
-                    <li class="breadcrumb-item" aria-current="page">Pertemuan</li>
-                </ol>
-            </nav>
-        </div>
+<div class="container py-4">
+    {{-- Breadcrumb & Title --}}
+    <div class="mb-4">
+        <h5 class="fw-bold text-primary mb-1">{{ $lms_space->title }}</h5>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb small mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('students.lms.index') }}">LMS Space</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $lms_space->title }}</li>
+            </ol>
+        </nav>
     </div>
 
     <div class="row">
-        {{-- Kolom Kiri: Deskripsi Pertemuan --}}
-        <div class="col-lg-8">
-            <div class="card">
-                <img src="{{ $lms_space->image_path ? Storage::url($lms_space->image_path) : 'https://via.placeholder.com/700x400' }}"
-                    class="card-img-top">
-                <div class="card-body">
+        {{-- LEFT CONTENT --}}
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                {{-- Image --}}
+                <img src="{{ $lms_space->image_path ? asset('storage/' . $lms_space->image_path) : asset('images/placeholder.jpg') }}"
+                    class="w-100" style="object-fit: cover; height: 260px;" alt="Banner">
+
+                <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bolder">Bimbingan Lanjutan</h4>
-                        @if ($lms_space->coachings->isNotEmpty())
-                            @php $firstCoaching = $lms_space->coachings->first(); @endphp
+                        <h5 class="fw-bold mb-0">Bimbingan Lanjutan</h5>
+
+                        @if ($lms_space->coachings && $lms_space->coachings->count() > 0)
+                            @php
+                                $coaching = $lms_space->coachings->first();
+                            @endphp
                             <span
-                                class="badge bg-light-primary text-primary fs-3">{{ $firstCoaching->start_at->format('H:i') }}
-                                - {{ $firstCoaching->end_at->format('H:i') }} WIB</span>
+                                class="badge d-flex align-items-center gap-1 px-3 py-2 rounded-pill text-primary bg-light">
+                                {{ \Carbon\Carbon::parse($coaching->start_time)->format('H.i') }} -
+                                {{ \Carbon\Carbon::parse($coaching->end_time)->format('H.i') }} WIB
+                                <i class="bi bi-calendar-event"></i>
+                            </span>
                         @endif
                     </div>
-                    <p>{{ $lms_space->description }}</p>
+
+                    <p class="text-muted lh-lg mb-0">{{ $lms_space->description }}</p>
                 </div>
             </div>
         </div>
 
-        {{-- Kolom Kanan: Menu Konten --}}
+        {{-- RIGHT SIDEBAR --}}
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title fw-semibold mb-3">Menu</h5>
-                    <div class="row">
-                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.materials', $lms_space) }}"
-                                class="card card-body text-center text-decoration-none"><i class="ti ti-book fs-7"></i>
-                                <p class="mb-0 mt-2" style="font-size: 12.5px">Materi</p>
-                            </a></div>
-                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.coaching', $lms_space) }}"
-                                class="card card-body text-center text-decoration-none"><i
-                                    class="ti ti-microphone fs-7"></i>
-                                <p class="mb-0 mt-2" style="font-size: 12.5px">Coaching</p>
-                            </a></div>
-                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.videos', $lms_space) }}"
-                                class="card card-body text-center text-decoration-none"><i class="ti ti-video fs-7"></i>
-                                <p class="mb-0 mt-2" style="font-size: 12.5px">Rekaman</p>
-                            </a></div>
-                        <div class="col-6 mb-3"><a href="{{ route('students.lms.content.quizzes', $lms_space) }}"
-                                class="card card-body text-center text-decoration-none"><i
-                                    class="ti ti-file-text fs-7"></i>
-                                <p class="mb-0 mt-2" style="font-size: 12.5px">Kuis</p>
-                            </a></div>
-                        <div class="col-6"><a href="{{ route('students.lms.content.files', $lms_space) }}"
-                                class="card card-body text-center text-decoration-none"><i class="ti ti-files fs-7"></i>
-                                <p class="mb-0 mt-2" style="font-size: 12.5px">File</p>
-                            </a></div>
-                        <div class="col-6"><a href="{{ route('students.lms.content.audio', $lms_space) }}"
-                                class="card card-body text-center text-decoration-none"><i
-                                    class="ti ti-volume fs-7"></i>
-                                <p class="mb-0 mt-2" style="font-size: 12.5px">Audio</p>
-                            </a></div>
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-4 text-primary">Menu</h6>
+                    <div class="row g-3">
+
+                        {{-- Materi --}}
+                        <div class="col-6">
+                            <a href="{{ route('students.lms.content.materials', $lms_space->id) }}" class="menu-item">
+                                <div class="mb-2">
+                                    <svg width="36" height="36" viewBox="0 0 46 46" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M39.0457 30.2609V34.9892C39.0457 38.6394 36.0764 41.6088 32.4262 41.6088H13.5131C9.8629 41.6088 6.89355 38.6394 6.89355 34.9892V33.7598C6.89355 30.7905 9.31442 28.3696 12.2838 28.3696H37.1544C38.1947 28.3696 39.0457 29.2207 39.0457 30.2609Z"
+                                            fill="#FF4F3F" />
+                                        <path
+                                            d="M29.5892 3.78223H16.3501C8.78486 3.78223 6.89355 5.67353 6.89355 13.2387V27.5748C8.33095 26.3077 10.2223 25.5322 12.2838 25.5322H37.1544C38.1947 25.5322 39.0457 24.6811 39.0457 23.6409V13.2387C39.0457 5.67353 37.1544 3.78223 29.5892 3.78223ZM24.861 20.3311H15.4044C14.629 20.3311 13.9859 19.6881 13.9859 18.9127C13.9859 18.1372 14.629 17.4942 15.4044 17.4942H24.861C25.6364 17.4942 26.2794 18.1372 26.2794 18.9127C26.2794 19.6881 25.6364 20.3311 24.861 20.3311ZM30.5349 13.7116H15.4044C14.629 13.7116 13.9859 13.0685 13.9859 12.2931C13.9859 11.5177 14.629 10.8746 15.4044 10.8746H30.5349C31.3103 10.8746 31.9533 11.5177 31.9533 12.2931C31.9533 13.0685 31.3103 13.7116 30.5349 13.7116Z"
+                                            fill="#FF4F3F" />
+                                    </svg>
+
+                                </div>
+                                <small class="fw-medium">Materi</small>
+                            </a>
+                        </div>
+
+                        {{-- Coaching --}}
+                        <div class="col-6">
+                            <a href="{{ route('students.lms.content.coaching', $lms_space->id) }}" class="menu-item">
+                                <div class="mb-2">
+                                    <svg width="36" height="35" viewBox="0 0 36 35" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M29.5957 9.84961C31.0746 14.3074 31.0746 17.2792 29.5957 21.7369"
+                                            stroke="#4FA521" stroke-width="2.1875" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <path
+                                            d="M3.36055 18.9203C3.36067 20.5512 4.68279 21.8733 6.31368 21.8733L6.28602 28.4246C6.27835 30.2403 7.74864 31.716 9.56437 31.7151C11.3734 31.7141 12.8393 30.2474 12.8393 28.4384V22.0362H14.6619V9.56648H9.51371C7.51551 9.56648 6.51642 9.56648 5.73639 9.91453C4.83333 10.3175 4.11098 11.0399 3.7081 11.943C3.36009 12.723 3.36017 13.7221 3.36031 15.7203L3.36055 18.9203Z"
+                                            fill="#4FA521" />
+                                        <path
+                                            d="M16.8497 7.84783C20.434 4.70735 22.2261 3.13711 23.7532 3.14959C24.8858 3.15885 25.9617 3.64662 26.7151 4.49241C27.7308 5.63275 27.7308 8.01548 27.7308 12.7809V18.6727C27.7308 23.4412 27.7308 25.8254 26.6982 26.9701C25.9623 27.7858 24.924 28.2639 23.8258 28.2928C22.2847 28.3333 20.473 26.7833 16.8497 23.6834V7.84783Z"
+                                            fill="#4FA521" />
+                                    </svg>
+                                </div>
+                                <small class="fw-medium">Coaching</small>
+                            </a>
+                        </div>
+
+                        {{-- Rekaman --}}
+                        <div class="col-6">
+                            <a href="{{ route('students.lms.content.videos', $lms_space->id) }}" class="menu-item">
+                                <div class="mb-2">
+                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M20.5479 6.80566C22.7615 6.80566 23.8686 6.80546 24.7451 7.15723C25.9834 7.65419 26.9649 8.63576 27.4619 9.87402C27.8137 10.7506 27.8135 11.8577 27.8135 14.0713L29.3145 13.0801C30.4291 12.3436 30.9864 11.9748 31.4414 12.1045C31.5842 12.1452 31.7164 12.2168 31.8291 12.3135C32.1883 12.6216 32.1885 13.2897 32.1885 14.626V21.5898C32.1885 22.926 32.1883 23.5942 31.8291 23.9023C31.7164 23.9989 31.5841 24.0696 31.4414 24.1104C30.9863 24.2402 30.4291 23.8722 29.3145 23.1357L27.8135 22.1445C27.8135 24.3576 27.8135 25.4644 27.4619 26.3408C26.965 27.5791 25.9833 28.5606 24.7451 29.0576C23.8686 29.4094 22.7615 29.4102 20.5479 29.4102H12.5527C8.88572 29.4102 7.05194 29.4094 5.7666 28.4756C5.35159 28.174 4.98611 27.8096 4.68457 27.3945C3.75072 26.1092 3.75098 24.2754 3.75098 20.6084V15.6074C3.75098 11.9405 3.75082 10.1066 4.68457 8.82129C4.98617 8.40618 5.35149 8.04085 5.7666 7.73926C7.05193 6.8055 8.88584 6.80566 12.5527 6.80566H20.5479ZM21.251 12.2744C20.6469 12.2744 20.1572 12.7641 20.1572 13.3682C20.1573 13.9722 20.647 14.4619 21.251 14.4619C21.855 14.4619 22.3446 13.9722 22.3447 13.3682C22.3447 12.7641 21.855 12.2744 21.251 12.2744ZM9.94922 12.5957C9.52282 12.5957 9.17676 12.9418 9.17676 13.3682C9.17684 13.7945 9.52288 14.1406 9.94922 14.1406H17.2412C17.6673 14.1404 18.0126 13.7943 18.0127 13.3682C18.0127 12.9419 17.6674 12.596 17.2412 12.5957H9.94922Z"
+                                            fill="#2F69FC" />
+                                    </svg>
+
+                                </div>
+                                <small class="fw-medium">Rekaman</small>
+                            </a>
+                        </div>
+
+                        {{-- Kuis --}}
+                        <div class="col-6">
+                            <a href="{{ route('students.lms.content.quizzes', $lms_space->id) }}" class="menu-item">
+                                <div class="mb-2">
+                                    <svg width="36" height="36" viewBox="0 0 47 46" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M24.9687 38.3776C25.4542 38.4905 25.4994 39.1284 25.027 39.2872C24.992 39.299 24.9568 39.3108 24.9215 39.3225L21.9333 40.306C14.4248 42.7269 10.472 40.7032 8.03219 33.1947L5.61132 25.7241C3.19045 18.2156 5.19523 14.2438 12.7037 11.823L14.5704 11.2048C14.9851 11.0674 15.3806 11.4802 15.2467 11.896C15.0404 12.5364 14.8517 13.2308 14.6707 13.9791L12.8172 21.9036C10.7368 30.8117 13.7818 35.7291 22.6898 37.8473L24.9687 38.3776Z"
+                                            fill="#FF9A02" />
+                                        <path
+                                            d="M33.3565 6.67845L30.198 5.94084C23.8811 4.44671 20.1174 5.67606 17.9046 10.253C17.3372 11.4067 16.8832 12.8063 16.505 14.4139L14.6515 22.3385C12.798 30.2441 15.2378 34.1402 23.1246 36.0126L26.3019 36.7691C27.3989 37.0339 28.4202 37.2041 29.3659 37.2798C35.2667 37.8472 38.4063 35.0859 39.995 28.2582L41.8485 20.3526C43.7019 12.4469 41.2811 8.53193 33.3565 6.67845ZM29.8009 25.8185C29.6306 26.4615 29.0633 26.8776 28.4202 26.8776C28.3067 26.8776 28.1933 26.8587 28.0609 26.8398L22.5572 25.4402C21.8006 25.2511 21.3467 24.4756 21.5359 23.7191C21.725 22.9626 22.5004 22.5087 23.2569 22.6978L28.7606 24.0974C29.5361 24.2865 29.99 25.0619 29.8009 25.8185ZM35.3424 19.4258C35.1722 20.0689 34.6048 20.485 33.9617 20.485C33.8483 20.485 33.7348 20.4661 33.6024 20.4472L24.4296 18.1208C23.673 17.9317 23.2191 17.1563 23.4082 16.3998C23.5974 15.6432 24.3728 15.1893 25.1293 15.3785L34.3022 17.7048C35.0776 17.875 35.5315 18.6504 35.3424 19.4258Z"
+                                            fill="#FF9A02" />
+                                    </svg>
+
+
+                                </div>
+                                <small class="fw-medium">Kuis</small>
+                            </a>
+                        </div>
+
+                        {{-- File --}}
+                        <div class="col-6">
+                            <a href="{{ route('students.lms.content.files', $lms_space->id) }}" class="menu-item">
+                                <div class="mb-2">
+                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18.3346 3.49609V7.48506C18.3346 10.3801 18.3346 11.8276 19.0719 12.8423C19.31 13.17 19.5982 13.4582 19.9259 13.6963C20.9406 14.4336 22.3882 14.4336 25.2832 14.4336L29.2721 14.4336V24.9851C29.2721 27.8801 29.2721 29.3276 28.5349 30.3423C28.2968 30.67 28.0086 30.9582 27.6809 31.1963C26.6661 31.9336 25.2186 31.9336 22.3236 31.9336H13.6165C10.7215 31.9336 9.27398 31.9336 8.25924 31.1963C7.93152 30.9582 7.64332 30.67 7.40522 30.3423C6.66797 29.3276 6.66797 27.8801 6.66797 24.9851V10.4446C6.66797 7.54961 6.66797 6.1021 7.40522 5.08736C7.64332 4.75965 7.93152 4.47145 8.25924 4.23334C9.27398 3.49609 10.7215 3.49609 13.6165 3.49609H18.3346Z"
+                                            fill="#1F9FE5" />
+                                        <path
+                                            d="M20.5221 3.49609V8.07698C20.5221 9.81399 20.5221 10.6825 20.9645 11.2913C21.1073 11.488 21.2803 11.6609 21.4769 11.8037C22.0857 12.2461 22.9542 12.2461 24.6913 12.2461L29.2721 12.2461L20.5221 3.49609Z"
+                                            fill="#1F9FE5" />
+                                    </svg>
+
+                                </div>
+                                <small class="fw-medium">File</small>
+                            </a>
+                        </div>
+
+                        {{-- Audio --}}
+                        <div class="col-6">
+                            <a href="{{ route('students.lms.content.audio', $lms_space->id) }}" class="menu-item">
+                                <div class="mb-2">
+                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M24.8701 11.6439C27.0524 16.2583 27.0524 19.175 24.8701 23.7896M27.87 8.60742C31.647 13.1621 31.647 22.2714 27.87 26.8261"
+                                            stroke="#FF4F3F" stroke-width="2.1875" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <path
+                                            d="M22.3182 18.9542V16.4755C22.3182 11.2025 22.3182 8.56602 20.9665 7.36907C20.4461 6.90827 19.815 6.59062 19.1348 6.44729C17.3682 6.07495 15.2508 7.64589 11.0161 10.7878V24.6419C15.2508 27.7838 17.3682 29.3547 19.1348 28.9824C19.815 28.8391 20.4461 28.5214 20.9665 28.0606C22.3182 26.8637 22.3182 24.2272 22.3182 18.9542Z"
+                                            fill="#FF4F3F" />
+                                        <path
+                                            d="M3.35986 16.9858V18.3831C3.35986 19.783 3.35986 20.483 3.53372 21.0541C3.91839 22.3176 4.90053 23.3107 6.15972 23.7094C6.72882 23.8896 7.42875 23.8974 8.82861 23.9129V11.5172C7.47207 11.5172 6.79379 11.5172 6.24057 11.6796C4.93096 12.0641 3.9068 13.0882 3.52229 14.3978C3.35986 14.951 3.35986 15.6293 3.35986 16.9858Z"
+                                            fill="#FF4F3F" />
+                                    </svg>
+                                </div>
+                                <small class="fw-medium">Audio</small>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('styles')
+    <style>
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 1.5rem 0;
+            text-decoration: none;
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: all .2s ease-in-out;
+        }
+
+        .menu-item:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+            transform: translateY(-3px);
+        }
+    </style>
+@endpush
