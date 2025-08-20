@@ -29,13 +29,14 @@
                 @forelse ($packages as $index => $package)
                     <div class="col-md-6 col-lg-4" wire:key="soal-{{ $package->id }}">
                         @php
-                            if (!auth()->user()->hasLmsAccess()) {
-                                $isLocked = true;
+                            if (auth()->user()->hasLmsAccess()) {
+                                $isLocked = false;
                             } else {
                                 if ($index == 0) {
+                                    $isLocked = false;
+                                } else {
                                     $isLocked = true;
                                 }
-                                $isLocked = false;
                             }
                         @endphp
                         <a href="{{ !$isLocked ? route('students.quiz.attempt', $package) : '#' }}"

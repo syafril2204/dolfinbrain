@@ -30,7 +30,6 @@
                     <div class="card-body">
                         <p class="mb-3">{{ $question->question_text }}</p>
 
-                        {{-- Opsi Jawaban --}}
                         @foreach ($question->answers as $answer)
                             @php
                                 $isUserAnswer = $userAnswerId == $answer->id;
@@ -49,6 +48,8 @@
                                 @endif
                             </div>
                         @endforeach
+                        <h3 class="">Pembahasan: </h3>
+                        <p class="mb-3">{{ $question->explanation }}</p>
                     </div>
                 </div>
             @endforeach
