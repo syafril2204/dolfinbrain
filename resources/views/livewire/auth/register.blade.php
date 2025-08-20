@@ -146,11 +146,54 @@
                     </div>
                 </form>
             @endif
+            @if ($step == 3)
+                <h2 class="mb-3 fs-7 fw-bolder">Isi Bidang & Instansi Tujuan</h2>
+                <p class="mb-4">Lengkapi data bidang, instansi tujuan, dan jabatan.</p>
+
+                <form wire:submit.prevent="submitStep3">
+                    <div class="mb-3">
+                        <label for="formation_id" class="form-label">Bidang / Formasi</label>
+                        <select id="formation_id" class="form-control" wire:model.defer="formation_id">
+                            <option value="">-- Pilih Bidang --</option>
+                            @foreach ($formations as $formation)
+                                <option value="{{ $formation->id }}">{{ $formation->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('formation_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="instansi" class="form-label">Instansi Tujuan</label>
+                        <input type="text" id="instansi" class="form-control" wire:model.defer="instansi"
+                            placeholder="Contoh: Kementerian Pendidikan">
+                        @error('instansi')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="jabatan" class="form-label">Jabatan</label>
+                        <input type="text" id="jabatan" class="form-control" wire:model.defer="jabatan"
+                            placeholder="Contoh: Analis Data">
+                        @error('jabatan')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" wire:click="back">Kembali</button>
+                        <button type="submit" class="btn btn-primary">Lanjutkan</button>
+                    </div>
+                </form>
+            @endif
+
 
             {{-- =============================================== --}}
             {{-- LANGKAH 3: PILIH KATEGORI FORMASI --}}
             {{-- =============================================== --}}
-            @if ($step == 3)
+            @if ($step == 4)
                 <h2 class="mb-3 fs-7 fw-bolder">Pilih Kategori Formasi</h2>
                 <p class="mb-4">Silakan pilih kategori formasi sesuai minat dan kualifikasi anda</p>
 
@@ -172,7 +215,7 @@
             {{-- =============================================== --}}
             {{-- LANGKAH 4: PILIH JABATAN (POSISI) --}}
             {{-- =============================================== --}}
-            @if ($step == 4)
+            @if ($step == 5)
                 <h2 class="mb-3 fs-7 fw-bolder">{{ $selectedFormation->name ?? 'Pilih Jabatan' }}</h2>
                 <p class="mb-4">Pilih Jabatan yang ingin dipelajari.</p>
 
@@ -205,7 +248,7 @@
             {{-- =============================================== --}}
             {{-- LANGKAH 5: TUNGGU VERIFIKASI EMAIL --}}
             {{-- =============================================== --}}
-            @if ($step == 5)
+            @if ($step == 6)
                 <div class="text-center">
                     <img src="{{ asset('assets/logo/mail-success.png') }}" alt="Email Sent" width="150"
                         class="mb-4">

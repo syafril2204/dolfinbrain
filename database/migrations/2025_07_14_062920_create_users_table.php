@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('avatar')->nullable();
             $table->foreignId('position_id')->nullable()->constrained();
+            $table->foreignId('formation_id')->nullable()->constrained();
+            $table->string('instansi')->nullable();
+            $table->string('jabatan')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

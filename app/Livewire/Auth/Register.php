@@ -21,6 +21,10 @@ class Register extends Component
     public $phone_number = '';
     public $password_confirmation = '';
 
+    public $formation_id = '';
+    public $instansi = '';
+    public $jabatan = '';
+
     public $gender = '';
     public $date_of_birth = '';
     public $domicile = '';
@@ -115,11 +119,31 @@ class Register extends Component
         session(['registration_step' => 3]);
     }
 
+    public function submitStep3()
+    {
+        $this->validate([
+            'formation_id' => 'required',
+            'instansi' => 'required',
+            'jabatan' => 'required',
+        ]);
+
+        $userId = session('user_id_for_registration') ?? Auth::id();
+        if ($userId) {
+            $user = User::find($userId);
+            $user->update([
+                'formation_id' => $this->formation_id,
+                'instansi' => $this->instansi,
+                'jabatan' => $this->jabatan,
+            ]);
+        }
+        $this->step = 4;
+        session(['registration_step' => 4]);
+    }
     public function selectFormation($formationId)
     {
         $this->selectedFormation = Formation::with('positions')->find($formationId);
-        $this->step = 4;
-        session(['registration_step' => 4]);
+        $this->step = 5;
+        session(['registration_step' => 5]);
     }
 
     public function submitStep4()
@@ -135,8 +159,8 @@ class Register extends Component
 
             session()->flash('status', 'Pendaftaran hampir selesai! Link verifikasi telah dikirim ke email Anda. Silakan cek kotak masuk/spam.');
 
-            $this->step = 5;
-            session(['registration_step' => 5]);
+            $this->step = 6;
+            session(['registration_step' => 6]);
 
             return;
         }
@@ -158,9 +182,9 @@ class Register extends Component
 
     public function back()
     {
-        if ($this->step == 5) {
-            $this->step = 4;
-            session(['registration_step' => 4]);
+        if ($this->step == 6) {
+            $this->step = 5;
+            session(['registration_step' => 5]);
         } else if ($this->step > 1) {
             $this->step--;
             session(['registration_step' => $this->step]);
@@ -174,7 +198,7 @@ class Register extends Component
 
     public function render()
     {
-        if ($this->step == 3) {
+        if ($this->step == 3 || $this->step == 4) {
             $this->formations = Formation::all();
         }
         return view('livewire.auth.register');

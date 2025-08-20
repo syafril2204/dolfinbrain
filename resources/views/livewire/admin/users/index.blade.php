@@ -74,31 +74,93 @@
     @if ($isDetailModalOpen && $selectedUser)
         <div class="modal fade show" style="display: block; background-color: rgba(0,0,0,0.5);" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Detail Pengguna: {{ $selectedUser->name }}</h5>
-                        <button type="button" class="btn-close" wire:click="closeDetailModal"></button>
+                <div class="modal-content shadow-lg border-0 rounded-3">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="bi bi-person-circle me-2"></i> Detail Pengguna: {{ $selectedUser->name }}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" wire:click="closeDetailModal"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Email:</strong> {{ $selectedUser->email }}</p>
-                                <p><strong>Domisili:</strong> {{ $selectedUser->domicile ?? '-' }}</p>
+                        <div class="row g-4">
+                            <!-- Avatar -->
+                            <div class="col-md-4 text-center">
+                                <img src="{{ $selectedUser->avatar ? asset('storage/' . $selectedUser->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($selectedUser->name) }}"
+                                    class="img-thumbnail rounded-circle mb-3" alt="Avatar" width="150">
+                                <p class="fw-bold mb-0">{{ $selectedUser->name }}</p>
+                                <small class="text-muted">ID: {{ $selectedUser->id }}</small>
                             </div>
-                            <div class="col-md-6">
-                                <p><strong>Jenis Kelamin:</strong> {{ $selectedUser->gender ?? '-' }}</p>
-                                <p><strong>Tanggal Lahir:</strong>
-                                    {{ $selectedUser->date_of_birth ? \Carbon\Carbon::parse($selectedUser->date_of_birth)->format('d M Y') : '-' }}
-                                </p>
+
+                            <!-- Detail Data -->
+                            <div class="col-md-8">
+                                <table class="table table-borderless mb-0">
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>{{ $selectedUser->email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>No. HP</th>
+                                        <td>{{ $selectedUser->phone_number ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Domisili</th>
+                                        <td>{{ $selectedUser->domicile ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Jenis Kelamin</th>
+                                        <td>{{ $selectedUser->gender ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tanggal Lahir</th>
+                                        <td>
+                                            {{ $selectedUser->date_of_birth ? \Carbon\Carbon::parse($selectedUser->date_of_birth)->format('d M Y') : '-' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Jabatan Saat Ini</th>
+                                        <td>{{ $selectedUser->position->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Bidang</th>
+                                        <td>{{ $selectedUser->formation->name ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Instansi</th>
+                                        <td>{{ $selectedUser->instansi }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Jabatan Yang Dilamar</th>
+                                        <td>{{ $selectedUser->jabatan }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email Terverifikasi</th>
+                                        <td>
+                                            {{ $selectedUser->email_verified_at ? \Carbon\Carbon::parse($selectedUser->email_verified_at)->format('d M Y H:i') : 'Belum' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Dibuat</th>
+                                        <td>{{ $selectedUser->created_at->format('d M Y H:i') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Terakhir Diperbarui</th>
+                                        <td>{{ $selectedUser->updated_at->format('d M Y H:i') }}</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
+
                         <hr>
-                        <h6>Kursus (Jabatan) yang Dibeli</h6>
+
+                        <!-- Kursus yang Dibeli -->
+                        <h6 class="fw-bold">Kursus (Jabatan) yang Dibeli</h6>
                         @if ($selectedUser->purchasedPositions->isNotEmpty())
                             <ul class="list-group">
                                 @foreach ($selectedUser->purchasedPositions as $position)
-                                    <li class="list-group-item">{{ $position->formation->name }} -
-                                        {{ $position->name }}</li>
+                                    <li class="list-group-item">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        {{ $position->formation->name }} - {{ $position->name }}
+                                    </li>
                                 @endforeach
                             </ul>
                         @else
@@ -106,10 +168,13 @@
                         @endif
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeDetailModal">Tutup</button>
+                        <button type="button" class="btn btn-secondary" wire:click="closeDetailModal">
+                            <i class="bi bi-x-circle me-1"></i> Tutup
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     @endif
+
 </div>
