@@ -14,7 +14,7 @@ class Index extends Component
         $lmsSpaces = collect();
 
         if ($hasAccess && $user->position) {
-            $lmsSpaces = $user->position->lmsSpaces()->where('is_active', true)->get();
+            $lmsSpaces = $user->position->lmsSpaces()->where('is_active', true)->orderBy('created_at', 'asc')->get();
         }
 
         return view('livewire.student.lms.index', [
