@@ -30,13 +30,6 @@
         <div class="position-relative overflow-hidden radial-gradient min-vh-100">
             <div class="position-relative z-index-5">
                 <div class="row">
-                    <div class="col-xl-7 col-xxl-8">
-                        <div class="d-none d-xl-flex align-items-center justify-content-center"
-                            style="height: calc(100vh - 80px);">
-                            <img src="{{ asset('assets/auth/image.png') }}" alt="" class="img-fluid"
-                                width="350">
-                        </div>
-                    </div>
                     {{ $slot }}
                 </div>
             </div>

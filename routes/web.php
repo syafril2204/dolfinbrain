@@ -64,7 +64,7 @@ use App\Http\Controllers\Auth\VerificationController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::middleware('guest')->group(function () {
