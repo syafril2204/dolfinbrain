@@ -2,7 +2,7 @@
     <div class="col-xl-7 col-xxl-8">
         <div class="d-none d-xl-flex align-items-center justify-content-center" style="height: calc(100vh - 80px);">
             @if ($step == 1 || $step == 6)
-                <img src="{{ asset('assets/auth/imag2.png') }}" alt="" class="img-fluid" width="450">
+                <img src="{{ asset('assets/auth/image2.png') }}" alt="" class="img-fluid" width="450">
             @elseif ($step == 2)
                 <img src="{{ asset('assets/auth/image3.png') }}" alt="" class="img-fluid" width="450">
             @elseif ($step == 4 || $step == 3 || $step == 5)
