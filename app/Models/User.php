@@ -119,4 +119,9 @@ class User extends Authenticatable implements MustVerifyEmail
             ->where('package_type', 'bimbingan')
             ->exists();
     }
+
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
 }
