@@ -32,6 +32,7 @@ class QuizAttemptController extends Controller
     }
 
 
+
     public function answer(Request $request, QuizAttempt $attempt)
     {
         if ($request->user()->id !== $attempt->user_id) {
@@ -94,7 +95,7 @@ class QuizAttemptController extends Controller
     public function result(Request $request, QuizAttempt $attempt)
     {
         if ($request->user()->id !== $attempt->user_id || $attempt->status !== 'completed') {
-            ResponseHelper::error(null, 'Tidak diizinkan atau kuis belum selesai.', Response::HTTP_FORBIDDEN);
+            return ResponseHelper::error(null, 'Tidak diizinkan atau kuis belum selesai.', 403);
         }
 
         $attempt->load('quizPackage.questions.answers', 'details');

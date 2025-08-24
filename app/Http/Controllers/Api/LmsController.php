@@ -34,33 +34,30 @@ class LmsController extends Controller
         return ResponseHelper::success($data, 'Berhasil mengambil daftar LMS Space.');
     }
 
-    /**
-     * Menampilkan detail LMS Space beserta seluruh kontennya.
-     */
+
     public function show(Request $request, LmsSpace $lms_space): JsonResponse
     {
         $user = $request->user();
 
-        // 1. Cek apakah user punya akses umum ke LMS
         if (!$user->hasLmsAccess()) {
             return ResponseHelper::error(null, 'Akses ditolak. Fitur ini hanya untuk paket bimbingan.', Response::HTTP_FORBIDDEN);
         }
 
-        // 2. Cek apakah user punya akses ke LMS Space spesifik ini
         $canAccess = $user->purchasedPositions()
             ->where('package_type', 'bimbingan')
             ->whereHas('lmsSpaces', fn($q) => $q->where('lms_space_id', $lms_space->id))
             ->exists();
 
         if (!$canAccess) {
-             return ResponseHelper::error(null, 'Anda tidak memiliki akses ke LMS Space ini.', Response::HTTP_FORBIDDEN);
+            return ResponseHelper::error(null, 'Anda tidak memiliki akses ke LMS Space ini.', Response::HTTP_FORBIDDEN);
         }
 
-        // Muat semua relasi konten
         $lms_space->load([
             'videos' => fn($q) => $q->orderBy('order'),
             'coachings' => fn($q) => $q->orderBy('start_at'),
-            'resources', 'materials', 'quizPackages'
+            'resources',
+            'materials',
+            'quizPackages'
         ]);
 
         $data = new LmsSpaceResource($lms_space);

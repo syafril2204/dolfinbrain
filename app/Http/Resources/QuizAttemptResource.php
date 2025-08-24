@@ -9,27 +9,42 @@ class QuizAttemptResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // Ambil detail jawaban pengguna dari relasi
-        $userAnswers = $this->whenLoaded('details', function () {
-            return $this->details->pluck('answer_id', 'question_id');
-        });
+        $questions = $this->whenLoaded('quizPackage', fn() => $this->quizPackage->questions);
+        $userAnswersMap = $this->whenLoaded('details', fn() => $this->details->pluck('answer_id', 'question_id'));
+
+        $correctCount = 0;
+        $incorrectCount = 0;
+        $unansweredCount = 0;
+
+        foreach ($questions as $question) {
+            $userAnswerId = $userAnswersMap[$question->id] ?? null;
+            if ($userAnswerId === null) {
+                $unansweredCount++;
+            } else {
+                $correctAnswer = $question->answers->where('is_correct', true)->first();
+                if ($correctAnswer && $userAnswerId == $correctAnswer->id) {
+                    $correctCount++;
+                } else {
+                    $incorrectCount++;
+                }
+            }
+        }
 
         return [
             'attempt_id' => $this->id,
-            'quiz_package_title' => $this->quizPackage->title,
-            'status' => $this->status,
-            'score' => $this->score,
-            'finished_at' => $this->finished_at ? $this->finished_at->translatedFormat('j F Y, H:i') : null,
-            'questions' => $this->whenLoaded('quizPackage.questions', function () use ($userAnswers) {
-                return $this->quizPackage->questions->map(function ($question) use ($userAnswers) {
-                    return [
-                        'id' => $question->id,
-                        'question_text' => $question->question_text,
-                        'explanation' => $question->explanation,
-                        'user_answer_id' => $userAnswers[$question->id] ?? null,
-                        'answers' => AnswerResultResource::collection($question->answers),
-                    ];
-                });
+            'quiz_package' => [
+                'id' => $this->quizPackage->id,
+                'title' => $this->quizPackage->title,
+            ],
+            'summary' => [
+                'score' => round($this->score, 2),
+                'correct_count' => $correctCount,
+                'incorrect_count' => $incorrectCount,
+                'unanswered_count' => $unansweredCount,
+                'total_questions' => $questions->count(),
+            ],
+            'questions' => $questions->map(function ($question) use ($userAnswersMap) {
+                return new QuestionResultResource($question, $userAnswersMap[$question->id] ?? null);
             }),
         ];
     }
