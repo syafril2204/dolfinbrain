@@ -16,6 +16,7 @@ class QuizHistoryResource extends JsonResource
     {
         return [
             'attempt_id' => $this->id,
+            'quiz_package_id' => $this->whenLoaded('quizPackage', $this->quizPackage->id),
             'quiz_package_title' => $this->whenLoaded('quizPackage', $this->quizPackage->title),
             'score' => round($this->score),
             'finished_at' => $this->finished_at->translatedFormat('j F Y, H:i'),
