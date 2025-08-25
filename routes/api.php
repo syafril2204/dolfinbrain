@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FormationController;
 use App\Http\Controllers\Api\LmsController;
@@ -24,6 +25,12 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/formations', [FormationController::class, 'index']);
 Route::get('/positions', [PositionController::class, 'index']);
 Route::get('/positions/{formation}', [PositionController::class, 'show']);
+
+Route::prefix('password')->name('api.password.')->group(function () {
+    Route::post('/send-code', [PasswordResetController::class, 'sendCode'])->name('send-code');
+    Route::post('/verify-code', [PasswordResetController::class, 'verifyCode'])->name('verify-code');
+    Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->name('reset');
+});
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('profile')->group(function () {
