@@ -23,9 +23,12 @@ class LmsController extends Controller
             return ResponseHelper::success([], 'Anda tidak memiliki akses ke fitur LMS.');
         }
 
-        $purchasedPositions = $user->purchasedPositions()->where('package_type', 'bimbingan')->pluck('id');
-        $lmsSpaces = LmsSpace::whereHas('positions', function ($query) use ($purchasedPositions) {
-            $query->whereIn('position_id', $purchasedPositions);
+        $purchasedPositionIds = $user->purchasedPositions()
+            ->where('package_type', 'bimbingan')
+            ->pluck('positions.id');
+
+        $lmsSpaces = LmsSpace::whereHas('positions', function ($query) use ($purchasedPositionIds) {
+            $query->whereIn('position_id', $purchasedPositionIds);
         })->where('is_active', true)->latest()->paginate(10);
 
         $data = LmsSpaceResource::collection($lmsSpaces);
