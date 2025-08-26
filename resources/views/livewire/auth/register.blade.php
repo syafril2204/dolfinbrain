@@ -1,6 +1,7 @@
-<div class="row w-100">
+<div class="row w-100 h-100 g-0">
     <div class="col-xl-6 col-xxl-8">
-        <div class="d-none d-xl-flex align-items-center justify-content-center" style="height: calc(100vh - 80px);">
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100"
+            style="min-height: 100vh; background: linear-gradient(to bottom, #0d6efd, #ffffff);">
             @if ($step == 1 || $step == 6)
                 <img src="{{ asset('assets/auth/image2.png') }}" alt="" class="img-fluid" width="350">
             @elseif ($step == 2)

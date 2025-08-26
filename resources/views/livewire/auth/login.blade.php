@@ -1,11 +1,15 @@
 <div class="row w-100">
 
-    <div class="col-xl-7 col-xxl-8">
-        <div class="d-none d-xl-flex align-items-center justify-content-center" style="height: calc(100vh - 80px);">
-            <img src="{{ asset('assets/auth/image.png') }}" alt="" class="img-fluid" width="350">
+    <div class="col-xl-6 col-xxl-8 p-0">
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100"
+            style="min-height: 100vh; background: linear-gradient(to bottom, #0d6efd, #ffffff);">
+
+            <img src="{{ asset('assets/auth/image.png') }}" alt="" class="img-fluid mb-4" width="350">
         </div>
     </div>
-    <div class="col-xl-5 col-xxl-4">
+
+
+    <div class="col-xl-6 col-xxl-4">
         <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
             <div class="col-sm-8 col-md-6 col-xl-9">
                 <h2 class="mb-3 fs-7 fw-bolder">Selamat Datang di Dolfin Brain</h2>
