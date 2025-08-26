@@ -29,6 +29,7 @@ class AuthController extends Controller
             'formation_id' => ['required', 'exist:formations,id'],
             'instansi' => ['required'],
             'jabatan' => ['required'],
+            'phone_number' => ['required'], 
         ]);
 
         if ($validator->fails()) {
@@ -46,6 +47,7 @@ class AuthController extends Controller
             'formation_id' => $request->formation_id,
             'instansi' => $request->instansi,
             'jabatan' => $request->jabatan,
+            'phone_number' => $request->phone_number,
         ]);
 
         $user->assignRole('student');
