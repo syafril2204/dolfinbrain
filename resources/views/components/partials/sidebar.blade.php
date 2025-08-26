@@ -1,6 +1,6 @@
 <aside class="left-sidebar">
     <div>
-        <div class="brand-logo d-flex flex-column align-items-center justify-content-center py-3">
+        <div class="brand-logo d-flex flex-column align-items-center justify-content-center py-1">
             <a href="" class="text-nowrap logo-img" wire:navigate>
                 <img src="{{ asset('assets/img/Container.png') }}" width="170" alt="">
             </a>

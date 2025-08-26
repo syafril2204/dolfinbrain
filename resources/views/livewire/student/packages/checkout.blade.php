@@ -48,6 +48,7 @@
                         </table>
                     </div>
                     <hr>
+                    <label for="referral" class="mb-2">Masukkan Kode Referral Untuk Mendapatkan Potongan Harga</label>
                     <input type="text" id="referral" class="form-control" placeholder="Masukkan kode"
                         wire:model="referral_code">
                     @error('referral_code')
