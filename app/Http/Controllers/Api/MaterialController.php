@@ -23,7 +23,7 @@ class MaterialController extends Controller
         $position = Position::with('materials')->find($user->position_id);
 
         if (!$position) {
-            ResponseHelper::error(null, 'Posisi tidak ditemukan.', Response::HTTP_NOT_FOUND);
+            ResponseHelper::error(null, 'Jabatan tidak ditemukan.', Response::HTTP_NOT_FOUND);
         }
 
         $materials = $position->materials;

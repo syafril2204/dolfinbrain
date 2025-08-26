@@ -34,8 +34,8 @@ class Form extends Component
             'duration_in_minutes.required' => 'Durasi harus diisi.',
             'duration_in_minutes.integer' => 'Durasi harus berupa angka.',
             'duration_in_minutes.min' => 'Durasi minimal 1 menit.',
-            'assignedPositions.required' => 'Posisi harus dipilih.',
-            'assignedPositions.min' => 'Pilih setidaknya satu posisi.',
+            'assignedPositions.required' => 'Jabatan harus dipilih.',
+            'assignedPositions.min' => 'Pilih setidaknya satu Jabatan.',
         ];
     }
 

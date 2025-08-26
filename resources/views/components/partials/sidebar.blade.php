@@ -1,10 +1,10 @@
 <aside class="left-sidebar">
     <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-            <a href="{{ route('dashboard') }}" class="text-nowrap logo-img" wire:navigate>
-                <h3 class="fw-bolder ps-4 pt-2">Dolfin Brain</h3>
+        <div class="brand-logo d-flex flex-column align-items-center justify-content-center py-3">
+            <a href="" class="text-nowrap logo-img" wire:navigate>
+                <img src="{{ asset('assets/img/Container.png') }}" width="170" alt="">
             </a>
-            <div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+            <div class="close-btn d-lg-none d-block sidebartoggler cursor-pointer mt-2" id="sidebarCollapse">
                 <i class="ti ti-x fs-8 text-muted"></i>
             </div>
         </div>

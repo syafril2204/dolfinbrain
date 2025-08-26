@@ -19,13 +19,13 @@ class PositionController extends Controller
         $positions = Position::with('formation')->where('formation_id', $formation->id)->get();
         $data = PositionResource::collection($positions);
 
-        return ResponseHelper::success($data, 'Berhasil mengambil data posisi.');
+        return ResponseHelper::success($data, 'Berhasil mengambil data jabatan.');
     }
     public function index()
     {
         $positions = Position::with('formation')->get();
         $data = PositionResource::collection($positions);
 
-        return ResponseHelper::success($data, 'Berhasil mengambil data posisi.');
+        return ResponseHelper::success($data, 'Berhasil mengambil data jabatan.');
     }
 }

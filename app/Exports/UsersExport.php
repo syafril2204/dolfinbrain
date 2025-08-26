@@ -36,7 +36,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSiz
             'Domisili',
             'Nomor Telepon',
             'Formasi',
-            'Posisi',
+            'Jabatan',
             'Status Akun',
             'Tanggal Registrasi',
         ];

@@ -31,7 +31,7 @@ class Index extends Component
     protected function messages()
     {
         return [
-            'name.required' => 'Nama posisi tidak boleh kosong.',
+            'name.required' => 'Nama Jabatan tidak boleh kosong.',
             'price_mandiri.required' => 'Harga Paket Mandiri harus diisi.',
             'price_mandiri.integer' => 'Harga Paket Mandiri harus berupa angka.',
             'price_mandiri.min' => 'Harga Paket Mandiri tidak boleh negatif.',
@@ -91,7 +91,7 @@ class Index extends Component
             'price_bimbingan' => $this->price_bimbingan,
         ]);
 
-        session()->flash('message', $this->position_id ? 'Posisi berhasil diperbarui.' : 'Posisi berhasil dibuat.');
+        session()->flash('message', $this->position_id ? 'Jabatan berhasil diperbarui.' : 'Jabatan berhasil dibuat.');
         $this->closeModal();
     }
 
@@ -108,6 +108,6 @@ class Index extends Component
     public function delete(Position $position)
     {
         $position->delete();
-        session()->flash('message', 'Posisi berhasil dihapus.');
+        session()->flash('message', 'Jabatan berhasil dihapus.');
     }
 }

@@ -24,7 +24,7 @@ class QuizPackageController extends Controller
         $position = Position::with('quizPackages.questions')->find($user->position_id);
 
         if (!$position) {
-            ResponseHelper::error(null, 'Posisi tidak ditemukan.', Response::HTTP_NOT_FOUND);
+            ResponseHelper::error(null, 'Jabatan tidak ditemukan.', Response::HTTP_NOT_FOUND);
         }
 
 

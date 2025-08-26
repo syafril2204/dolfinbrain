@@ -35,7 +35,7 @@ class Form extends Component
             'image.required' => 'Gambar sampul harus diunggah.',
             'image.image' => 'File harus berupa gambar.',
             'image.max' => 'Ukuran gambar maksimal 2MB.',
-            'assignedPositions.required' => 'Pilih setidaknya satu posisi.',
+            'assignedPositions.required' => 'Pilih setidaknya satu jabatan.',
         ];
     }
 
