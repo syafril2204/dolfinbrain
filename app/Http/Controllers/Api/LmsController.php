@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LmsCoachingResource;
+use App\Http\Resources\LmsResourceResource;
 use App\Http\Resources\LmsSpaceResource;
+use App\Http\Resources\LmsVideoResource;
+use App\Http\Resources\MaterialResource;
+use App\Http\Resources\QuizPackageResource;
 use App\Models\LmsSpace;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,6 +17,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LmsController extends Controller
 {
+
+    /**
+     * Helper untuk memeriksa otorisasi akses ke LMS Space.
+     */
+    private function authorizeAccess(User $user, LmsSpace $lms_space): bool
+    {
+        if (!$user->hasLmsAccess()) {
+            return false;
+        }
+
+        return $user->purchasedPositions()
+            ->where('package_type', 'bimbingan')
+            ->whereHas('lmsSpaces', fn($q) => $q->where('lms_space_id', $lms_space->id))
+            ->exists();
+    }
     /**
      * Menampilkan daftar LMS Space yang dapat diakses oleh pengguna.
      */
@@ -36,34 +56,81 @@ class LmsController extends Controller
         return ResponseHelper::success($data, 'Berhasil mengambil daftar LMS Space.');
     }
 
-
+    /**
+     * Menampilkan detail LMS Space beserta seluruh kontennya.
+     */
     public function show(Request $request, LmsSpace $lms_space): JsonResponse
     {
-        $user = $request->user();
-
-        if (!$user->hasLmsAccess()) {
-            return ResponseHelper::error(null, 'Akses ditolak. Fitur ini hanya untuk paket bimbingan.', Response::HTTP_FORBIDDEN);
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
         }
 
-        $canAccess = $user->purchasedPositions()
-            ->where('package_type', 'bimbingan')
-            ->whereHas('lmsSpaces', fn($q) => $q->where('lms_space_id', $lms_space->id))
-            ->exists();
+        $lms_space->load(['videos', 'coachings', 'resources', 'materials', 'quizPackages']);
+        return ResponseHelper::success(new LmsSpaceResource($lms_space), 'Berhasil mengambil detail LMS Space.');
+    }
 
-        if (!$canAccess) {
-            return ResponseHelper::error(null, 'Anda tidak memiliki akses ke LMS Space ini.', Response::HTTP_FORBIDDEN);
+    /**
+     * Menampilkan daftar video untuk sebuah LMS Space.
+     */
+    public function videos(Request $request, LmsSpace $lms_space): JsonResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
         }
 
-        $lms_space->load([
-            'videos' => fn($q) => $q->orderBy('order'),
-            'coachings' => fn($q) => $q->orderBy('start_at'),
-            'resources',
-            'materials',
-            'quizPackages'
-        ]);
+        $videos = $lms_space->videos()->orderBy('order')->paginate(10);
+        return ResponseHelper::success(LmsVideoResource::collection($videos), 'Berhasil mengambil daftar video.');
+    }
 
-        $data = new LmsSpaceResource($lms_space);
+    /**
+     * Menampilkan daftar jadwal coaching untuk sebuah LMS Space.
+     */
+    public function coachings(Request $request, LmsSpace $lms_space): JsonResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
+        }
 
-        return ResponseHelper::success($data, 'Berhasil mengambil detail LMS Space.');
+        $coachings = $lms_space->coachings()->orderBy('start_at')->paginate(10);
+        return ResponseHelper::success(LmsCoachingResource::collection($coachings), 'Berhasil mengambil daftar coaching.');
+    }
+
+    /**
+     * Menampilkan daftar file & audio untuk sebuah LMS Space.
+     */
+    public function files(Request $request, LmsSpace $lms_space): JsonResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
+        }
+
+        $files = $lms_space->resources()->latest()->paginate(10);
+        return ResponseHelper::success(LmsResourceResource::collection($files), 'Berhasil mengambil daftar file.');
+    }
+
+    /**
+     * Menampilkan daftar materi untuk sebuah LMS Space.
+     */
+    public function materials(Request $request, LmsSpace $lms_space): JsonResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
+        }
+
+        $materials = $lms_space->materials()->latest()->paginate(10);
+        return ResponseHelper::success(MaterialResource::collection($materials), 'Berhasil mengambil daftar materi.');
+    }
+
+    /**
+     * Menampilkan daftar paket kuis untuk sebuah LMS Space.
+     */
+    public function quizzes(Request $request, LmsSpace $lms_space): JsonResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
+        }
+
+        $quizzes = $lms_space->quizPackages()->latest()->paginate(10);
+        return ResponseHelper::success(QuizPackageResource::collection($quizzes), 'Berhasil mengambil daftar kuis.');
     }
 }
