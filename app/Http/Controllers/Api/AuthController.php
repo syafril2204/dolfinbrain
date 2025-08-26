@@ -26,6 +26,9 @@ class AuthController extends Controller
             'date_of_birth' => ['required', 'date', 'before:today'],
             'domicile' => ['required', 'string', 'max:255'],
             'position_id' => ['required', 'integer', 'exists:positions,id'],
+            'formation_id' => ['required', 'exist:formations,id'],
+            'instansi' => ['required'],
+            'jabatan' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -40,6 +43,9 @@ class AuthController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'domicile' => $request->domicile,
             'position_id' => $request->position_id,
+            'formation_id' => $request->formation_id,
+            'instansi' => $request->instansi,
+            'jabatan' => $request->jabatan,
         ]);
 
         $user->assignRole('student');
