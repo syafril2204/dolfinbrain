@@ -26,7 +26,7 @@ class AuthController extends Controller
             'date_of_birth' => ['required', 'date', 'before:today'],
             'domicile' => ['required', 'string', 'max:255'],
             'position_id' => ['required', 'integer', 'exists:positions,id'],
-            'formation_id' => ['required', 'exist:formations,id'],
+            'formation_id' => ['required', 'exists:formations,id'],
             'instansi' => ['required'],
             'jabatan' => ['required'],
             'phone_number' => ['required'], 
