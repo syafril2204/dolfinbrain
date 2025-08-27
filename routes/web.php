@@ -106,6 +106,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
 
+        Route::get('/banners', \App\Livewire\Admin\Banners\Index::class)->name('banners.index');
+
         Route::get('/affiliates', AffiliateIndex::class)->name('affiliates.index');
         Route::get('/users', UserIndex::class)->name('users.index');
         Route::get('/formations', FormationIndex::class)->name('formations.index');

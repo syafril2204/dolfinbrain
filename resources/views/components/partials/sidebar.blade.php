@@ -83,6 +83,13 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('admin.banners.index') ? 'active' : '' }}"
+                            href="{{ route('admin.banners.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-photo"></i></span>
+                            <span class="hide-menu">Banner</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
                         <a class="sidebar-link {{ request()->routeIs('admin.mentors.*') ? 'active' : '' }}"
                             href="{{ route('admin.mentors.index') }}" wire:navigate aria-expanded="false">
                             <span><i class="ti ti-article"></i></span>

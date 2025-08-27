@@ -1,18 +1,14 @@
 <div>
-    {{-- CSS Kustom yang sudah disederhanakan --}}
     @push('styles')
         <style>
-            /* Card utama yang membungkus semuanya */
             .main-content-card .card-body {
                 padding: 0;
             }
 
-            /* Mengatur indikator carousel */
             .carousel-indicators [data-bs-target] {
                 background-color: #5D87FF;
             }
 
-            /* Style untuk kotak fitur di dalam card utama */
             .feature-box {
                 border-radius: 12px;
                 padding: 1.5rem;
@@ -69,25 +65,62 @@
             {{-- Bagian 1: Carousel Banner --}}
             <div id="welcomeCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" data-bs-interval="5000">
-                        <img src="{{ asset('assets/img/banner/Banner.png') }}" class="d-block w-100" alt="Banner 1">
-                    </div>
-                    <div class="carousel-item" data-bs-interval="5000">
-                        <img src="{{ asset('assets/img/banner/Banner (1).png') }}" class="d-block w-100" alt="Banner 2">
-                    </div>
-                    <div class="carousel-item" data-bs-interval="5000">
-                        <img src="{{ asset('assets/img/banner/Banner (2).png') }}" class="d-block w-100" alt="Banner 3">
-                    </div>
+                    @if ($banners->count() > 0)
+                        @foreach ($banners as $item)
+                            <div class="carousel-item {{ $loop->first ? 'active' : '' }}" data-bs-interval="5000">
+                                <img src="{{ Storage::url($item->image_path) }}" class="d-block w-100"
+                                    alt="Banner {{ $loop->iteration }}" style="height: 260px; object-fit: cover;">
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="carousel-item active" data-bs-interval="5000">
+                            <img src="{{ asset('assets/img/banner/Banner.png') }}" class="d-block w-100" alt="Banner 1">
+                        </div>
+                        <div class="carousel-item" data-bs-interval="5000">
+                            <img src="{{ asset('assets/img/banner/Banner (1).png') }}" class="d-block w-100"
+                                alt="Banner 2">
+                        </div>
+                        <div class="carousel-item" data-bs-interval="5000">
+                            <img src="{{ asset('assets/img/banner/Banner (2).png') }}" class="d-block w-100"
+                                alt="Banner 3">
+                        </div>
+                    @endif
                 </div>
+
+                {{-- Indicators dinamis --}}
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#welcomeCarousel" data-bs-slide-to="0" class="active"
-                        aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#welcomeCarousel" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#welcomeCarousel" data-bs-slide-to="2"
-                        aria-label="Slide 3"></button>
+                    @if ($banners->count() > 0)
+                        @foreach ($banners as $item)
+                            <button type="button" data-bs-target="#welcomeCarousel"
+                                data-bs-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}"
+                                aria-current="{{ $loop->first ? 'true' : 'false' }}"
+                                aria-label="Slide {{ $loop->iteration }}"></button>
+                        @endforeach
+                    @else
+                        <button type="button" data-bs-target="#welcomeCarousel" data-bs-slide-to="0" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#welcomeCarousel" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#welcomeCarousel" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    @endif
                 </div>
+
+                {{-- Optional: tombol prev/next, tampil kalau slide > 1 --}}
+                @if ($banners->count() > 1 || $banners->count() == 0)
+                    <button class="carousel-control-prev" type="button" data-bs-target="#welcomeCarousel"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#welcomeCarousel"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                @endif
             </div>
+
 
             {{-- Bagian 2 & 3: Konten di bawah Carousel --}}
             <div class="p-4">
