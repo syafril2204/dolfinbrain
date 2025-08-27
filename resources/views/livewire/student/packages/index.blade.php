@@ -57,7 +57,7 @@
         <div class="d-flex align-items-center mb-4">
             <a href="#" class="btn btn-outline-secondary me-3" wire:click.prevent="goBack"><i
                     class="ti ti-arrow-left"></i></a>
-            <h3 class="fw-bolder mb-0">Pilih Paket Belajarmu untuk {{ $selectedPosition->name }}</h3>
+            <h3 class="fw-bolder mb-0"> Pilih Paket Terbaik untuk Masa Depanmu {{ $selectedPosition->name }}</h3>
         </div>
         <div class="row justify-content-center g-4">
             {{-- Kartu Paket Aplikasi (Mandiri) --}}
@@ -66,8 +66,8 @@
                     <div class="card-body d-flex flex-column">
                         <div class="text-center mb-3"><span class="package-tag mandiri-tag">Akses Mandiri</span></div>
                         <h4 class="fw-bolder text-center">Paket Aplikasi</h4>
-                        <p class="text-muted text-center small mb-4">Cocok untuk Anda yang ingin belajar mandiri dengan
-                            materi dan soal lengkap.</p>
+                        <p class="text-muted text-center small mb-4">Pilihan Tepat untuk Pejuang Mandiri yang Serius!
+                        </p>
                         <div class="text-center my-3">
                             <p class="price-original text-muted"><s>Rp.
                                     {{ number_format($mandiriPackage['original_price'], 0, ',', '.') }}</s></p>
@@ -102,8 +102,7 @@
                         <div class="text-center mb-3"><span class="package-tag bimbingan-tag">Paling Lengkap</span>
                         </div>
                         <h4 class="fw-bolder text-center">Paket Bimbel</h4>
-                        <p class="text-muted text-center small mb-4">Pengalaman belajar lengkap dengan akses penuh ke
-                            semua fitur dan bimbingan mentor.</p>
+                        <p class="text-muted text-center small mb-4">Paket Khusus untuk Sukses Tanpa Ragu!</p>
                         <div class="text-center my-3">
                             @if (!$bimbinganPackage['is_upgrade'])
                                 <p class="price-original text-muted"><s>Rp.

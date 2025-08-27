@@ -68,9 +68,16 @@ class Index extends Component
             'original_price' => $mandiriPrice * 1.8,
             'features' => [
                 ['text' => 'Akses Penuh Selama 6 Bulan Tanpa Batas', 'included' => true],
-                ['text' => 'Full Akses Paket Materi', 'included' => true],
-                ['text' => 'Full Akses Paket Soal', 'included' => true],
-                ['text' => 'Tidak termasuk Sesi Bimbel', 'included' => false],
+                ['text' => ' Materi Paling Up-to-Date', 'included' => true],
+                ['text' => 'Bonus! Fitur Simulasi Try Out', 'included' => true],
+                ['text' => 'Cocok untuk Kamu yang Punya Jadwal Padat', 'included' => true],
+                ['text' => 'Bimbingan Eksklusif 1-on-1', 'included' => false],
+                ['text' => 'Tutor Berpengalaman & ASN Aktif', 'included' => false],
+                ['text' => 'Akses Grup Belajar Premium', 'included' => false],
+                ['text' => 'Konsultasi Gratis Tanpa Batas', 'included' => false],
+                ['text' => 'Materi dan Rekaman Premium', 'included' => false],
+                ['text' => 'Garansi Fokus Terbaik! HANYA 1 PESERTA PER INSTANSI!*', 'included' => false],
+                ['text' => 'Tujuh sesi pertemuan intensif yang akan membimbingmu secara personal', 'included' => false],
             ],
         ];
 
@@ -80,9 +87,16 @@ class Index extends Component
             'is_upgrade' => $isUpgrade, // Flag untuk menandai ini adalah harga upgrade
             'features' => [
                 ['text' => 'Akses Penuh Selama 6 Bulan Tanpa Batas', 'included' => true],
-                ['text' => 'Full Akses Paket Materi', 'included' => true],
-                ['text' => 'Full Akses Paket Soal', 'included' => true],
-                ['text' => 'Full Akses Paket Bimbel', 'included' => true],
+                ['text' => ' Materi Paling Up-to-Date', 'included' => true],
+                ['text' => 'Bonus! Fitur Simulasi Try Out', 'included' => true],
+                ['text' => 'Cocok untuk Kamu yang Punya Jadwal Padat', 'included' => true],
+                ['text' => 'Bimbingan Eksklusif 1-on-1', 'included' => true],
+                ['text' => 'Tutor Berpengalaman & ASN Aktif', 'included' => true],
+                ['text' => 'Akses Grup Belajar Premium', 'included' => true],
+                ['text' => 'Konsultasi Gratis Tanpa Batas', 'included' => true],
+                ['text' => 'Materi dan Rekaman Premium', 'included' => true],
+                ['text' => 'Garansi Fokus Terbaik! HANYA 1 PESERTA PER INSTANSI!*', 'included' => true],
+                ['text' => 'Tujuh sesi pertemuan intensif yang akan membimbingmu secara personal', 'included' => true],
             ],
         ];
     }
