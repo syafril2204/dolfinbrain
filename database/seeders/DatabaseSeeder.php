@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             FormationAndPositionSeeder::class,
             MaterialAndQuizSeeder::class,
             LmsSpaceSeeder::class,
+            MentorSeeder::class,
+            ArticleSeeder::class,
         ]);
     }
 }
