@@ -79,16 +79,15 @@ class ProfileController extends Controller
         ]);
 
         // Cek apakah pengguna sudah membeli jabatan yang akan diaktifkan
-        $hasPurchased = $user->purchasedPositions()->where('position_id', $validated['position_id'])->exists();
+        // $hasPurchased = $user->purchasedPositions()->where('position_id', $validated['position_id'])->exists();
 
-        if (!$hasPurchased) {
-            // Jika jabatan yang dipilih adalah jabatan default (saat register) dan belum ada pembelian, izinkan.
-            if ($user->purchasedPositions()->count() === 0 && $user->position_id == $validated['position_id']) {
-                 // Tidak melakukan apa-apa, karena sudah aktif
-            } else {
-                return ResponseHelper::error(null, 'Anda belum membeli paket untuk jabatan ini.', 403);
-            }
-        }
+        // if (!$hasPurchased) {
+        //     // Jika jabatan yang dipilih adalah jabatan default (saat register) dan belum ada pembelian, izinkan.
+        //     if ($user->purchasedPositions()->count() === 0 && $user->position_id == $validated['position_id']) {
+        //     } else {
+        //         return ResponseHelper::error(null, 'Anda belum membeli paket untuk jabatan ini.', 403);
+        //     }
+        // }
 
         $user->update(['position_id' => $validated['position_id']]);
 
