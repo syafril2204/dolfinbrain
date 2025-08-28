@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\LmsCoachingResource;
 use App\Http\Resources\LmsResourceResource;
 use App\Http\Resources\LmsSpaceResource;
-use App\Http\Resources\LmsVideoResource;
+use App\Http\Resources\LMSVideoResource;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\QuizPackageResource;
 use App\Models\LmsSpace;
@@ -79,7 +79,7 @@ class LmsController extends Controller
         }
 
         $videos = $lms_space->videos()->orderBy('order')->paginate(10);
-        return ResponseHelper::success(LmsVideoResource::collection($videos), 'Berhasil mengambil daftar video.');
+        return ResponseHelper::success(LMSVideoResource::collection($videos), 'Berhasil mengambil daftar video.');
     }
 
     /**
