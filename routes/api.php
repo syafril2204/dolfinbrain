@@ -22,6 +22,8 @@ Route::post('/tripay/callback', [TripayCallbackController::class, 'handle'])->na
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::get('/banners', [BannerController::class, 'index'])->name('api.banners.index');
+
 Route::get('/formations', [FormationController::class, 'index']);
 Route::get('/positions', [PositionController::class, 'index']);
 Route::get('/positions/{formation}', [PositionController::class, 'show']);
