@@ -38,6 +38,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSiz
             'Formasi',
             'Jabatan',
             'Status Akun',
+            'Asal Instansi',
             'Tanggal Registrasi',
         ];
     }
@@ -59,6 +60,7 @@ class UsersExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSiz
             $user->position->formation->name ?? '-', // Ambil nama formasi dari relasi
             $user->position->name ?? '-', // Ambil nama posisi dari relasi
             ucfirst($user->status),
+            $user->instansi,
             $user->created_at->format('d-m-Y H:i:s'), // Format tanggal registrasi
         ];
     }
