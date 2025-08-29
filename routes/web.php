@@ -105,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('admin.lms-resources.download');
 
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+        Route::get('/transactions', \App\Livewire\Admin\Transactions\Index::class)->name('transactions.index');
 
         Route::get('/banners', \App\Livewire\Admin\Banners\Index::class)->name('banners.index');
 

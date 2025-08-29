@@ -104,6 +104,13 @@
                             <span class="hide-menu">Affiliate</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link {{ request()->routeIs('admin.transactions.index') ? 'active' : '' }}"
+                            href="{{ route('admin.transactions.index') }}" wire:navigate aria-expanded="false">
+                            <span><i class="ti ti-receipt-2"></i></span>
+                            <span class="hide-menu">Transaksi</span>
+                        </a>
+                    </li>
                     <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                         <span class="hide-menu">Akun Saya</span>
