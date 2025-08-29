@@ -20,6 +20,8 @@ use App\Http\Controllers\Api\TripayCallbackController;
 use App\Http\Resources\UserResource;
 
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle'])->name('api.tripay.callback');
+Route::get('/payment-methods', [PaymentController::class, 'getPaymentChannels'])->name('api.payment-methods');
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -35,6 +37,8 @@ Route::prefix('password')->name('api.password.')->group(function () {
     Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->name('reset');
 });
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/transactions/create', [PaymentController::class, 'createTransaction'])->name('api.transactions.create');
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'show']);
