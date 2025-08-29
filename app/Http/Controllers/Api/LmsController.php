@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\LmsCoachingResource;
+use App\Http\Resources\LMSCoachingResource;
 use App\Http\Resources\LmsResourceResource;
 use App\Http\Resources\LmsSpaceResource;
 use App\Http\Resources\LMSVideoResource;
@@ -92,7 +92,7 @@ class LmsController extends Controller
         }
 
         $coachings = $lms_space->coachings()->orderBy('start_at')->paginate(10);
-        return ResponseHelper::success(LmsCoachingResource::collection($coachings), 'Berhasil mengambil daftar coaching.');
+        return ResponseHelper::success(LMSCoachingResource::collection($coachings), 'Berhasil mengambil daftar coaching.');
     }
 
     /**

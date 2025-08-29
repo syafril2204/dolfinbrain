@@ -20,7 +20,7 @@ class LmsSpaceResource extends JsonResource
             // Sertakan semua konten jika resource ini dimuat dengan relasinya
             'contents' => [
                 'videos' => LMSVideoResource::collection($this->whenLoaded('videos')),
-                'coachings' => LmsCoachingResource::collection($this->whenLoaded('coachings')),
+                'coachings' => LMSCoachingResource::collection($this->whenLoaded('coachings')),
                 'files' => LmsResourceResource::collection($this->whenLoaded('resources')),
                 'materials' => MaterialResource::collection($this->whenLoaded('materials')),
                 'quizzes' => QuizPackageResource::collection($this->whenLoaded('quizPackages')),
