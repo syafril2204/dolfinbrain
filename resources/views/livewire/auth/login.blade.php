@@ -4,7 +4,34 @@
         <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100"
             style="min-height: 100vh; background: linear-gradient(to bottom, #0d6efd, #ffffff);">
 
-            <img src="{{ asset('assets/auth/image.png') }}" alt="" class="img-fluid mb-4" width="350">
+            <div id="authCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ asset('assets/auth/image.png') }}" class="d-block img-fluid mx-auto"
+                            width="350" alt="Image 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('assets/auth/image2.png') }}" class="d-block img-fluid mx-auto"
+                            width="350" alt="Image 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('assets/auth/image3.png') }}" class="d-block img-fluid mx-auto"
+                            width="350" alt="Image 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('assets/auth/image4.png') }}" class="d-block img-fluid mx-auto"
+                            width="350" alt="Image 4">
+                    </div>
+                </div>
+
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="2"></button>
+                    <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="3"></button>
+                </div>
+            </div>
+
         </div>
     </div>
 
