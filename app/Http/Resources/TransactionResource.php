@@ -17,15 +17,16 @@ class TransactionResource extends JsonResource
         return [
             'id' => $this->id,
             'reference' => $this->reference,
-            'package_name' => 'Paket ' . ucfirst($this->package_type),
-            'position_name' => $this->whenLoaded('position', function () {
-                return $this->position->formation->name . ' - ' . $this->position->name;
-            }),
-            'amount' => (int) $this->amount,
+            'package_type' => $this->package_type,
+            'amount' => $this->amount,
             'status' => $this->status,
             'payment_method' => $this->payment_method,
-            'transaction_date' => $this->created_at->translatedFormat('j F Y'),
-            // 'payment_url' => $this->status === 'pending' ? route('student.packages.instruction', $this->reference) : null,
+            'checkout_url' => $this->checkout_url,
+            'payment_code' => $this->payment_code,
+            'qr_url' => $this->qr_url,
+            'expired_at' => $this->expired_at ? $this->expired_at->translatedFormat('d F Y, H:i') : null,
+            'created_at' => $this->created_at->translatedFormat('d F Y, H:i'),
+            'position' => new PositionResource($this->whenLoaded('position')),
         ];
     }
 }

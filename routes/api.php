@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuizAttemptController;
 use App\Http\Controllers\Api\QuizHistoryController;
 use App\Http\Controllers\Api\QuizPackageController;
+use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\TransactionHistoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,8 @@ Route::prefix('password')->name('api.password.')->group(function () {
     Route::post('/reset', [PasswordResetController::class, 'resetPassword'])->name('reset');
 });
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/transactions/{transaction:reference}', [TransactionController::class, 'show'])->name('api.transactions.show');
 
     Route::post('/transactions/create', [PaymentController::class, 'createTransaction'])->name('api.transactions.create');
 
