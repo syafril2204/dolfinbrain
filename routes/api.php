@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\FormationController;
 use App\Http\Controllers\Api\LmsController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\MentorController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\QuizAttemptController;
