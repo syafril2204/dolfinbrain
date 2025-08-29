@@ -53,9 +53,15 @@
     @endpush
 
     {{-- Sapaan Pengguna (di luar card) --}}
-    <div class="welcome-greeting mb-4">
-        {{-- <h4>Hi {{ auth()->user()->name }} 👋</h4> --}}
-        <p>Siap belajar hari ini?</p>
+    <div class="welcome-greeting mb-4" style="display: flex">
+        <div class="">
+            <img src="{{ auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : asset('dist/images/profile/user-1.jpg') }}"
+                class="rounded-circle" width="55" height="55" style="margin-right:10px" alt="User Avatar" />
+        </div>
+        <div class="">
+            <h4 style="font-weight: 1000; color:#042657">Hi {{ auth()->user()->name }} 👋</h4>
+            <p style="color: #042657; font-weight:500">Siap belajar hari ini?</p>
+        </div>
     </div>
 
     {{-- Card Tunggal untuk Semua Konten --}}
