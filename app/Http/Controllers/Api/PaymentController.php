@@ -18,13 +18,8 @@ class PaymentController extends Controller
     public function getPaymentChannels(TripayService $tripay): JsonResponse
     {
         $response = $tripay->getPaymentChannels();
-
-        if (isset($response['success']) && $response['success']) {
-            $data = PaymentMethodResource::collection($response['data']);
-            return ResponseHelper::success($data, 'Berhasil mengambil metode pembayaran.');
-        }
-
-        return ResponseHelper::error(null, 'Gagal mengambil metode pembayaran.', 500);
+        $data = PaymentMethodResource::collection(collect($response));
+        return ResponseHelper::success($data, 'Berhasil mengambil metode pembayaran.');
     }
 
     public function createTransaction(Request $request, TripayService $tripay): JsonResponse
