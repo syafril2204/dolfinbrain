@@ -16,7 +16,7 @@
     <div class="row">
         {{-- Kolom Soal --}}
         <div class="col-md-8">
-            @foreach ($attempt->quizPackage->questions as $question)
+            @foreach ($showQuestions as $question)
                 @php
                     $userAnswerId = $userAnswers[$question->id] ?? null;
                     $correctAnswerId = $question->answers->where('is_correct', true)->first()->id;
@@ -53,6 +53,7 @@
                     </div>
                 </div>
             @endforeach
+            <div class="mt-3">{{ $showQuestions->links('partials.custom-pagination') }}</div>
         </div>
 
         {{-- Kolom Daftar Pertanyaan --}}
@@ -74,12 +75,16 @@
             @elseif($isCorrect) border-success text-success
             @else border-danger text-danger @endif"
                                 style="width:40px; height:40px;">
-                                {{ $loop->iteration }}
+                                <a href="/students/quiz/result/1?page={{ $loop->iteration }}">
+                                    {{ $loop->iteration }}
+                                </a>
+
                             </div>
                         @endforeach
                     </div>
 
-                    <a href="{{ route('students.soal.index') }}" class="btn btn-primary w-100 mt-4 rounded-pill">Kembali
+                    <a href="{{ route('students.soal.index') }}"
+                        class="btn btn-primary w-100 mt-4 rounded-pill">Kembali
                         Ke Daftar Quiz</a>
                 </div>
             </div>

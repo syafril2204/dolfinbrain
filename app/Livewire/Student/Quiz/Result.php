@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Student\Quiz;
 
+use App\Models\Question;
 use App\Models\QuizAttempt;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -9,6 +10,7 @@ use Livewire\Component;
 class Result extends Component
 {
     public QuizAttempt $attempt;
+    // public Question $showQuestions;
     public $score = 0;
     public $correctCount = 0;
     public $incorrectCount = 0;
@@ -23,12 +25,13 @@ class Result extends Component
             abort(403, 'Akses Ditolak');
         }
 
-        // Ambil semua data yang dibutuhkan dalam satu query
         $this->attempt = $quiz_attempt->load('quizPackage.questions.answers', 'details');
         $this->userAnswers = $this->attempt->details->pluck('answer_id', 'question_id');
         $this->score = $this->attempt->score;
 
         $this->calculateStats();
+
+        // dd($this->attempt->quizPackage->id);
     }
 
     /**
@@ -56,6 +59,7 @@ class Result extends Component
 
     public function render()
     {
-        return view('livewire.student.quiz.result')->layout('components.layouts.app');
+        $showQuestions = Question::where('quiz_package_id', $this->attempt->quizPackage->id)->paginate(1);
+        return view('livewire.student.quiz.result', compact('showQuestions'))->layout('components.layouts.app');
     }
 }
