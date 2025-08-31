@@ -11,6 +11,7 @@ use App\Http\Resources\LMSVideoResource;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\QuizPackageResource;
 use App\Models\LmsSpace;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
