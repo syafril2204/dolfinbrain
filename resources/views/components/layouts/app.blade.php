@@ -12,7 +12,7 @@
     <meta name="keywords" content="Mordenize" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="shortcut icon" type="image/png" href="{{ asset('dist/images/logos/favicon.ico') }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo.png') }}" />
     <link rel="stylesheet" href="{{ asset('dist/libs/owl.carousel/dist/assets/owl.carousel.min.css') }}">
 
     {{-- CSS Tema Utama --}}
@@ -28,7 +28,7 @@
 
 <body>
     <div class="preloader">
-        <img src="{{ asset('dist/images/logos/favicon.ico') }}" alt="loader" class="lds-ripple img-fluid" />
+        <img src="{{ asset('assets/img/logo.png') }}" alt="loader" class="lds-ripple img-fluid" />
     </div>
 
     <div class="page-wrapper" id="main-wrapper" data-theme="blue_theme" data-layout="vertical" data-sidebartype="full"
