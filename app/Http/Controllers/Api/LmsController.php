@@ -50,7 +50,7 @@ class LmsController extends Controller
 
         $lmsSpaces = LmsSpace::whereHas('positions', function ($query) use ($purchasedPositionIds) {
             $query->whereIn('position_id', $purchasedPositionIds);
-        })->where('is_active', true)->where('position_id', auth()->user()->position_id)->latest()->paginate(10);
+        })->where('is_active', true)->latest()->paginate(10);
 
         $data = LmsSpaceResource::collection($lmsSpaces);
 
