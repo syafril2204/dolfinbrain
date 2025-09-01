@@ -3,12 +3,11 @@
     <div class="col-xl-6 col-xxl-8 p-0">
         <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100"
             style="min-height: 100vh; background: linear-gradient(to bottom, #0d6efd, #ffffff);">
-
-            <div id="authCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="5000">
+            <div id="authCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="2000">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="{{ asset('assets/auth/image.png') }}" class="d-block img-fluid mx-auto"
-                            width="350" alt="Image 1">
+                        <img src="{{ asset('assets/auth/image.png') }}" class="d-block img-fluid mx-auto" width="350"
+                            alt="Image 1">
                     </div>
                     <div class="carousel-item">
                         <img src="{{ asset('assets/auth/image2.png') }}" class="d-block img-fluid mx-auto"
@@ -24,13 +23,15 @@
                     </div>
                 </div>
 
-                <div class="carousel-indicators">
+                <!-- Indicators -->
+                <div class="carousel-indicators custom-indicators">
                     <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="0" class="active"></button>
                     <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="1"></button>
                     <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="2"></button>
                     <button type="button" data-bs-target="#authCarousel" data-bs-slide-to="3"></button>
                 </div>
             </div>
+
 
         </div>
     </div>
@@ -116,3 +117,20 @@
         </div>
     </div>
 </div>
+@push('styles')
+    <style>
+        /* Geser indicator ke bawah */
+        .custom-indicators {
+            bottom: -40px;
+            /* jarak di bawah carousel */
+        }
+
+        .custom-indicators [data-bs-target] {
+            background-color: #0d6efd;
+            /* warna aktif */
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+@endpush
