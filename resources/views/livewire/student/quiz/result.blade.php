@@ -75,9 +75,11 @@
             @elseif($isCorrect) border-success text-success
             @else border-danger text-danger @endif"
                                 style="width:40px; height:40px;">
-                                <a href="/students/quiz/result/1?page={{ $loop->iteration }}">
+                                <a
+                                    href="{{ route('students.quiz.result', ['quiz_attempt' => $attempt->id, 'page' => $loop->iteration]) }}">
                                     {{ $loop->iteration }}
                                 </a>
+
 
                             </div>
                         @endforeach
