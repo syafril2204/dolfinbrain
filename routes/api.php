@@ -70,6 +70,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('lms-spaces/{lms_space}')->name('api.lms.')->group(function () {
         Route::get('/', [LmsController::class, 'show'])->name('show');
         Route::get('/videos', [LmsController::class, 'videos'])->name('videos');
+        Route::get('/audios', [LmsController::class, 'audio'])->name('audio');
         Route::get('/coachings', [LmsController::class, 'coachings'])->name('coachings');
         Route::get('/files', [LmsController::class, 'files'])->name('files');
         Route::get('/materials', [LmsController::class, 'materials'])->name('materials');

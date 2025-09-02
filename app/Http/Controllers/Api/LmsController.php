@@ -57,6 +57,23 @@ class LmsController extends Controller
         return ResponseHelper::success($data, 'Berhasil mengambil daftar LMS Space.');
     }
 
+
+    /**
+     * Menampilkan daftar audio untuk sebuah LMS Space.
+     */
+    public function audio(Request $request, LmsSpace $lms_space): JsonResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
+        }
+
+        $audioFiles = $lms_space->resources()
+            ->where('type', 'audio_recording') // Filter hanya untuk audio
+            ->latest()
+            ->paginate(10);
+
+        return ResponseHelper::success(LmsResourceResource::collection($audioFiles), 'Berhasil mengambil daftar audio.');
+    }
     /**
      * Menampilkan detail LMS Space beserta seluruh kontennya.
      */
