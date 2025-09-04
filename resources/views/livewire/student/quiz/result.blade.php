@@ -70,17 +70,19 @@
                                 $correctAnswerId = $question->answers->where('is_correct', true)->first()->id;
                                 $isCorrect = $userAnswerId !== null && $userAnswerId == $correctAnswerId;
                             @endphp
-                            <div class="d-flex align-items-center justify-content-center rounded-3 border fw-bold
-            @if ($userAnswerId === null) border-secondary text-secondary
-            @elseif($isCorrect) border-success text-success
-            @else border-danger text-danger @endif"
+                            <div class="d-flex align-items-center justify-content-center rounded-3 fw-bold
+    @if ($userAnswerId === null) border border-secondary
+    @elseif($isCorrect) border border-success
+    @else border border-danger @endif"
                                 style="width:40px; height:40px;">
-                                <a
-                                    href="{{ route('students.quiz.result', ['quiz_attempt' => $attempt->id, 'page' => $loop->iteration]) }}">
+
+                                <a href="{{ route('students.quiz.result', ['quiz_attempt' => $attempt->id, 'page' => $loop->iteration]) }}"
+                                    class="fw-bold text-decoration-none
+        @if ($userAnswerId === null) text-secondary
+        @elseif($isCorrect) text-success
+        @else text-danger @endif">
                                     {{ $loop->iteration }}
                                 </a>
-
-
                             </div>
                         @endforeach
                     </div>

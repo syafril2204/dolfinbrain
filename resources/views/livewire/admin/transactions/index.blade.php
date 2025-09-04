@@ -15,7 +15,15 @@
     {{-- Panel Filter --}}
     <div class="card mb-4">
         <div class="card-body">
-            <h5 class="card-title fw-semibold">Filter Transaksi</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title fw-semibold">Filter Transaksi</h5>
+
+                {{-- TOMBOL EXPORT BARU --}}
+                <button wire:click="exportExcel" class="btn btn-success">
+                    <i class="ti ti-file-excel me-1"></i>
+                    Export Excel
+                </button>
+            </div>
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label">Cari Nama / Referensi</label>

@@ -4,6 +4,8 @@ namespace App\Livewire\Admin\Transactions;
 
 use App\Models\Transaction;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionsExport;
 use Livewire\WithPagination;
 
 class Index extends Component
@@ -17,15 +19,41 @@ class Index extends Component
     public string $endDate = '';
 
     // Reset halaman saat filter berubah
-    public function updatingSearch() { $this->resetPage(); }
-    public function updatingFilterStatus() { $this->resetPage(); }
-    public function updatingStartDate() { $this->resetPage(); }
-    public function updatingEndDate() { $this->resetPage(); }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+    public function updatingFilterStatus()
+    {
+        $this->resetPage();
+    }
+    public function updatingStartDate()
+    {
+        $this->resetPage();
+    }
+    public function updatingEndDate()
+    {
+        $this->resetPage();
+    }
 
     public function resetFilters()
     {
         $this->reset('search', 'filterStatus', 'startDate', 'endDate');
         $this->resetPage();
+    }
+    /**
+     * Method untuk memicu unduhan file Excel.
+     */
+    public function exportExcel()
+    {
+        // Berikan nama file yang dinamis berdasarkan tanggal
+        $fileName = 'transaksi-' . now()->format('d-m-Y') . '.xlsx';
+
+        // Panggil class export dengan membawa semua nilai filter saat ini
+        return Excel::download(
+            new TransactionsExport($this->search, $this->filterStatus, $this->startDate, $this->endDate),
+            $fileName
+        );
     }
 
     public function render()
