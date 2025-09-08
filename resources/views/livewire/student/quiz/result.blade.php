@@ -83,7 +83,7 @@
         @else text-danger @endif">
                                     {{ $loop->iteration }}
                                 </a>
-                            </div>
+                            </div> 
                         @endforeach
                     </div>
 
