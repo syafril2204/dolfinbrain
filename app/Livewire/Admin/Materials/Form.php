@@ -24,7 +24,7 @@ class Form extends Component
     protected function rules()
     {
         $rules = [
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:materials,title',
             'description' => 'nullable|string',
             'assignedPositions' => 'required|array|min:1',
             'file' => $this->isEditMode ? 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240' : 'required|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
