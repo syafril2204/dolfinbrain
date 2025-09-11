@@ -74,7 +74,7 @@
                     </table>
                 </div>
                 @if ($items->hasPages())
-                    <div class="mt-3">{{ $items->links() }}</div>
+                    <div class="mt-3">{{ $items->links('partials.custom-pagination') }}</div>
                 @endif
             </div>
         </div>

@@ -109,7 +109,7 @@
                 </table>
             </div>
             <div class="mt-3">
-                {{ $transactions->links() }}
+                {{ $transactions->links('partials.custom-pagination') }}
             </div>
         </div>
     </div>

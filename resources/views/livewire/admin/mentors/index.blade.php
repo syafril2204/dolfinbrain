@@ -64,7 +64,7 @@
                     </tbody>
                 </table>
             </div>
-            {{ $mentors->links() }}
+            {{ $mentors->links('partials.custom-pagination') }}
         </div>
     </div>
 

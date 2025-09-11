@@ -59,7 +59,7 @@
                 </table>
             </div>
             <div class="mt-3">
-                {{ $affiliates->links() }}
+                {{ $affiliates->links('partials.custom-pagination') }}
             </div>
         </div>
     </div>

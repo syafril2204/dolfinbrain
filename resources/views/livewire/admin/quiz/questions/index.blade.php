@@ -111,6 +111,6 @@
     @endforelse
 
     <div class="mt-4">
-        {{ $questions->links() }}
+        {{ $questions->links('partials.custom-pagination') }}
     </div>
 </div>

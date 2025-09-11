@@ -81,7 +81,12 @@ class Form extends Component
             }
         }
 
-        $this->material->positions()->sync($validatedData['assignedPositions']);
+
+        if ($this->material) {
+            $this->material->positions()->sync($validatedData['assignedPositions']);
+        } else {
+            $newMaterial->positions()->sync($validatedData['assignedPositions']);
+        }
 
         session()->flash('message', 'Data materi berhasil disimpan.');
 

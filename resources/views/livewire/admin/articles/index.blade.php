@@ -85,7 +85,7 @@
     </div>
 
     <div class="mt-4">
-        {{ $articles->links() }}
+        {{ $articles->links('partials.custom-pagination') }}
     </div>
 
     {{-- Modal untuk Detail Artikel --}}

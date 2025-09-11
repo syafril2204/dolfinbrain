@@ -69,7 +69,7 @@
                         </tbody>
                     </table>
                 </div>
-                {{ $items->links() }}
+                {{ $items->links('partials.custom-pagination') }}
             </div>
         </div>
     @elseif ($currentFormation)
