@@ -110,7 +110,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.admin.mentors.index', [
-            'mentors' => Mentor::with('position.formation')->latest()->paginate(10),
+            'mentors' => Mentor::with('position.formation')->latest()->paginate(1),
             'positions' => Position::with('formation')->get(),
         ])->layout('components.layouts.app');
     }
