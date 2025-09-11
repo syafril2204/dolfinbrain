@@ -23,12 +23,21 @@ class Form extends Component
 
     protected function rules()
     {
-        $rules = [
-            'title' => 'required|string|max:255|unique:materials,title,' . $this->material->id,
-            'description' => 'nullable|string',
-            'assignedPositions' => 'required|array|min:1',
-            'file' => $this->isEditMode ? 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240' : 'required|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
-        ];
+        if ($this->material) {
+            $rules = [
+                'title' => 'required|string|max:255|unique:materials,title,' . $this->material->id,
+                'description' => 'nullable|string',
+                'assignedPositions' => 'required|array|min:1',
+                'file' => $this->isEditMode ? 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240' : 'required|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
+            ];
+        } else {
+            $rules = [
+                'title' => 'required|string|max:255|unique:materials,title',
+                'description' => 'nullable|string',
+                'assignedPositions' => 'required|array|min:1',
+                'file' => $this->isEditMode ? 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240' : 'required|file|mimes:pdf,doc,docx,ppt,pptx,zip|max:10240',
+            ];
+        }
         return $rules;
     }
 
