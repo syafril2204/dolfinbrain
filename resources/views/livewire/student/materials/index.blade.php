@@ -34,7 +34,7 @@
                     }
 
                     // Hanya materi pertama atau jika user punya akses yang bisa di-download
-                    $canDownload = $loop->first || auth()->user()->hasMaterialAccess();
+                    $canDownload = true;
                 @endphp
 
                 <div class="col-md-6 col-lg-4 mb-4">

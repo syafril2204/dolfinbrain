@@ -66,30 +66,26 @@ class Form extends Component
         ];
 
         if ($this->file) {
-            if ($this->isEditMode && $this->material->file_path && Storage::exists($this->material->file_path)) {
-                Storage::delete($this->material->file_path);
+            if ($this->isEditMode && $this->material->file_path && Storage::disk('public')->exists($this->material->file_path)) {
+                Storage::disk('public')->delete($this->material->file_path);
             }
-            $dataToSave['file_path'] = $this->file->store('public/materials');
+
+            $filePath = $this->file->store('materials', 'public'); // konsisten pake disk "public"
+
+            $dataToSave['file_path'] = 'public/' . $filePath;
             $dataToSave['file_size'] = $this->file->getSize();
-            $dataToSave['file_type'] = $this->file->extension();
+            $dataToSave['file_type'] = $this->file->getClientOriginalExtension();
         }
 
         if ($this->isEditMode) {
             $this->material->update($dataToSave);
         } else {
-            $newMaterial = Material::create([
-                'title' => $this->title,
-                'description' => $this->description,
-                'file_path' => $this->file->store('materials', 'public'),
-                'file_size' => $this->file->getSize(),
-                'file_type' => $this->file->getClientOriginalExtension(),
-            ]);
+            $newMaterial = Material::create($dataToSave);
 
             if ($this->position_id) {
                 $newMaterial->positions()->attach($this->position_id);
             }
         }
-
 
         if ($this->material) {
             $this->material->positions()->sync($validatedData['assignedPositions']);
@@ -101,6 +97,7 @@ class Form extends Component
 
         return $this->redirectRoute('admin.materials.index', navigate: true);
     }
+
 
     public function render()
     {

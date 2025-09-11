@@ -18,7 +18,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form wire:submit.prevent="store">
+            <form wire:submit.prevent="store" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Judul Materi</label>
                     <input type="text" class="form-control" id="title" wire:model="title">
