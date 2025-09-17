@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\ResponseHelper; // <-- 1. Import helper Anda
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MaterialResource;
+use App\Models\Material;
 use App\Models\Position;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MaterialController extends Controller
 {
@@ -37,5 +40,22 @@ class MaterialController extends Controller
             }
         }
         return ResponseHelper::success($data, 'Berhasil mengambil data materi.');
+    }
+
+    public function download(Request $request, Material $material): JsonResponse|StreamedResponse
+    {
+        $user = $request->user();
+
+        $lmsSpaceId = $material->lms_space_id;
+        if (!$user->lmsSpaces()->where('lms_space_id', $lmsSpaceId)->exists()) {
+            return ResponseHelper::error(null, 'Akses ditolak. Anda bukan anggota dari space materi ini.', Response::HTTP_FORBIDDEN);
+        }
+
+        $filePath = $material->file_path;
+        if (!$filePath || !Storage::disk('private')->exists($filePath)) {
+            return ResponseHelper::error(null, 'File tidak ditemukan di server.', Response::HTTP_NOT_FOUND);
+        }
+
+        return Storage::disk('private')->download($filePath);
     }
 }

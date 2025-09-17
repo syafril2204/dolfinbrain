@@ -63,6 +63,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/materials', [MaterialController::class, 'index']);
+    Route::get('/materials/{material}/download', [MaterialController::class, 'download'])
+        ->name('api.materials.download');
+
     Route::get('/mentors', [MentorController::class, 'index'])->name('api.mentors.index');
     Route::get('/mentors/{mentor}', [MentorController::class, 'show'])->name('api.mentors.show');
 
@@ -74,7 +77,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/coachings', [LmsController::class, 'coachings'])->name('coachings');
         Route::get('/files', [LmsController::class, 'files'])->name('files');
         Route::get('/materials', [LmsController::class, 'materials'])->name('materials');
-        Route::get('/download-materi', [LmsController::class, 'downloadMaterial']);
         Route::get('/quizzes', [LmsController::class, 'quizzes'])->name('quizzes');
     });
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
