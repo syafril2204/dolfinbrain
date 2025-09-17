@@ -44,4 +44,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Position::class);
     }
+
+    public function affiliate(): BelongsTo
+    {
+        return $this->belongsTo(Affiliate::class);
+    }
 }
