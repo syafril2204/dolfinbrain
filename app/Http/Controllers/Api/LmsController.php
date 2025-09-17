@@ -9,6 +9,9 @@ use App\Http\Resources\LmsResourceResource;
 use App\Http\Resources\LmsSpaceResource;
 use App\Http\Resources\LMSVideoResource;
 use App\Http\Resources\MaterialResource;
+use App\Models\LmsResource; // Tambahkan ini
+use Illuminate\Support\Facades\Storage; // Tambahkan ini
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Resources\QuizPackageResource;
 use App\Models\LmsSpace;
 use App\Models\User;
@@ -111,6 +114,32 @@ class LmsController extends Controller
 
         $coachings = $lms_space->coachings()->orderBy('start_at')->paginate(10);
         return ResponseHelper::success(LMSCoachingResource::collection($coachings), 'Berhasil mengambil daftar coaching.');
+    }
+
+    /**
+     * downloadMaterial
+     *
+     * @param  mixed $request
+     * @param  mixed $lms_space
+     * @param  mixed $lms_resource
+     * @return JsonResponse
+     */
+    public function downloadMaterial(Request $request, LmsSpace $lms_space, LmsResource $lms_resource): JsonResponse|StreamedResponse
+    {
+        if (!$this->authorizeAccess($request->user(), $lms_space)) {
+            return ResponseHelper::error(null, 'Akses ditolak.', Response::HTTP_FORBIDDEN);
+        }
+
+        if ($lms_resource->lms_space_id !== $lms_space->id || !in_array($lms_resource->type, ['material', 'file'])) {
+            return ResponseHelper::error(null, 'File materi tidak ditemukan.', Response::HTTP_NOT_FOUND);
+        }
+
+        $filePath = $lms_resource->file_path;
+        if (!$filePath || !Storage::disk('private')->exists($filePath)) {
+            return ResponseHelper::error(null, 'File tidak ditemukan di server.', Response::HTTP_NOT_FOUND);
+        }
+
+        return Storage::disk('private')->download($filePath);
     }
 
     /**

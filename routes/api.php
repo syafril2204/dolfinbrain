@@ -74,6 +74,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/coachings', [LmsController::class, 'coachings'])->name('coachings');
         Route::get('/files', [LmsController::class, 'files'])->name('files');
         Route::get('/materials', [LmsController::class, 'materials'])->name('materials');
+        Route::get('/download-materi', [LmsController::class, 'downloadMaterial']);
         Route::get('/quizzes', [LmsController::class, 'quizzes'])->name('quizzes');
     });
     Route::get('/quiz-packages', [QuizPackageController::class, 'index']);
