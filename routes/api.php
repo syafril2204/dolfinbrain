@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\TransactionHistoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TripayCallbackController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Resources\UserResource;
 use App\Models\Material;
 use Illuminate\Support\Facades\Storage;
@@ -30,6 +31,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::get('/banners', [BannerController::class, 'index'])->name('api.banners.index');
+
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 Route::get('/formations', [FormationController::class, 'index']);
 Route::get('/positions', [PositionController::class, 'index']);
@@ -65,7 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/materials', [MaterialController::class, 'index']);
-    
+
     Route::get('/materials/download/{material}', function (Material $material) {
         if (Storage::exists($material->file_path)) {
             $originalName = pathinfo($material->file_path, PATHINFO_BASENAME);
