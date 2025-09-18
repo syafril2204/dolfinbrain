@@ -46,10 +46,10 @@ class MaterialController extends Controller
     {
         $user = $request->user();
 
-        $lmsSpaceId = $material->lms_space_id;
-        if (!$user->lmsSpaces()->where('lms_space_id', $lmsSpaceId)->exists()) {
-            return ResponseHelper::error(null, 'Akses ditolak. Anda bukan anggota dari space materi ini.', Response::HTTP_FORBIDDEN);
-        }
+        // $lmsSpaceId = $material->lms_space_id;
+        // if (!$user->lmsSpaces()->where('lms_space_id', $lmsSpaceId)->exists()) {
+        //     return ResponseHelper::error(null, 'Akses ditolak. Anda bukan anggota dari space materi ini.', Response::HTTP_FORBIDDEN);
+        // }
 
         $filePath = $material->file_path;
         if (!$filePath || !Storage::disk('private')->exists($filePath)) {
