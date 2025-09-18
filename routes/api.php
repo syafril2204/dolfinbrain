@@ -20,6 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TripayCallbackController;
 use App\Http\Resources\UserResource;
+use App\Models\Material;
+use Illuminate\Support\Facades\Storage;
 
 Route::post('/tripay/callback', [TripayCallbackController::class, 'handle'])->name('api.tripay.callback');
 Route::get('/payment-methods', [PaymentController::class, 'getPaymentChannels'])->name('api.payment-methods');
@@ -63,8 +65,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/materials', [MaterialController::class, 'index']);
-    Route::get('/materials/{material}/download', [MaterialController::class, 'download'])
-        ->name('api.materials.download');
+    
+    Route::get('/materials/download/{material}', function (Material $material) {
+        if (Storage::exists($material->file_path)) {
+            $originalName = pathinfo($material->file_path, PATHINFO_BASENAME);
+            return Storage::download($material->file_path, $originalName);
+        }
+        abort(404, 'File not found.');
+    })->name('materials.download');
 
     Route::get('/mentors', [MentorController::class, 'index'])->name('api.mentors.index');
     Route::get('/mentors/{mentor}', [MentorController::class, 'show'])->name('api.mentors.show');

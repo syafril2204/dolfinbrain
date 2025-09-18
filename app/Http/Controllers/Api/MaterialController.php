@@ -42,20 +42,14 @@ class MaterialController extends Controller
         return ResponseHelper::success($data, 'Berhasil mengambil data materi.');
     }
 
-    public function download(Request $request, Material $material): JsonResponse|StreamedResponse
-    {
-        $user = $request->user();
+public function download(Request $request, Material $material)
+{
+    $filePath = $material->file_path;
 
-        // $lmsSpaceId = $material->lms_space_id;
-        // if (!$user->lmsSpaces()->where('lms_space_id', $lmsSpaceId)->exists()) {
-        //     return ResponseHelper::error(null, 'Akses ditolak. Anda bukan anggota dari space materi ini.', Response::HTTP_FORBIDDEN);
-        // }
-
-        $filePath = $material->file_path;
-        if (!$filePath || !Storage::disk('private')->exists($filePath)) {
-            return ResponseHelper::error(null, 'File tidak ditemukan di server.', Response::HTTP_NOT_FOUND);
-        }
-
-        return Storage::disk('private')->download($filePath);
+    if (!$filePath || !Storage::disk('private')->exists($filePath)) {
+        return ResponseHelper::error(null, 'File tidak ditemukan.', 404);
     }
+
+    return response()->download(Storage::disk('private')->path($filePath));
+}
 }
