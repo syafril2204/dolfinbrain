@@ -15,7 +15,7 @@ class LmsResourceResource extends JsonResource
             'title' => $this->title,
             'type' => $this->type, // 'recap_file' atau 'audio_recording'
             'file_type' => $this->file_type,
-            'download_url' => route('admin.lms-resources.download', $this->id),
+            'download_url' => url(Storage::url($this->file_path)),
         ];
     }
 }
